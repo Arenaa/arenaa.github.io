@@ -1,4 +1,4 @@
 User-agent: *
 Disallow:
 
-Sitemap: https://Arenaa.github.io/sitemap.xml
+Sitemap: https://jennajordan.me/sitemap.xml
