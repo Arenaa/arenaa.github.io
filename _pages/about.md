@@ -2,7 +2,7 @@
 layout: about
 title: about
 permalink: /
-subtitle: Data Engineer in practice, Data Librarian at heart
+subtitle: NLP/ML Researcher, NLP, CV, Multimodal Gen AI, LLMs
 
 profile:
   align: right
@@ -10,16 +10,13 @@ profile:
   image_circular: false # crops the image to make it circular
   address: >
     <p>Data Engineer</p>
-    <p><a href="https://www.boston.gov/departments/analytics-team">Analytics Team</a></p> 
+    <p><a href="https://www.boston.gov/departments/analytics-team">Analytics Team</a></p>
     <p>City of Boston</p>
 
 news: true  # includes a list of news items
 latest_posts: true  # includes a list of the newest posts
 selected_papers: true # includes a list of papers marked as "selected={true}"
 social: true  # includes social icons at the bottom of the page
----
-
-Certainly! Here's the revised text in a plain text format:
 
 ---
 I am a NLP/ML researcher at Son Corporate Group, where I bring together my expertise in machine learning and natural language processing to tackle exciting challenges in the industry.
@@ -39,7 +36,5 @@ In my research, I'm dedicated to advancing Large Language Models (LLMs) and thei
 Research Interests:
 - Large Language models
 - Multimodal Generation
-- Natural Language Understanding 
+- Natural Language Understanding
 - Computer Vision
-
-Feel free to let me know if you have specific details or preferences you'd like to include!
