@@ -5,17 +5,16 @@
       value: Mahsa Khosh
     - name: Job Title
       value: NLP/ML researcher
-    - enail: Email
+    - name: Email
       value: khoshnoodi.ma@gmail.com
 
 - title: Skills
   type: list
   contents:
-
-		"Programming Languages: Python(proficient), Java(Senior), Scala, MatLab, R"
-		"Deep learning tools: Pytorch, TensorFlow, Hugging Face Transformers, Diffusion Libraries, NLTK, Scikit-learn"
-		"Developer Tools: Git, Docker, Apache Spark, Apache Kafka,  VS Code, Jupyter Lab, IntelliJ IDEA"
-		"Databse Management: MongoDB, Cassandra, Redis, MySQL, SparkSQL"
+    - "Programming Languages: Python(proficient), Java(Senior), Scala, MatLab, R"
+    - "Deep learning tools: Pytorch, TensorFlow, Hugging Face Transformers, Diffusion Libraries, NLTK, Scikit-learn"
+    - "Developer Tools: Git, Docker, Apache Spark, Apache Kafka,  VS Code, Jupyter Lab, IntelliJ IDEA"
+    - "Database Management: MongoDB, Cassandra, Redis, MySQL, SparkSQL"
 
 - title: Experience
   type: time_table
