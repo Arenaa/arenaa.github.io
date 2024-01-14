@@ -2,11 +2,11 @@
   type: map
   contents:
     - name: Full Name
-      value: Jennifer (Jenna) Jordan
+      value: Mahsa Khosh
     - name: Job Title 
-      value: Data Engineer
+      value: NLP/ML researcher
     - name: Citizenship
-      value: USA
+      value: Iran
 
 - title: Skills
   type: list
