@@ -25,7 +25,7 @@ social: true  # includes social icons at the bottom of the page
 
 <div style="text-align: justify;">
 
-  I am a PhD student in Computer Science at
+  I am a first-year PhD student in Computer Science at
 <a href="https://www.georgetown.edu/">Georgetown University</a>,
 advised by
 <a href="https://cs-people.bu.edu/sbargal/">Dr. Sarah Adel Bargal</a> in the Georgetown University Computer Vision (GUCV) Lab and I am fortunate to work closely with
