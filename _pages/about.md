@@ -21,12 +21,45 @@ social: true  # includes social icons at the bottom of the page
 
 <div style="text-align: justify;">
 
-  I am a first-year PhD student in Computer Science at
-<a href="https://www.georgetown.edu/">Georgetown University</a>, advised by <a href="https://cs-people.bu.edu/sbargal/">Dr. Sarah Adel Bargal</a> in the Georgetown University Computer Vision (GUCV) Lab and I am fortunate to work closely with <a href="https://michaelsaxon.github.io/">Michael Saxon</a> as my research mentor. My research focuses on developing multimodal AI systems that perform explicit reasoning over visual and linguistic inputs. I work on vision-language models that go beyond pattern matching to construct interpretable reasoning chains—enabling models to ground their decisions in visual evidence, articulate their intermediate steps, and align their outputs with human cognitive processes.
+<p>
+I am a first-year PhD student in Computer Science at <a href="https://www.georgetown.edu/">Georgetown University</a>,
+advised by <a href="https://cs-people.bu.edu/sbargal/">Dr. Sarah Adel Bargal</a>
+in the Georgetown University Computer Vision (GUCV) Lab, and I am fortunate
+to work closely with
+<a href="https://michaelsaxon.github.io/">Michael Saxon</a>
+as my research mentor.
+My research focuses on developing multimodal AI systems that perform explicit
+reasoning over visual and linguistic inputs.
+I work on vision-language models that go beyond pattern matching to construct
+interpretable reasoning chains—enabling models to ground their decisions in
+visual evidence, articulate their intermediate steps, and align their outputs
+with human cognitive processes.
+</p>
 
-Specifically, I investigate:
-- **Multimodal reasoning**: How models can systematically integrate visual scenes with textual context to solve complex reasoning tasks
-- **Visual grounding and interpretability**: Methods for making vision-language models explain their predictions through attention mechanisms, reasoning graphs, or natural language justifications
-- **Structured reasoning in VLMs**: Architectures and training paradigms that encourage explicit, step-by-step reasoning rather than implicit pattern recognition
+<p>Specifically, I investigate:</p>
 
- <p>My research goal is to develop multimodal AI systems that reason explicitly over visual and linguistic information, enabling models that are transparent, interpretable, and aligned with human understanding.</p>
+<ul>
+  <li>
+    <strong>Multimodal reasoning</strong>:
+    How models can systematically integrate visual scenes with textual context
+    to solve complex reasoning tasks
+  </li>
+  <li>
+    <strong>Visual grounding and interpretability</strong>:
+    Methods for making vision-language models explain their predictions through
+    attention mechanisms, reasoning graphs, or natural language justifications
+  </li>
+  <li>
+    <strong>Structured reasoning in VLMs</strong>:
+    Architectures and training paradigms that encourage explicit, step-by-step
+    reasoning rather than implicit pattern recognition
+  </li>
+</ul>
+
+<p>
+My research goal is to develop multimodal AI systems that reason explicitly over
+visual and linguistic information, enabling models that are transparent,
+interpretable, and aligned with human understanding.
+</p>
+
+</div>
