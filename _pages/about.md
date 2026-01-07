@@ -11,10 +11,6 @@ profile:
   image_circular: true # crops the image to make it circular
   image_size: 50 # Set the desired size in pixels
 
-  # address: >
-  #   <p>Data Engineer</p>
-  #   <p><a href="https://www.boston.gov/departments/analytics-team">Analytics Team</a></p>
-  #   <p>City of Boston</p>
 
 news: false  # includes a list of news items
 latest_posts: false  # includes a list of the newest posts
