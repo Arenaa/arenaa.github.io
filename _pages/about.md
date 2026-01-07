@@ -26,10 +26,11 @@ social: true  # includes social icons at the bottom of the page
 <div style="text-align: justify;">
 
   I am a first-year PhD student in Computer Science at
-<a href="https://www.georgetown.edu/">Georgetown University</a>,
-advised by
-<a href="https://cs-people.bu.edu/sbargal/">Dr. Sarah Adel Bargal</a> in the Georgetown University Computer Vision (GUCV) Lab and I am fortunate to work closely with
-<a href="https://michaelsaxon.github.io/">Michael Saxon</a>
-as my research mentor. My research sits at the intersection of computer vision and natural language processing, with a focus on building multimodal AI systems that reason, not just predict. I am particularly interested in vision–language understanding, multimodal and visual reasoning, and interpretability. My work explores how models integrate visual and textual information to form structured reasoning processes, make grounded decisions, and communicate their conclusions transparently.
+<a href="https://www.georgetown.edu/">Georgetown University</a>, advised by <a href="https://cs-people.bu.edu/sbargal/">Dr. Sarah Adel Bargal</a> in the Georgetown University Computer Vision (GUCV) Lab and I am fortunate to work closely with <a href="https://michaelsaxon.github.io/">Michael Saxon</a> as my research mentor. My research focuses on developing multimodal AI systems that perform explicit reasoning over visual and linguistic inputs. I work on vision-language models that go beyond pattern matching to construct interpretable reasoning chains—enabling models to ground their decisions in visual evidence, articulate their intermediate steps, and align their outputs with human cognitive processes.
 
-  <p>My research goal is to develop multimodal AI systems that reason explicitly over visual and linguistic information, enabling models that are transparent, interpretable, and aligned with human understanding.</p>
+Specifically, I investigate:
+- **Multimodal reasoning**: How models can systematically integrate visual scenes with textual context to solve complex reasoning tasks
+- **Visual grounding and interpretability**: Methods for making vision-language models explain their predictions through attention mechanisms, reasoning graphs, or natural language justifications
+- **Structured reasoning in VLMs**: Architectures and training paradigms that encourage explicit, step-by-step reasoning rather than implicit pattern recognition
+
+ <p>My research goal is to develop multimodal AI systems that reason explicitly over visual and linguistic information, enabling models that are transparent, interpretable, and aligned with human understanding.</p>
