@@ -26,7 +26,7 @@ I am a first-year PhD student in Computer Science at <a href="https://www.george
 advised by <a href="https://cs-people.bu.edu/sbargal/">Dr. Sarah Adel Bargal</a>
 in the Georgetown University Computer Vision (GUCV) Lab, and I am fortunate
 to work closely with
-<a href="https://michaelsaxon.github.io/">Michael Saxon</a>
+<a href="https://michaelsaxon.github.io/">Dr. Michael Saxon</a>
 as my research mentor.
 My research focuses on developing multimodal AI systems that perform explicit
 reasoning over visual and linguistic inputs.
