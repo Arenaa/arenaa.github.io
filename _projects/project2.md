@@ -1,13 +1,19 @@
 ---
 layout: page
-title: Sentiment analysis of Hateful Speech
-img: /assets/img/project6.png
+title: T2IScoreScore
+img: /assets/img/project1.png
 description: >
   <div style="text-align: justify;">
-  This project uses <strong>Large Language Models (LLMs)</strong> to conduct sentiment analysis on tweets within <strong>X(Twitter)</strong> platform. The primary objective is to examine the impacts of hated speech on the stock market. Utilizing state-of-the-art LLMs, the project involves fine-tunning these models specifically for analyzing sentiments in Persian/Farsi financial text. By adapting the language models to the intricacies of financial content in the Persian language, the project aims to provide a comprehensive understanding of the impact of hated speech on <strong>stock market</strong> dynamics within the Twitter.<br>
+  Our research expands on recent progress in <strong>Text-to-Image (T2I)</strong> models, concentrating on enhancing image generation quality. Despite advancements, challenges like hallucination persist. Automated T2I metrics aim to monitor progress, yet their blindspots, rooted in training on natural images, result in inconsistent scoring for images that are semantically equivalent.<br>
+  
+
+  We introduce <strong>T2IScoreScore</strong>, a curated dataset that systematically transitions images from high to low faithfulness. This dataset includes synthetic and natural examples, providing a foundation for a comprehensive "meta-evaluation" of existing T2I metrics. By directly addressing blindspots, our work contributes to refining T2I models, aiming to reduce object hallucination and improve image consistency. The ultimate goal is to enhance the models' proficiency in aligning with textual descriptions.<br>
+**[Who Evaluates the Evaluations? Objectively Scoring Text-to-Image Prompt Coherence Metrics with T2IScore (TS2)](https://arxiv.org/abs/2404.04251)**  
+**Mahsa Khoshnoodi**, Michael Saxon, Fatima Jahara, Yujie Lu, Aditya Sharma, William Yang Wang  
+NeurIPS 2024  
   </div>
-
 importance: 1
----
 
 
+---  
+# <img src="https://img.shields.io/badge/text%20to%20image-pink" alt="Static Badge">

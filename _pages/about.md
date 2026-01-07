@@ -2,7 +2,7 @@
 layout: about
 title: About
 permalink: /
-subtitle: NLP/ML Researcher | NLP, CV, Multimodal, Gen AI, LLMs
+subtitle:  Multimodal AI, Gen AI, Reasoning
 
 
 profile:
