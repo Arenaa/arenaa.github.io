@@ -1,14 +1,14 @@
 ---
 layout: page
-title: Stock market prediction
-img: /assets/img/project8.png
+title: Accelerated Generation Techniques in LLMs
+img: /assets/img/project10.png
 description: >
   <div style="text-align: justify;">
-  In this project, we utilized sequence learning methodologies, specifically employing Recurrent Neural Networks (RNNs) like <strong>Long Short-Term Memory (LSTM)</strong> networks. The goal was to generate accurate predictions that go beyond simple stock price forecasting. The project aimed to provide in-depth insights into market trends, volatility patterns, and potential price movements. The focus was on developing a predictive model that not only anticipates stock prices but also offers a comprehensive understanding of the underlying factors influencing market behavior. This broader perspective aimed to empower stakeholders with valuable information for strategic decision-making in the dynamic stock market environment. Additionally, I incorporated Transformers, implementing a <strong>time embedding</strong> layer for further refinement in the predictive capabilities.<br>
+  Despite the crucial importance of accelerating text generation in large language models (LLMs) for efficiently producing content, the sequential nature of this process often leads to high inference latency, posing challenges for real-time applications. Various techniques have been proposed and developed to address these challenges and improve efficiency. This paper presents a comprehensive survey of accelerated generation techniques in autoregressive language models, aiming to understand the state-of-the-art methods and their applications. We categorize these techniques into several key areas: speculative decoding, early exiting mechanisms, and non-autoregressive methods. We discuss each category's underlying principles, advantages, limitations, and recent advancements. Through this survey, we aim to offer insights into the current landscape of techniques in LLMs and provide guidance for future research directions in this critical area of natural language processing.<br>
+  <br>
+  <strong>A Comprehensive Survey of Accelerated Generation Techniques in Large Language Models</strong><br>
+  <strong>Mahsa Khoshnoodi</strong>, Vinija Jain, Mingye Gao, Malavika Srikanth, Aman Chadha
   </div>
-
 importance: 1
 ---
-
-
 

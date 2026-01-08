@@ -1,14 +1,12 @@
 ---
 layout: page
-title: Baysian Network
-img: /assets/img/project3.png
+title: GMM for customer behaviour
+img: /assets/img/project7.png
 description: >
   <div style="text-align: justify;">
-  In this work, an Anomaly Detection Engine was carefully designed and developed, employing <strong>Bayesian networks</strong> and <strong>Hidden Markov Models (HMM)</strong> to uncover subtle patterns and anomalies within intricate datasets. The primary objective was to create a robust model capable of identifying deviations from expected behavior, especially in scenarios where traditional methods might fall short.<br>
+  In this project, an innovative approach to customer behavior analysis in commercial banking was implemented through the development of a Hierarchical Clustering model based on <strong>Gaussian Mixture Models (GMMs)</strong>. This advanced technique, executed using Scala within a Spark Dataframe, enabled a comprehensive understanding of complex patterns within large-scale customer datasets.<br>
   
-  The implementation of the proposed model was carried out in Java, encompassing the entire data processing pipeline. This involved rigorous data preprocessing, algorithm development, and seamless integration into the existing data pipeline. The comprehensive coverage ensured a holistic approach to anomaly detection, addressing the intricacies of diverse datasets.<br>
-  
-  To guarantee both efficiency and accuracy in anomaly detection, the project underwent thorough testing and optimization phases. These efforts were crucial in enhancing the overall quality of the data analysis process, resulting in a reliable Anomaly Detection Engine capable of handling complex datasets with precision.<br>
+  The application of GMMs in the <strong>hierarchical clustering model</strong> yielded outstanding results by revealing intricate nuances in customer behavior. The model successfully identified subtle patterns and interactions, allowing for the nuanced segmentation of clientele based on diverse banking behaviors. This in-depth analysis provided rich insights, empowering the bank to implement more targeted and personalized strategies, ultimately enhancing customer satisfaction and refining service offerings.<br>
   </div>
 importance: 1
 ---

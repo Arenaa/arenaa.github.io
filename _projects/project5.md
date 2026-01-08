@@ -1,12 +1,12 @@
 ---
 layout: page
-title: GMM for customer behaviour
-img: /assets/img/project7.png
+title: Anomaly detection in financial behavior
+img: /assets/img/project2.png
 description: >
   <div style="text-align: justify;">
-  In this project, an innovative approach to customer behavior analysis in commercial banking was implemented through the development of a Hierarchical Clustering model based on <strong>Gaussian Mixture Models (GMMs)</strong>. This advanced technique, executed using Scala within a Spark Dataframe, enabled a comprehensive understanding of complex patterns within large-scale customer datasets.<br>
+  In the Anomaly Detection in the Banking domain project, we developed a model based on Instance-based learning. The model utilizes user behavior analytics to detect fraudulent activities and insider threats by focusing on anomalies in user actions, such as identifying unusual logins and irregular transaction amounts. Through the incorporation of <strong>Active Learning</strong>, the model dynamically learns the system's behavior over time with an <strong>adaptive learning factor</strong>.<br>
   
-  The application of GMMs in the <strong>hierarchical clustering model</strong> yielded outstanding results by revealing intricate nuances in customer behavior. The model successfully identified subtle patterns and interactions, allowing for the nuanced segmentation of clientele based on diverse banking behaviors. This in-depth analysis provided rich insights, empowering the bank to implement more targeted and personalized strategies, ultimately enhancing customer satisfaction and refining service offerings.<br>
+  Recognizing the inherent challenge of achieving 100% accuracy in anomaly detection, the project adopted  <strong>Ensemble Learning</strong>. This involved running multiple model instances concurrently to address false positives and negatives. The strategic approach, approved by Bank Melli Iran, the largest Iranian Bank, successfully delivered real-time anomaly detection capabilities, leading to substantial cost savings and reinforcing the bank's security and risk management protocols.<br>
   </div>
 importance: 1
 ---

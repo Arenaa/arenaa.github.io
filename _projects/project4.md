@@ -1,13 +1,14 @@
 ---
 layout: page
-title: Anomaly detection in banking sector
-img: /assets/img/project2.png
+title: Stock market prediction
+img: /assets/img/project8.png
 description: >
   <div style="text-align: justify;">
-  In the Anomaly Detection in the Banking domain project, we developed a model based on Instance-based learning. The model utilizes user behavior analytics to detect fraudulent activities and insider threats by focusing on anomalies in user actions, such as identifying unusual logins and irregular transaction amounts. Through the incorporation of <strong>Active Learning</strong>, the model dynamically learns the system's behavior over time with an <strong>adaptive learning factor</strong>.<br>
-  
-  Recognizing the inherent challenge of achieving 100% accuracy in anomaly detection, the project adopted  <strong>Ensemble Learning</strong>. This involved running multiple model instances concurrently to address false positives and negatives. The strategic approach, approved by Bank Melli Iran, the largest Iranian Bank, successfully delivered real-time anomaly detection capabilities, leading to substantial cost savings and reinforcing the bank's security and risk management protocols.<br>
+  In this project, we utilized sequence learning methodologies, specifically employing Recurrent Neural Networks (RNNs) like <strong>Long Short-Term Memory (LSTM)</strong> networks. The goal was to generate accurate predictions that go beyond simple stock price forecasting. The project aimed to provide in-depth insights into market trends, volatility patterns, and potential price movements. The focus was on developing a predictive model that not only anticipates stock prices but also offers a comprehensive understanding of the underlying factors influencing market behavior. This broader perspective aimed to empower stakeholders with valuable information for strategic decision-making in the dynamic stock market environment. Additionally, I incorporated Transformers, implementing a <strong>time embedding</strong> layer for further refinement in the predictive capabilities.<br>
   </div>
+
 importance: 1
 ---
+
+
 
