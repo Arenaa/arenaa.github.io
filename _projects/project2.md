@@ -1,7 +1,7 @@
 ---
 layout: page
 title: T2IScoreScore
-img: /assets/img/t2i.png
+img: /assets/img/project6.png
 description: >
   <div style="text-align: justify;">
   Our research expands on recent progress in <strong>Text-to-Image (T2I)</strong> models, concentrating on enhancing image generation quality. Despite advancements, challenges like hallucination persist. Automated T2I metrics aim to monitor progress, yet their blindspots, rooted in training on natural images, result in inconsistent scoring for images that are semantically equivalent.<br>
