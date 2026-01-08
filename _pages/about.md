@@ -45,10 +45,10 @@ with human cognitive processes.
   <li>
     <strong>Visual grounding and interpretability</strong>:
     Methods for making vision-language models explain their predictions through
-    attention mechanisms, reasoning graphs, or natural language justifications
+    attention mechanisms, reasoning graphs, or natural language justifications that articulate configurational relationships.
   </li>
   <li>
-    <strong>Compositional spatal reasoning in VLMs</strong>:
+    <strong>Compositional spatial reasoning in VLMs</strong>:
     Training methodologies and architectural designs that decompose visual understanding into explicit spatial primitives, relational graphs, and geometric transformations to enable transparent, verifiable reasoning chains.
   </li>
 </ul>
