@@ -35,13 +35,12 @@ visual evidence, articulate their intermediate steps, and align their outputs
 with human cognitive processes.
 </p>
 
-<p>Specifically, I investigate:</p>
+<p>Specifically, I focus on:</p>
 
 <ul>
   <li>
     <strong>Multimodal reasoning</strong>:
-    How models can systematically integrate visual scenes with textual context
-    to solve complex reasoning tasks
+    How models can systematically integrate visual scenes, spatial relationships, and textual context to solve complex reasoning tasks requiring geometric awareness and positional inference.
   </li>
   <li>
     <strong>Visual grounding and interpretability</strong>:
@@ -49,9 +48,8 @@ with human cognitive processes.
     attention mechanisms, reasoning graphs, or natural language justifications
   </li>
   <li>
-    <strong>Structured reasoning in VLMs</strong>:
-    Architectures and training paradigms that encourage explicit, step-by-step
-    reasoning rather than implicit pattern recognition
+    <strong>Compositional spatal reasoning in VLMs</strong>:
+    Training methodologies and architectural designs that decompose visual understanding into explicit spatial primitives, relational graphs, and geometric transformations to enable transparent, verifiable reasoning chains.
   </li>
 </ul>
 
