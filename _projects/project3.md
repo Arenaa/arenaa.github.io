@@ -13,7 +13,8 @@ description: >
   and <strong>non-autoregressive generation</strong>, and analyzed their underlying
   principles, trade-offs, and limitations.
   <br>
-  <strong><a href="https://arxiv.org/pdf/2405.13019">A Comprehensive Survey of Accelerated Generation Techniques in Large Language Models</strong><br>
+  <br>
+  <strong><a href="https://arxiv.org/pdf/2405.13019">A Comprehensive Survey of Accelerated Generation Techniques in Large Language Models</a></strong><br>
   <strong>Mahsa Khoshnoodi</strong>, Vinija Jain, Mingye Gao, Malavika Srikanth, Aman Chadha
   </div>
 importance: 1
