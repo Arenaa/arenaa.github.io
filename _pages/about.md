@@ -40,18 +40,18 @@ with human cognitive processes.
 <ul>
   <li>
     <strong>Multimodal reasoning</strong>:
-    How models can systematically integrate visual scenes, spatial relationships, and textual context to solve complex reasoning tasks requiring geometric awareness and positional inference.
+    Integrating visual scenes, spatial relationships, and textual context to solve complex tasks requiring geometric awareness and positional inference.
   </li>
   <li>
     <strong>Visual grounding and interpretability</strong>:
-    Methods for making vision-language models explain their predictions through
-    attention mechanisms, reasoning graphs, or natural language justifications that articulate configurational relationships.
+    Developing methods for VLMs to explain predictions through attention mechanisms, reasoning graphs, or natural language justifications.
   </li>
   <li>
-    <strong>Compositional spatial reasoning in VLMs</strong>:
-    Training methodologies and architectural designs that decompose visual understanding into explicit spatial primitives, relational graphs, and geometric transformations to enable transparent, verifiable reasoning chains.
+    <strong>Alignment via Verifiability</strong>:
+    Using spatial grounding and explicit reasoning to ensure model faithfulness. I focus on mitigating hallucinations and shortcut learning by requiring models to produce human-auditable logic for their decisions.
   </li>
 </ul>
+
 
 <p>
 My research goal is to develop multimodal AI systems that reason explicitly over
