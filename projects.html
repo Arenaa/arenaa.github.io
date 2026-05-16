@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Projects, Mahsa Khoshnoodi</title>
+<link rel="icon" href="/assets/img/favicon.png" type="image/png">
+<link rel="shortcut icon" href="/assets/img/favicon.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=DM+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #1a1916;
+    --ink-soft: #4a4844;
+    --ink-muted: #8a8780;
+    --page: #faf9f6;
+    --surface: #f2f0eb;
+    --rule: #d8d5ce;
+    --accent: #1e3a5f;
+    --accent-light: #e8eef5;
+    --accent-mid: #3d6b9e;
+    --highlight: #b5491c;
+    --serif: 'EB Garamond', Georgia, serif;
+    --sans: 'Instrument Sans', system-ui, sans-serif;
+    --mono: 'DM Mono', monospace;
+    --max: 860px;
+  }
+
+  html { font-size: 17px; scroll-behavior: smooth; }
+  body { font-family: var(--serif); background: var(--page); color: var(--ink); line-height: 1.75; min-height: 100vh; }
+
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--page); border-bottom: 1px solid var(--rule);
+    padding: 0 2rem;
+  }
+  nav ul { max-width: var(--max); margin: 0 auto; display: flex; gap: 2rem; list-style: none; padding: 0.75rem 0; align-items: center; }
+  nav ul li:first-child { margin-right: auto; }
+  nav a { font-family: var(--sans); font-size: 0.82rem; font-weight: 500; color: var(--ink-soft); text-decoration: none; letter-spacing: 0.04em; text-transform: uppercase; transition: color 0.15s; }
+  nav a:hover { color: var(--accent); }
+  nav a.active { color: var(--accent); }
+  nav .site-name { font-family: var(--serif); font-size: 1rem; font-weight: 400; color: var(--ink); text-transform: none; letter-spacing: 0; }
+
+  main { max-width: var(--max); margin: 0 auto; padding: 3.5rem 2rem 6rem; }
+
+  .page-header {
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+  }
+  .page-header h1 { font-family: var(--serif); font-size: 2rem; font-weight: 400; margin-bottom: 0.5rem; }
+  .page-header p { font-size: 0.95rem; color: var(--ink-soft); max-width: 560px; line-height: 1.75; }
+  .page-cover {
+    width: 100%;
+    display: block;
+    margin-top: 1rem;
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    background: #fff;
+    height: 200px;
+    object-fit: cover;
+    object-position: center 50%;
+  }
+
+  .section-label {
+    font-family: var(--sans); font-size: 0.72rem; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-muted);
+    margin-bottom: 1.5rem; margin-top: 3rem;
+    display: flex; align-items: center; gap: 1rem;
+  }
+
+  /* ── RESEARCH PROJECTS ── */
+  .research-list { display: flex; flex-direction: column; gap: 0; }
+
+  .research-card {
+    display: grid;
+    grid-template-columns: 68px 1fr;
+    gap: 0 1.25rem;
+    padding: 1.5rem 0;
+    border-bottom: 1px solid var(--rule);
+    align-items: start;
+  }
+  .research-card:last-child { border-bottom: none; }
+
+  .card-badge { display: flex; flex-direction: column; align-items: flex-end; gap: 0.35rem; padding-top: 0.2rem; }
+
+  .venue-tag {
+    font-family: var(--mono); font-size: 0.62rem; font-weight: 500;
+    letter-spacing: 0.06em; padding: 0.2rem 0.45rem; border-radius: 2px;
+    white-space: nowrap; text-align: center;
+  }
+  .venue-tag.neurips { background: #1e3a5f; color: #c5d8f0; }
+  .venue-tag.cvpr    { background: #3d6b0a; color: #c8e8a5; }
+  .venue-tag.aaai    { background: #7a3010; color: #f5c5a8; }
+  .venue-tag.semeval { background: #4a3570; color: #cfc0f0; }
+  .venue-tag.arxiv   { background: var(--surface); color: var(--ink-muted); border: 1px solid var(--rule); }
+  .venue-tag.review  { background: var(--surface); color: var(--ink-muted); border: 1px solid var(--rule); }
+
+  .spotlight-tag {
+    font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.04em;
+    color: #b5491c; background: #fdf0ea; padding: 0.15rem 0.4rem;
+    border-radius: 2px; border: 1px solid #e8c4b0; white-space: nowrap;
+  }
+  .year-tag { font-family: var(--mono); font-size: 0.62rem; color: var(--ink-muted); }
+  .card-content {
+    display: grid;
+    grid-template-columns: 132px 1fr;
+    column-gap: 1rem;
+    align-items: start;
+  }
+  .card-title { font-family: var(--serif); font-size: 1.1rem; font-weight: 500; color: var(--ink); line-height: 1.35; margin-bottom: 0.35rem; }
+  .card-authors { font-family: var(--sans); font-size: 0.78rem; color: var(--ink-muted); margin-bottom: 0.3rem; line-height: 1.5; }
+  .card-authors strong { color: var(--ink-soft); font-weight: 600; }
+  .card-venue { font-family: var(--sans); font-size: 0.8rem; font-style: italic; color: var(--ink-soft); margin-bottom: 0.75rem; }
+  .card-desc { font-size: 0.9rem; color: var(--ink-soft); line-height: 1.75; margin-bottom: 0.75rem; }
+  .card-links { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .card-title,
+  .card-authors,
+  .card-venue,
+  .card-desc,
+  .card-links { grid-column: 2; }
+  .card-link {
+    font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.04em;
+    color: var(--accent-mid); text-decoration: none; text-transform: uppercase;
+    display: flex; align-items: center; gap: 0.25rem;
+    border-bottom: none !important;
+    transition: color 0.15s;
+  }
+  .card-link::before { content: '→ '; }
+  .card-link:hover { color: var(--accent); text-decoration: underline; }
+  .card-media {
+    grid-column: 1;
+    grid-row: 1 / span 5;
+    width: 132px;
+    margin: 0.1rem 0 0;
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    overflow: hidden;
+    background: #fff;
+    align-self: start;
+  }
+  .card-image {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  /* ── PAST PROJECTS ── */
+  .past-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+    margin-top: 0.5rem;
+  }
+  .past-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    margin-top: 0.5rem;
+  }
+
+  .past-card {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    padding: 1.25rem 1.25rem 1.5rem;
+    position: relative;
+    display: grid;
+    grid-template-columns: 116px 1fr;
+    column-gap: 1rem;
+    align-items: start;
+  }
+  .past-card.no-media {
+    grid-template-columns: 1fr;
+  }
+
+  .past-card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 0.45rem;
+    gap: 0.5rem;
+    grid-column: 2;
+  }
+  .past-card.no-media .past-card-top,
+  .past-card.no-media .past-desc {
+    grid-column: 1;
+  }
+
+  .past-tag {
+    font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.06em;
+    text-transform: uppercase; padding: 0.15rem 0.4rem; border-radius: 2px;
+    white-space: nowrap; flex-shrink: 0;
+  }
+  .past-tag.industry { background: #e8eef5; color: #1e3a5f; border: 1px solid #c0d0e0; }
+  .past-tag.thesis   { background: #f5eef8; color: #5a2d72; border: 1px solid #d8c0e8; }
+  .past-tag.undergrad{ background: #eef5e8; color: #2d5a1e; border: 1px solid #c0d8b0; }
+
+  .past-title { font-family: var(--serif); font-size: 0.98rem; font-weight: 500; color: var(--ink); line-height: 1.35; margin-bottom: 0.5rem; }
+  .past-org { font-family: var(--sans); font-size: 0.73rem; color: var(--ink-muted); margin-bottom: 0.5rem; letter-spacing: 0.02em; }
+  .past-desc { font-size: 0.83rem; line-height: 1.7; color: var(--ink-soft); grid-column: 2; text-align: justify; }
+  .past-media {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    width: 116px;
+    margin: 0;
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    overflow: hidden;
+    background: #fff;
+    align-self: start;
+  }
+  .past-image {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; transition: border-color 0.15s; }
+  a:hover { border-bottom-color: var(--accent-mid); }
+
+  footer { border-top: 1px solid var(--rule); padding: 2rem; text-align: center; }
+  footer p { font-family: var(--mono); font-size: 0.7rem; color: var(--ink-muted); letter-spacing: 0.04em; }
+
+  @media (max-width: 640px) {
+    .research-card { grid-template-columns: 54px 1fr; gap: 0 1rem; }
+    .card-content { grid-template-columns: 1fr; }
+    .card-title,
+    .card-authors,
+    .card-venue,
+    .card-desc,
+    .card-links { grid-column: 1; }
+    .card-media {
+      grid-column: 1;
+      grid-row: auto;
+      width: min(150px, 42vw);
+      margin: 0.15rem 0 0.75rem;
+    }
+    .past-grid { grid-template-columns: 1fr; }
+    .past-card { grid-template-columns: 1fr; }
+    .past-card-top,
+    .past-desc { grid-column: 1; }
+    .past-media {
+      grid-column: 1;
+      grid-row: auto;
+      width: min(150px, 45vw);
+      margin: 0 0 0.75rem;
+    }
+    nav ul { gap: 1rem; flex-wrap: wrap; }
+    .page-cover {
+      width: 100%;
+      margin-top: 1rem;
+      aspect-ratio: 2 / 1;
+    }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <ul>
+    <li><a href="index.html" class="site-name">Mahsa Khoshnoodi</a></li>
+    <li><a href="index.html#research">Research</a></li>
+    <li><a href="index.html#publications">Publications</a></li>
+    <li><a href="projects.html" class="active">Projects</a></li>
+    <li><a href="mailto:mk2524@georgetown.edu">Contact</a></li>
+  </ul>
+</nav>
+
+<main>
+
+  <div class="page-header">
+    <h1>Projects</h1>
+    <p>Research publications, applied ML systems, and earlier work spanning multimodal AI, NLP, anomaly detection, and computational neuroscience.</p>
+    <img src="/assets/img/cover.png" alt="Abstract network visualization representing connected research themes" width="1600" height="763" class="page-cover" decoding="async" fetchpriority="high">
+  </div>
+
+  <!-- ══ PUBLISHED RESEARCH ══ -->
+  <div class="section-label">Published Research</div>
+  <div class="research-list">
+
+    <div class="research-card">
+      <div class="card-badge">
+        <span class="venue-tag cvpr">CVPR-VisCon</span>
+        <span class="year-tag">2026</span>
+      </div>
+      <div class="card-content">
+        <div class="card-title">Do VLMs Reason About Faces? Probing the Perception-Reasoning Gap in Identity Judgment</div>
+        <div class="card-authors"><strong>Mahsa Khoshnoodi</strong>, Sarah Adel Bargal</div>
+        <div class="card-venue">CVPR 2026, Third Workshop on Visual Concepts (VisCon)</div>
+        <div class="card-desc">
+          We probe whether vision-language models can reason about facial identity or merely pattern-match on low-level features. Using FaceBench, we build a diagnostic framework that localizes the perception-to-reasoning gap, distinguishing failures of visual perception from failures of reasoning over perceived attributes.
+        </div>
+        <div class="card-media">
+          <img src="/assets/img/Face.png" alt="FaceBench diagnostic examples for identity judgment and attribute agreement" width="1638" height="754" class="card-image" loading="lazy" decoding="async">
+        </div>
+      </div>
+    </div>
+
+    <div class="research-card">
+      <div class="card-badge">
+        <span class="venue-tag neurips">NeurIPS</span>
+        <span class="spotlight-tag">Spotlight</span>
+        <span class="year-tag">2024</span>
+      </div>
+      <div class="card-content">
+        <div class="card-title">Who Evaluates the Evaluations? Objectively Scoring Text-to-Image Prompt Coherence Metrics with T2IScoreScore (TS2)</div>
+        <div class="card-authors"><strong>Mahsa Khoshnoodi</strong>, Fatima Jahara, Michael Saxon, Yujie Lu, Aditya Sharma, William Yang Wang</div>
+        <div class="card-venue">NeurIPS 2024, Spotlight (top 5% of submissions)</div>
+        <div class="card-desc">
+          Automated metrics for text-to-image models suffer from systematic blindspots, they score semantically equivalent images inconsistently, often failing to detect object hallucination. We introduce T2IScoreScore (TS2), a curated meta-evaluation dataset that transitions images from high to low faithfulness, enabling rigorous benchmarking of T2I evaluation metrics themselves.
+        </div>
+        <div class="card-media">
+          <img src="/assets/img/project9.png" alt="Example synthetic image used to illustrate text-to-image coherence evaluation" width="512" height="512" class="card-image" loading="lazy" decoding="async">
+        </div>
+        <div class="card-links">
+          <a href="https://arxiv.org/abs/2404.04251" target="_blank" class="card-link">Paper</a>
+          <a href="https://t2iscorescore.github.io/" target="_blank" class="card-link">Project Page</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="research-card">
+      <div class="card-badge">
+        <span class="venue-tag semeval">SemEval</span>
+        <span class="year-tag">2026</span>
+      </div>
+      <div class="card-content">
+        <div class="card-title">GUNLP at SemEval-2026 Task 10: Emotion-Aware Multi-Task Learning for Conspiracy Detection</div>
+        <div class="card-authors"><strong>Mahsa Khoshnoodi</strong>, Rojin Ziaei, Nazli Goharian</div>
+        <div class="card-venue">SemEval 2026</div>
+        <div class="card-desc">
+          We present a multi-task learning system that jointly models emotion signals and conspiracy detection, motivated by the strong correlation between affective language and conspiratorial framing. The system achieves competitive performance on Task 10 of SemEval-2026.
+        </div>
+        <div class="card-media">
+          <img src="/assets/img/semeval_diagram.png" alt="Emotion-aware multi-task model diagram for SemEval conspiracy detection" width="1360" height="840" class="card-image" loading="lazy" decoding="async">
+        </div>
+      </div>
+    </div>
+
+    <div class="research-card">
+      <div class="card-badge">
+        <span class="venue-tag aaai">AAAI</span>
+        <span class="year-tag">2025</span>
+      </div>
+      <div class="card-content">
+        <div class="card-title">Hierarchical Prompting Taxonomy: A Universal Evaluation Framework for Large Language Models</div>
+        <div class="card-authors">Devichand Budagam, Sankalp KJ, <strong>Mahsa Khoshnoodi</strong>, Ashutosh Kumar, Vinija Jain, Aman Chadha</div>
+        <div class="card-venue">AAAI 2025</div>
+        <div class="card-desc">
+          We introduce HPT, a cognitively motivated framework that categorizes prompting strategies by their cognitive demands and defines the Hierarchical Prompting Index (HPI) to quantify task complexity. The framework enables systematic analysis of reasoning capabilities across LLMs, yielding interpretable insights into problem-solving behavior.
+        </div>
+        <div class="card-media">
+          <img src="/assets/img/project1.png" alt="Hierarchical prompting taxonomy diagram showing prompt complexity levels" width="853" height="599" class="card-image" loading="lazy" decoding="async">
+        </div>
+        <div class="card-links">
+          <a href="https://arxiv.org/abs/2406.12644" target="_blank" class="card-link">Paper</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="research-card">
+      <div class="card-badge">
+        <span class="venue-tag arxiv">arXiv</span>
+        <span class="year-tag">2024</span>
+      </div>
+      <div class="card-content">
+        <div class="card-title">A Comprehensive Survey of Accelerated Generation Techniques in Large Language Models</div>
+        <div class="card-authors"><strong>Mahsa Khoshnoodi</strong>, Vinija Jain, Mingye Gao, Malavika Srikanth, Aman Chadha</div>
+        <div class="card-venue">Preprint, 2024</div>
+        <div class="card-desc">
+          A systematic survey of techniques for reducing inference latency in LLMs, covering speculative decoding, early exit mechanisms, and non-autoregressive generation. We analyze each method's underlying principles, trade-offs, and failure modes, with the goal of understanding how recent work addresses the fundamental bottleneck of autoregressive decoding.
+        </div>
+        <div class="card-media">
+          <img src="/assets/img/project10.png" alt="Diagram illustrating predict-verify style accelerated language generation" width="925" height="460" class="card-image" loading="lazy" decoding="async">
+        </div>
+        <div class="card-links">
+          <a href="https://arxiv.org/abs/2405.13019" target="_blank" class="card-link">arXiv</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="research-card">
+      <div class="card-badge">
+        <span class="venue-tag review">Under Review</span>
+        <span class="year-tag">2024</span>
+      </div>
+      <div class="card-content">
+        <div class="card-title">Reimagining Neurosymbolic AI through the Lens of Cognitive Science: A Survey</div>
+        <div class="card-authors">Devichand Budagam, <strong>Mahsa Khoshnoodi</strong>, Jibesh Patra, Ravid Shwartz-Ziv, Amit Sheth, Vinija Jain, Aman Chadha</div>
+        <div class="card-venue">Under review, ACM Computing Surveys</div>
+        <div class="card-desc">
+          We survey neurosymbolic AI through the lens of cognitive science, examining how symbolic reasoning and neural learning can be combined to better mirror human cognition. The survey maps existing approaches to cognitive principles and identifies open problems in building interpretable, reasoning-capable AI systems.
+        </div>
+        <div class="card-media">
+          <img src="/assets/img/survey.png" alt="Survey figure showing attention patterns over entities, tokens, and knowledge graph nodes" width="552" height="282" class="card-image" loading="lazy" decoding="async">
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══ MASTER'S THESIS ══ -->
+  <div class="section-label">Master's Thesis</div>
+  <div class="past-list">
+
+    <div class="past-card">
+      <div class="past-card-top">
+        <div class="past-title">Computational Models of the Basal Ganglia: Circuits, Dopamine, and Action Selection
+        </div>
+        <span class="past-tag thesis">M.Sc. Thesis</span>
+      </div>
+      <div class="past-media">
+        <img src="/assets/img/project4.png" alt="Basal ganglia pathway diagram showing cortex, striatum, thalamus, and pallidum" width="1149" height="1109" class="past-image" loading="lazy" decoding="async">
+      </div>
+      <div class="past-desc">Developed a novel computational model of the Basal Ganglia for action selection and motor sequence learning, grounded in physiological and anatomical findings. The direct cortico-basal ganglia pathway was modeled as a neuro-fuzzy network trained via reinforcement learning with reward prediction error, mirroring dopaminergic modulation. For the indirect pathway (Subthalamic Nucleus and External Globus Pallidus loop), a recurrent neural network was proposed with a novel neuron-level learning rule derived from gradient descent, enabling the network to function as local working memory for automatic sequence reproduction.</div>
+    </div>
+
+  </div>
+
+  <!-- ══ INDUSTRY PROJECTS ══ -->
+  <div class="section-label">Industry and Applied Work</div>
+  <div class="past-grid">
+
+    <div class="past-card no-media">
+      <div class="past-card-top">
+        <div class="past-title">LLM-Powered Financial Forecasting</div>
+        <span class="past-tag industry">Industry</span>
+      </div>
+      <div class="past-desc">Designed and deployed an end-to-end forecasting pipeline that combined a fine-tuned domain-specific LLM with real-time sentiment signals from financial news and social media. Transformer and LSTM architectures were trained jointly on equity time-series data, with a distributed Spark pipeline handling feature extraction at scale. The system consistently outperformed rule-based baselines in volatile market conditions, demonstrating that language model representations carry genuine predictive signal beyond price history alone.</div>
+    </div>
+
+    <div class="past-card no-media">
+      <div class="past-card-top">
+        <div class="past-title">Real-Time Fraud Detection at Production Scale</div>
+        <span class="past-tag industry">Industry</span>
+      </div>
+      <div class="past-desc">Built a real-time anomaly detection system for a large-scale banking ecosystem, processing millions of transactions daily. The system used instance-based learning with peer-group risk scoring and behavioral feature engineering to flag unusual activity without relying on labeled fraud data. Deployed on Apache Spark Streaming and Kafka, the system reduced false positive rates significantly while maintaining sub-second latency across distributed infrastructure.</div>
+    </div>
+
+    <div class="past-card no-media">
+      <div class="past-card-top">
+        <div class="past-title">Graph-Based Threat Detection with Complex Event Processing</div>
+        <span class="past-tag industry">Industry</span>
+      </div>
+      <div class="past-desc">Architected a graph-based Complex Event Processing engine over Apache Flink that aggregated over 40 heterogeneous network log sources in near real time. Bayesian Networks and Hidden Markov Models formed the core inference layer, enabling detection of multi-stage attack patterns that single-event rules would miss entirely. Deployed across banking and insurance clients, the engine provided a unified threat visibility layer that previously required manual correlation by security analysts.</div>
+    </div>
+
+    <div class="past-card no-media">
+      <div class="past-card-top">
+        <div class="past-title">Customer Segmentation with Hierarchical Gaussian Mixture Models</div>
+        <span class="past-tag industry">Industry</span>
+      </div>
+      <div class="past-desc">Developed a hierarchical clustering framework based on Gaussian Mixture Models, implemented in Scala on Apache Spark, to segment commercial banking customers at scale. By modeling the full distribution of behavioral patterns rather than assigning hard cluster boundaries, the system uncovered fine-grained customer segments that flat clustering methods collapsed into noise. The resulting segmentation directly informed personalized product strategies, increasing targeting precision for the bank's retail offerings.</div>
+    </div>
+
+  </div>
+
+</main>
+
+<footer>
+  <p>Mahsa Khoshnoodi &nbsp;&middot;&nbsp; Georgetown University &nbsp;&middot;&nbsp; mk2524@georgetown.edu</p>
+</footer>
+
+</body>
+</html>
