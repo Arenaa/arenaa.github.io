@@ -1,6 +1,7 @@
 ---
 layout: page
 title: Projects
+published: false
 permalink: /projects/
 description: A selected collection of my projects.
 cover_image: /assets/img/cover.png

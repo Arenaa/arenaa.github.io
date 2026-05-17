@@ -1,6 +1,7 @@
 ---
 layout: about
 title: About
+published: false
 permalink: /
 subtitle:  Multimodal AI, Gen AI, Reasoning
 

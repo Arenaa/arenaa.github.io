@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+cd "$(dirname "$0")/.."
+
+export PATH="/opt/homebrew/opt/ruby/bin:/opt/homebrew/lib/ruby/gems/4.0.0/bin:${PATH}"
+
+if ! command -v ruby >/dev/null 2>&1 || [[ "$(ruby -e 'print RUBY_VERSION')" < "3.0" ]]; then
+  echo "Ruby 3+ is required. Install with: brew install ruby"
+  exit 1
+fi
+
+if [[ ! -d vendor/bundle ]]; then
+  echo "Installing gems (first run only)..."
+  bundle config set --local path 'vendor/bundle'
+  bundle install
+fi
+
+echo "Starting site at http://127.0.0.1:4000/"
+exec bundle exec jekyll serve --livereload --host 127.0.0.1
