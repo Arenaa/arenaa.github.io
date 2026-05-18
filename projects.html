@@ -7,7 +7,7 @@
 <link rel="icon" href="/assets/img/favicon.png" type="image/png">
 <link rel="shortcut icon" href="/assets/img/favicon.png" type="image/png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=DM+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -38,10 +38,10 @@
   }
   nav ul { max-width: var(--max); margin: 0 auto; display: flex; gap: 2rem; list-style: none; padding: 0.75rem 0; align-items: center; }
   nav ul li:first-child { margin-right: auto; }
-  nav a { font-family: var(--sans); font-size: 0.82rem; font-weight: 500; color: var(--ink-soft); text-decoration: none; letter-spacing: 0.04em; text-transform: uppercase; transition: color 0.15s; }
+  nav a { font-family: var(--serif); font-size: 0.95rem; font-weight: 600; color: var(--ink-soft); text-decoration: none; letter-spacing: 0; text-transform: none; transition: color 0.15s; }
   nav a:hover { color: var(--accent); }
   nav a.active { color: var(--accent); }
-  nav .site-name { font-family: var(--serif); font-size: 1rem; font-weight: 400; color: var(--ink); text-transform: none; letter-spacing: 0; }
+  nav .site-name { font-family: var(--serif); font-size: 1rem; font-weight: 600; color: var(--ink); text-transform: none; letter-spacing: 0; }
 
   main { max-width: var(--max); margin: 0 auto; padding: 3.5rem 2rem 6rem; }
 
@@ -279,7 +279,6 @@
   <!-- ══ PUBLISHED RESEARCH ══ -->
   <div class="section-label">Published Research</div>
   <div class="research-list">
-
     <div class="research-card">
       <div class="card-badge">
         <span class="venue-tag cvpr">CVPR-VisCon</span>
@@ -297,7 +296,60 @@
         </div>
       </div>
     </div>
-
+    <div class="research-card">
+      <div class="card-badge">
+        <span class="venue-tag semeval">SemEval</span>
+        <span class="year-tag">2026</span>
+      </div>
+      <div class="card-content">
+        <div class="card-title">GUNLP at SemEval-2026 Task 10: Emotion-Aware Multi-Task Learning for Conspiracy Detection</div>
+        <div class="card-authors"><strong>Mahsa Khoshnoodi</strong>, Rojin Ziaei, Nazli Goharian</div>
+        <div class="card-venue">SemEval 2026</div>
+        <div class="card-desc">
+          We present a multi-task learning system that jointly models emotion signals and conspiracy detection, motivated by the strong correlation between affective language and conspiratorial framing. The system achieves competitive performance on Task 10 of SemEval-2026.
+        </div>
+        <div class="card-media">
+          <img src="/assets/img/semeval_diagram.png" alt="Emotion-aware multi-task model diagram for SemEval conspiracy detection" width="1360" height="840" class="card-image" loading="lazy" decoding="async">
+        </div>
+      </div>
+    </div>
+    <div class="research-card">
+      <div class="card-badge">
+        <span class="venue-tag review">Under Review</span>
+        <span class="year-tag">2026</span>
+      </div>
+      <div class="card-content">
+        <div class="card-title">Reimagining Neurosymbolic AI through the Lens of Cognitive Science: A Survey</div>
+        <div class="card-authors">Devichand Budagam, <strong>Mahsa Khoshnoodi</strong>, Jibesh Patra, Ravid Shwartz-Ziv, Amit Sheth, Vinija Jain, Aman Chadha</div>
+        <div class="card-venue">Under review, ACM Computing Surveys</div>
+        <div class="card-desc">
+          We survey neurosymbolic AI through the lens of cognitive science, examining how symbolic reasoning and neural learning can be combined to better mirror human cognition. The survey maps existing approaches to cognitive principles and identifies open problems in building interpretable, reasoning-capable AI systems.
+        </div>
+        <div class="card-media">
+          <img src="/assets/img/survey.png" alt="Survey figure showing attention patterns over entities, tokens, and knowledge graph nodes" width="552" height="282" class="card-image" loading="lazy" decoding="async">
+        </div>
+      </div>
+    </div>
+    <div class="research-card">
+      <div class="card-badge">
+        <span class="venue-tag kdd">KDD</span>
+        <span class="year-tag">2025</span>
+      </div>
+      <div class="card-content">
+        <div class="card-title">Hierarchical Prompting Taxonomy: A Universal Evaluation Framework for Large Language Models</div>
+        <div class="card-authors">Devichand Budagam, Sankalp KJ, <strong>Mahsa Khoshnoodi</strong>, Ashutosh Kumar, Vinija Jain, Aman Chadha</div>
+        <div class="card-venue">KDD 2025</div>
+        <div class="card-desc">
+          We introduce HPT, a cognitively motivated framework that categorizes prompting strategies by their cognitive demands and defines the Hierarchical Prompting Index (HPI) to quantify task complexity. The framework enables systematic analysis of reasoning capabilities across LLMs, yielding interpretable insights into problem-solving behavior.
+        </div>
+        <div class="card-media">
+          <img src="/assets/img/project1.png" alt="Hierarchical prompting taxonomy diagram showing prompt complexity levels" width="853" height="599" class="card-image" loading="lazy" decoding="async">
+        </div>
+        <div class="card-links">
+          <a href="https://arxiv.org/abs/2406.12644" target="_blank" class="card-link">Paper</a>
+        </div>
+      </div>
+    </div>
     <div class="research-card">
       <div class="card-badge">
         <span class="venue-tag neurips">NeurIPS</span>
@@ -320,46 +372,6 @@
         </div>
       </div>
     </div>
-
-    <div class="research-card">
-      <div class="card-badge">
-        <span class="venue-tag semeval">SemEval</span>
-        <span class="year-tag">2026</span>
-      </div>
-      <div class="card-content">
-        <div class="card-title">GUNLP at SemEval-2026 Task 10: Emotion-Aware Multi-Task Learning for Conspiracy Detection</div>
-        <div class="card-authors"><strong>Mahsa Khoshnoodi</strong>, Rojin Ziaei, Nazli Goharian</div>
-        <div class="card-venue">SemEval 2026</div>
-        <div class="card-desc">
-          We present a multi-task learning system that jointly models emotion signals and conspiracy detection, motivated by the strong correlation between affective language and conspiratorial framing. The system achieves competitive performance on Task 10 of SemEval-2026.
-        </div>
-        <div class="card-media">
-          <img src="/assets/img/semeval_diagram.png" alt="Emotion-aware multi-task model diagram for SemEval conspiracy detection" width="1360" height="840" class="card-image" loading="lazy" decoding="async">
-        </div>
-      </div>
-    </div>
-
-    <div class="research-card">
-      <div class="card-badge">
-        <span class="venue-tag kdd">KDD</span>
-        <span class="year-tag">2025</span>
-      </div>
-      <div class="card-content">
-        <div class="card-title">Hierarchical Prompting Taxonomy: A Universal Evaluation Framework for Large Language Models</div>
-        <div class="card-authors">Devichand Budagam, Sankalp KJ, <strong>Mahsa Khoshnoodi</strong>, Ashutosh Kumar, Vinija Jain, Aman Chadha</div>
-        <div class="card-venue">KDD 2025</div>
-        <div class="card-desc">
-          We introduce HPT, a cognitively motivated framework that categorizes prompting strategies by their cognitive demands and defines the Hierarchical Prompting Index (HPI) to quantify task complexity. The framework enables systematic analysis of reasoning capabilities across LLMs, yielding interpretable insights into problem-solving behavior.
-        </div>
-        <div class="card-media">
-          <img src="/assets/img/project1.png" alt="Hierarchical prompting taxonomy diagram showing prompt complexity levels" width="853" height="599" class="card-image" loading="lazy" decoding="async">
-        </div>
-        <div class="card-links">
-          <a href="https://arxiv.org/abs/2406.12644" target="_blank" class="card-link">Paper</a>
-        </div>
-      </div>
-    </div>
-
     <div class="research-card">
       <div class="card-badge">
         <span class="venue-tag arxiv">arXiv</span>
@@ -377,24 +389,6 @@
         </div>
         <div class="card-links">
           <a href="https://arxiv.org/abs/2405.13019" target="_blank" class="card-link">arXiv</a>
-        </div>
-      </div>
-    </div>
-
-    <div class="research-card">
-      <div class="card-badge">
-        <span class="venue-tag review">Under Review</span>
-        <span class="year-tag">2024</span>
-      </div>
-      <div class="card-content">
-        <div class="card-title">Reimagining Neurosymbolic AI through the Lens of Cognitive Science: A Survey</div>
-        <div class="card-authors">Devichand Budagam, <strong>Mahsa Khoshnoodi</strong>, Jibesh Patra, Ravid Shwartz-Ziv, Amit Sheth, Vinija Jain, Aman Chadha</div>
-        <div class="card-venue">Under review, ACM Computing Surveys</div>
-        <div class="card-desc">
-          We survey neurosymbolic AI through the lens of cognitive science, examining how symbolic reasoning and neural learning can be combined to better mirror human cognition. The survey maps existing approaches to cognitive principles and identifies open problems in building interpretable, reasoning-capable AI systems.
-        </div>
-        <div class="card-media">
-          <img src="/assets/img/survey.png" alt="Survey figure showing attention patterns over entities, tokens, and knowledge graph nodes" width="552" height="282" class="card-image" loading="lazy" decoding="async">
         </div>
       </div>
     </div>
