@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Robot Manipulation Benchmarks — Complete Taxonomy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --white:#ffffff;
+  --ink:#141414;
+  --ink-mid:#4a4a4a;
+  --ink-dim:#888888;
+  --ink-faint:#c0c0c0;
+  --rule:#e8e8e8;
+  --rule-strong:#d0d0d0;
+  --surface:#f9f9f8;
+  --yes-fill:#edf7ee;
+  --yes-ink:#1e6b28;
+  --no-fill:#fdf0f0;
+  --no-ink:#9b2a2a;
+  --partial-fill:#fdf7ed;
+  --partial-ink:#8b5e0a;
+  --new-fill:#e8f4fd;
+  --new-ink:#0c4a7c;
+  --serif:'Playfair Display',Georgia,serif;
+  --body:'Source Serif 4','Georgia',serif;
+  --mono:'DM Mono',monospace;
+}
+html{font-size:16px;-webkit-font-smoothing:antialiased}
+body{background:var(--white);color:var(--ink);font-family:var(--body);min-height:100vh;padding-bottom:100px}
+
+/* ── HEADER ── */
+.page-header{padding:72px 80px 52px;border-bottom:1px solid var(--rule-strong)}
+.header-kicker{font-family:var(--mono);font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:18px}
+.header-title{font-family:var(--serif);font-size:3rem;font-weight:700;line-height:1.1;letter-spacing:-0.02em;margin-bottom:20px;max-width:820px}
+.header-title em{font-style:italic;font-weight:400}
+.header-body{font-size:1.05rem;line-height:1.75;color:var(--ink-mid);max-width:700px;font-weight:300}
+.header-meta{display:flex;align-items:center;gap:24px;margin-top:32px;padding-top:24px;border-top:1px solid var(--rule)}
+.meta-item{font-family:var(--mono);font-size:0.72rem;color:var(--ink-dim);letter-spacing:0.06em}
+.meta-sep{width:4px;height:4px;border-radius:50%;background:var(--ink-faint)}
+
+/* ── WHY NOTE ── */
+.why-block{margin:0 80px;padding:40px 0;border-bottom:1px solid var(--rule)}
+.why-title{font-family:var(--serif);font-size:1.4rem;font-weight:500;margin-bottom:16px}
+.why-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px}
+.why-card{border-left:3px solid var(--rule-strong);padding:0 0 0 20px}
+.why-card.block-no{border-left-color:#d08080}
+.why-card.block-partial{border-left-color:#c0a050}
+.why-reason{font-family:var(--mono);font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:8px}
+.why-head{font-size:0.95rem;font-weight:600;color:var(--ink);margin-bottom:8px;line-height:1.3}
+.why-body{font-size:0.85rem;line-height:1.65;color:var(--ink-mid);font-weight:300}
+
+/* ── SECTION ── */
+.section{padding:48px 80px 0}
+.section-label{display:flex;align-items:center;gap:16px;margin-bottom:28px}
+.section-label h2{font-family:var(--serif);font-size:1.3rem;font-weight:500}
+.section-label .count{font-family:var(--mono);font-size:0.7rem;color:var(--ink-dim);letter-spacing:0.06em;border:1px solid var(--rule-strong);padding:2px 8px;border-radius:20px}
+.section-divider{width:100%;height:1px;background:var(--rule);margin:0 0 28px}
+
+/* ── GRID OF CARDS ── */
+.ds-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule);margin-bottom:48px}
+.ds-card{background:var(--white);padding:20px 22px;transition:background .15s}
+.ds-card:hover{background:var(--surface)}
+.ds-card.highlighted{background:#fffef8;outline:2px solid #c8b040;outline-offset:-2px}
+.ds-card.fresh{background:#f8fdfb}
+
+.card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:4px}
+.card-name{font-family:var(--serif);font-size:1rem;font-weight:500;line-height:1.25;color:var(--ink)}
+.new-pill{font-family:var(--mono);font-size:0.6rem;letter-spacing:0.06em;padding:2px 6px;border-radius:2px;background:var(--new-fill);color:var(--new-ink);white-space:nowrap;flex-shrink:0}
+.card-sub{font-size:0.78rem;color:var(--ink-dim);margin-bottom:12px;font-style:italic}
+.card-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:14px}
+.tag{font-family:var(--mono);font-size:0.6rem;letter-spacing:0.04em;padding:3px 7px;border-radius:2px;border:1px solid var(--rule-strong);color:var(--ink-mid)}
+.tag.t-vla{background:#eef2fa;border-color:#b0bfe0;color:#1a3a7c}
+.tag.t-wam{background:#edf7f0;border-color:#90cca0;color:#1a5a30}
+.tag.t-both{background:#fff8e8;border-color:#c8b050;color:#7a5010}
+.tag.t-rl{background:#f5f5f5;border-color:#c0c0c0;color:#505050}
+.tag.t-candidate{background:#fef0e8;border-color:#e0956a;color:#7a3010}
+
+/* ── WAM CANDIDATE BADGE ── */
+.wam-candidate{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:0.65rem;letter-spacing:0.04em;padding:4px 10px;border-radius:2px;margin-top:8px;background:#fff4ee;border:1px solid #e8a070;color:#7a3010}
+.wam-candidate .dot{width:5px;height:5px;border-radius:50%;background:#c86030;flex-shrink:0}
+
+.card-props{border-top:1px solid var(--rule);padding-top:12px;display:grid;gap:5px}
+.prop{display:flex;justify-content:space-between;font-size:0.78rem;gap:8px}
+.prop-key{color:var(--ink-dim)}
+.prop-val{color:var(--ink);text-align:right;font-weight:400}
+
+/* ── COMPAT BADGE ── */
+.compat{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:0.65rem;letter-spacing:0.04em;padding:3px 8px;border-radius:2px;margin-top:10px}
+.compat.yes{background:var(--yes-fill);color:var(--yes-ink)}
+.compat.no{background:var(--no-fill);color:var(--no-ink)}
+.compat.partial{background:var(--partial-fill);color:var(--partial-ink)}
+.compat .dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.compat.yes .dot{background:var(--yes-ink)}
+.compat.no .dot{background:var(--no-ink)}
+.compat.partial .dot{background:var(--partial-ink)}
+
+/* ── NOTE CARDS (why not both) ── */
+.note-inline{margin-top:10px;padding:10px 12px;background:var(--surface);border-radius:2px;font-size:0.78rem;line-height:1.6;color:var(--ink-mid)}
+.note-inline strong{color:var(--ink);font-weight:500}
+
+/* ── LEGEND ── */
+.legend{display:flex;align-items:center;gap:24px;padding:20px 80px;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);background:var(--surface);font-size:0.8rem;color:var(--ink-mid);flex-wrap:wrap}
+.legend-item{display:flex;align-items:center;gap:8px}
+.legend-dot{width:8px;height:8px;border-radius:50%}
+
+/* ── FOOTER ── */
+footer{padding:40px 80px 0;font-size:0.8rem;color:var(--ink-dim);font-family:var(--mono);letter-spacing:0.04em;line-height:2}
+
+@media(max-width:900px){
+  .page-header,.why-block,.section,footer{padding-left:24px;padding-right:24px}
+  .page-header{padding-top:40px;padding-bottom:36px}
+  .header-title{font-size:2rem}
+  .why-grid{grid-template-columns:1fr}
+  .legend{padding:16px 24px}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ HEADER ══ -->
+<header class="page-header">
+  <div class="header-kicker">VLA &amp; WAM Research · May 2026</div>
+  <h1 class="header-title">Robot Manipulation Benchmarks<br><em>A complete taxonomy</em></h1>
+  <p class="header-body">Every simulation and real-robot benchmark for evaluating Vision-Language-Action (VLA) and World Action Model (WAM) policies, organized by category with compatibility notes explaining why many benchmarks cannot fairly test both model families.</p>
+  <div class="header-meta">
+    <span class="meta-item">25 benchmarks</span>
+    <span class="meta-sep"></span>
+    <span class="meta-item">7 categories</span>
+    <span class="meta-sep"></span>
+    <span class="meta-item">2020 – 2026</span>
+
+  </div>
+</header>
+
+<!-- ══ LEGEND ══ -->
+<div class="legend">
+  <span style="font-weight:500;color:var(--ink)">Compatibility:</span>
+  <span class="legend-item"><span class="legend-dot" style="background:var(--yes-ink)"></span>VLA + WAM both</span>
+  <span class="legend-item"><span class="legend-dot" style="background:#4a90d0"></span>VLA only</span>
+  <span class="legend-item"><span class="legend-dot" style="background:var(--partial-ink)"></span>partial / growing</span>
+  <span class="legend-item"><span class="legend-dot" style="background:#888"></span>RL only (neither)</span>
+  <span class="meta-sep"></span>
+  <span class="legend-item"><span style="background:var(--new-fill);color:var(--new-ink);font-family:var(--mono);font-size:0.65rem;padding:2px 6px;border-radius:2px">2026</span>published this year</span>
+  <span class="legend-item"><span style="outline:2px solid #c8b040;font-family:var(--mono);font-size:0.65rem;padding:2px 6px;border-radius:2px;color:#7a5010">★</span>recommended for VLA vs WAM</span>
+  <span class="legend-item"><span style="background:#fff4ee;border:1px solid #e8a070;font-family:var(--mono);font-size:0.65rem;padding:2px 6px;border-radius:2px;color:#7a3010">◈ WAM candidate</span>good fit for existing WAM models, no published results yet</span>
+</div>
+
+<!-- ══ WHY NOTE ══ -->
+<div class="why-block">
+  <h2 class="why-title">Why can't all benchmarks test both VLA and WAM?</h2>
+  <div class="why-grid">
+    <div class="why-card block-no">
+      <div class="why-reason">Reason 1 — no live environment</div>
+      <div class="why-head">The benchmark has no simulator to close the loop</div>
+      <div class="why-body">VLA and WAM evaluation is always closed-loop: the model acts, the scene changes, the model sees the new state. Datasets like DROID and Open X-Embodiment are fixed recorded videos — the robot cannot actually execute an action and receive a new observation. You can measure offline imitation error (L1 loss) but not task success rate, which is the only meaningful metric for comparing VLA vs WAM.</div>
+    </div>
+    <div class="why-card block-no">
+      <div class="why-reason">Reason 2 — no language instruction</div>
+      <div class="why-head">WAMs work — VLAs need language to function</div>
+      <div class="why-body">VLAs require a natural language instruction at every episode ("pick up the butter and place it left of the plate"). Benchmarks like Meta-World, DMControl, and Atari have no language input — they use reward signals or goal states instead. You can evaluate WAMs that use MPC with a goal image or reward, but VLAs simply cannot run without a language instruction, making head-to-head comparison impossible on these benchmarks.</div>
+    </div>
+    <div class="why-card block-partial">
+      <div class="why-reason">Reason 3 — no WAM eval code yet</div>
+      <div class="why-head">The benchmark exists but WAM integration is missing</div>
+      <div class="why-body">Some benchmarks have full VLA eval pipelines but no WAM code yet — SimplerEnv, CALVIN, and RoboCasa all have working VLA evaluation but none have official Cosmos-Policy or Fast-WAM adapters as of May 2026. In principle WAMs could run there, but in practice no published paper has done it yet, making results incomparable to existing literature.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SECTION 1: LIBERO FAMILY ══ -->
+<div class="section">
+  <div class="section-label">
+    <h2>LIBERO family — direct extensions</h2>
+    <span class="count">5 benchmarks</span>
+  </div>
+</div>
+<div class="ds-grid" style="margin:0 80px 48px">
+
+  <div class="ds-card highlighted">
+    <div class="card-top"><span class="card-name">LIBERO-plus</span><span class="new-pill">★ recommended</span></div>
+    <div class="card-sub">Fei et al., Oct 2025</div>
+    <div class="card-tags"><span class="tag t-both">VLA + WAM</span><span class="tag">robustness</span><span class="tag">single-arm</span></div>
+    <div class="card-props">
+      <div class="prop"><span class="prop-key">Tasks</span><span class="prop-val">10,030</span></div>
+      <div class="prop"><span class="prop-key">Perturbations</span><span class="prop-val">7 types × L1–L5</span></div>
+      <div class="prop"><span class="prop-key">Simulator</span><span class="prop-val">MuJoCo</span></div>
+      <div class="prop"><span class="prop-key">Arms</span><span class="prop-val">1 arm — 7D action</span></div>
+      <div class="prop"><span class="prop-key">Language</span><span class="prop-val">yes + paraphrase</span></div>
+      <div class="prop"><span class="prop-key">Closed-loop eval</span><span class="prop-val">yes</span></div>
+    </div>
+    <div class="compat yes"><span class="dot"></span>VLA + WAM tested — used in Mar 2026 WAM robustness study</div>
+  </div>
+
+  <div class="ds-card">
+    <div class="card-top"><span class="card-name">LIBERO-PRO</span></div>
+    <div class="card-sub">Zhou et al., 2025</div>
+    <div class="card-tags"><span class="tag t-vla">VLA only</span><span class="tag">fairness</span></div>
+    <div class="card-props">
+      <div class="prop"><span class="prop-key">Focus</span><span class="prop-val">evaluation bias correction</span></div>
+      <div class="prop"><span class="prop-key">Simulator</span><span class="prop-val">MuJoCo</span></div>
+      <div class="prop"><span class="prop-key">Arms</span><span class="prop-val">1 arm — 7D</span></div>
+      <div class="prop"><span class="prop-key">Language</span><span class="prop-val">yes</span></div>
+    </div>
+    <div class="compat partial"><span class="dot"></span>Partial — no WAM eval code published yet</div>
+    <div class="wam-candidate"><span class="dot"></span>WAM candidate — MuJoCo env + language + 7D action. Cosmos-Policy &amp; Fast-WAM can run here with existing LIBERO checkpoint</div>
+  </div>
+
+  <div class="ds-card">
+    <div class="card-top"><span class="card-name">LIBERO-X</span><span class="new-pill">2026</span></div>
+    <div class="card-sub">Wang et al., Feb 2026</div>
+    <div class="card-tags"><span class="tag t-vla">VLA only</span><span class="tag">adversarial</span></div>
+    <div class="card-props">
+      <div class="prop"><span class="prop-key">Focus</span><span class="prop-val">adversarial robustness litmus</span></div>
+      <div class="prop"><span class="prop-key">Simulator</span><span class="prop-val">MuJoCo</span></div>
+      <div class="prop"><span class="prop-key">Arms</span><span class="prop-val">1 arm — 7D</span></div>
+    </div>
+    <div class="wam-candidate"><span class="dot"></span>WAM candidate — same MuJoCo stack as LIBERO-plus. Existing Cosmos-Policy &amp; Fast-WAM LIBERO checkpoints are directly reusable</div>
+  </div>
+
+  <div class="ds-card fresh">
+    <div class="card-top"><span class="card-name">LIBERO-Para</span><span class="new-pill">2026</span></div>
+    <div class="card-sub">Cai et al., Mar 2026</div>
+    <div class="card-tags"><span class="tag t-vla">VLA only</span><span class="tag">language</span></div>
+    <div class="card-props">
+      <div class="prop"><span class="prop-key">Focus</span><span class="prop-val">paraphrase robustness only</span></div>
+      <div class="prop"><span class="prop-key">Simulator</span><span class="prop-val">MuJoCo</span></div>
+      <div class="prop"><span class="prop-key">Language</span><span class="prop-val">rich linguistic variation</span></div>
+    </div>
+    <div class="compat partial"><span class="dot"></span>Partial — no WAM baseline published</div>
+    <div class="wam-candidate"><span class="dot"></span>WAM candidate — ideal for testing whether WAMs actually follow language better than VLAs (the paper's core finding is that VLAs largely ignore instructions)</div>
+  </div>
+
+  <div class="ds-card fresh">
+    <div class="card-top"><span class="card-name">RoboCerebra</span></div>
+    <div class="card-sub">Han et al., Jun 2025</div>
+    <div class="card-tags"><span class="tag t-vla">VLA only</span><span class="tag">long-horizon</span><span class="tag">planning</span></div>
+    <div class="card-props">
+      <div class="prop"><span class="prop-key">Focus</span><span class="prop-val">System 2 reasoning</span></div>
+      <div class="prop"><span class="prop-key">Simulator</span><span class="prop-val">MuJoCo (LIBERO objects)</span></div>
+      <div class="prop"><span class="prop-key">Steps</span><span class="prop-val">6× longer than LIBERO</span></div>
+    </div>
+    <div class="compat partial"><span class="dot"></span>Partial — WAM at this horizon is open research</div>
+    <div class="wam-candidate"><span class="dot"></span>WAM candidate (future) — once WAMs support longer horizons (&gt;100 steps), this is the ideal benchmark. World model priors should matter most in long-horizon tasks</div>
+  </div>
+
+</div>
+
+<!-- ══ SECTION 2: SHORT-HORIZON SIM ══ -->
+<div class="section">
+  <div class="section-label">
+    <h2>Short-horizon simulation</h2>
+    <span class="count">5 benchmarks</span>
+  </div>
+</div>
+<div class="ds-grid" style="margin:0 80px 48px">
+
+  <div class="ds-card">
+    <div class="card-top"><span class="card-name">RLBench</span></div>
+    <div class="card-sub">James et al., 2020 · RA-L</div>
+    <div class="card-tags"><span class="tag t-vla">VLA only</span><span class="tag">classic</span><span class="tag">100 tasks</span></div>
+    <div class="card-props">
+      <div class="prop"><span class="prop-key">Simulator</span><span class="prop-val">CoppeliaSim / PyRep</span></div>
+      <div class="prop"><span class="prop-key">Arms</span><span class="prop-val">1 arm — 7D</span></div>
+      <div class="prop"><span class="prop-key">Language</span><span class="prop-val">yes (templated)</span></div>
+    </div>
+    <div class="compat no"><span class="dot"></span>VLA only — no WAM baselines exist</div>
+    <div class="note-inline"><strong>Why not WAM:</strong> CoppeliaSim is older and slower than MuJoCo or Genesis. No WAM paper has published results here. The ecosystem has largely moved to MuJoCo-based benchmarks.</div>
+  </div>
+
+  <div class="ds-card">
+    <div class="card-top"><span class="card-name">SimplerEnv</span></div>
+    <div class="card-sub">Li et al., 2024 · SAPIEN</div>
+    <div class="card-tags"><span class="tag t-vla">VLA only</span><span class="tag">real-to-sim</span></div>
+    <div class="card-props">
+      <div class="prop"><span class="prop-key">Simulator</span><span class="prop-val">SAPIEN</span></div>
+      <div class="prop"><span class="prop-key">Arms</span><span class="prop-val">1 arm — 7D</span></div>
+      <div class="prop"><span class="prop-key">Language</span><span class="prop-val">yes</span></div>
+    </div>
+    <div class="compat partial"><span class="dot"></span>Partial — VLA-JEPA runs here; diffusion WAMs do not yet</div>
+    <div class="wam-candidate"><span class="dot"></span>WAM candidate — SAPIEN sim + language + 7D action. Needs dataset statistics file and action normalization tuned for SimplerEnv tasks. Moderate effort</div>
+  </div>
+
+
+
+  <div class="ds-card">
+    <div class="card-top"><span class="card-name">GemBench</span></div>
+    <div class="card-sub">Garcia et al., 2024</div>
+    <div class="card-tags"><span class="tag t-vla">VLA only</span><span class="tag">generalization</span></div>
+    <div class="card-props">
+      <div class="prop"><span class="prop-key">Simulator</span><span class="prop-val">RLBench / PyRep</span></div>
+      <div class="prop"><span class="prop-key">Arms</span><span class="prop-val">1 arm — 7D</span></div>
+      <div class="prop"><span class="prop-key">Levels</span><span class="prop-val">4 generalization levels</span></div>
+    </div>
+    <div class="compat no"><span class="dot"></span>VLA only — CoppeliaSim ecosystem, no WAM code</div>
+    <div class="note-inline"><strong>Why not WAM:</strong> Same CoppeliaSim limitation as RLBench. No WAM paper targets this benchmark.</div>
+  </div>
+
+  <div class="ds-card">
+    <div class="card-top"><span class="card-name">ManiSkill3</span></div>
+    <div class="card-sub">Tao et al., RSS 2025 · SAPIEN</div>
+    <div class="card-tags"><span class="tag t-both">VLA + WAM growing</span><span class="tag">GPU parallel</span></div>
+    <div class="card-props">
+      <div class="prop"><span class="prop-key">Simulator</span><span class="prop-val">SAPIEN (PhysX)</span></div>
+      <div class="prop"><span class="prop-key">Arms</span><span class="prop-val">1–2 arms</span></div>
+      <div class="prop"><span class="prop-key">Speed</span><span class="prop-val">1000+ envs / GPU</span></div>
+      <div class="prop"><span class="prop-key">Language</span><span class="prop-val">yes</span></div>
+    </div>
+    <div class="compat partial"><span class="dot"></span>Growing — VLA eval code exists; WAM adapters in progress</div>
+    <div class="wam-candidate"><span class="dot"></span>WAM candidate — best future option. GPU-parallel SAPIEN env + language + 7D action. 1000+ parallel envs means WAM eval at scale is fast. High priority for the community</div>
+  </div>
+
+  <div class="ds-card">
+    <div class="card-top"><span class="card-name">VLABench</span></div>
+    <div class="card-sub">Zhang et al., ICCV 2025</div>
+    <div class="card-tags"><span class="tag t-vla">VLA only</span><span class="tag">reasoning</span></div>
+    <div class="card-props">
+      <div class="prop"><span class="prop-key">Simulator</span><span class="prop-val">MuJoCo</span></div>
+      <div class="prop"><span class="prop-key">Arms</span><span class="prop-val">1 arm — 7D</span></div>
+      <div class="prop"><span class="prop-key">Language</span><span class="prop-val">rich + commonsense</span></div>
+    </div>
+    <div class="compat partial"><span class="dot"></span>Partial — no WAM baseline published yet</div>
+    <div class="wam-candidate"><span class="dot"></span>WAM candidate — MuJoCo + rich language + 7D action. Commonsense reasoning tasks are particularly interesting for WAMs since world model priors should improve semantic grounding</div>
+  </div>
+
+</div>
+
+<!-- ══ SECTION 3: LONG-HORIZON ══ -->
+<div class="section">
+  <div class="section-label">
+    <h2>Long-horizon simulation</h2>
+    <span class="count">4 benchmarks</span>
+  </div>
+</div>
+<div class="ds-grid" style="margin:0 80px 48px">
+
+  <div class="ds-card">
+    <div class="card-top"><span class="card-name">CALVIN</span></div>
+    <div class="card-sub">Mees et al., IEEE RA-L 2022</div>
+    <div class="card-tags"><span class="tag t-vla">VLA only</span><span class="tag">skill chains</span></div>
+    <div class="card-props">
+      <div class="prop"><span class="prop-key">Simulator</span><span class="prop-val">PyBullet</span></div>
+      <div class="prop"><span class="prop-key">Arms</span><span class="prop-val">1 arm — 7D</span></div>
+      <div class="prop"><span class="prop-key">Language</span><span class="prop-val">yes per step</span></div>
+    </div>
+    <div class="compat no"><span class="dot"></span>VLA only — PyBullet physics, no WAM eval code</div>
+    <div class="note-inline"><strong>Why not WAM:</strong> PyBullet has inferior contact physics compared to MuJoCo or Genesis. WAMs' advantage comes from physically realistic contact understanding — PyBullet's position drift would undermine this advantage artificially.</div>
+  </div>
+
+  <div class="ds-card">
+    <div class="card-top"><span class="card-name">RoboCasa</span></div>
+    <div class="card-sub">Nasiriany et al., RSS 2024</div>
+    <div class="card-tags"><span class="tag t-vla">VLA only</span><span class="tag">household</span></div>
+    <div class="card-props">
+      <div class="prop"><span class="prop-key">Simulator</span><span class="prop-val">MuJoCo (Robosuite)</span></div>
+      <div class="prop"><span class="prop-key">Arms</span><span class="prop-val">1 arm — 7D</span></div>
+      <div class="prop"><span class="prop-key">Envs</span><span class="prop-val">120 kitchen layouts</span></div>
+    </div>
+    <div class="compat partial"><span class="dot"></span>Partial — VLA fully supported; WAM in progress</div>
+    <div class="wam-candidate"><span class="dot"></span>WAM candidate — MuJoCo (Robosuite) + language + 7D action. 120 diverse kitchen layouts make it a strong generalization test. Low engineering effort using existing LIBERO WAM checkpoints</div>
+  </div>
+
+  <div class="ds-card fresh">
+    <div class="card-top"><span class="card-name">RoboCasa365</span><span class="new-pill">2026</span></div>
+    <div class="card-sub">Nasiriany et al., 2026</div>
+    <div class="card-tags"><span class="tag t-both">VLA + WAM growing</span><span class="tag">large-scale</span></div>
+    <div class="card-props">
+      <div class="prop"><span class="prop-key">Simulator</span><span class="prop-val">MuJoCo</span></div>
+      <div class="prop"><span class="prop-key">Arms</span><span class="prop-val">1 arm — 7D</span></div>
+      <div class="prop"><span class="prop-key">Scale</span><span class="prop-val">365-day diverse tasks</span></div>
+    </div>
+    <div class="compat partial"><span class="dot"></span>Growing — too new to have WAM baselines published</div>
+    <div class="wam-candidate"><span class="dot"></span>WAM candidate — same MuJoCo stack as RoboCasa. Task diversity across 365 days of activities is exactly the kind of distribution WAMs are built to handle via world model priors</div>
+  </div>
+
+  <div class="ds-card">
+    <div class="card-top"><span class="card-name">LaNMP</span></div>
+    <div class="card-sub">2024 · sim + real</div>
+    <div class="card-tags"><span class="tag t-vla">VLA only</span><span class="tag">mobile manip</span></div>
+    <div class="card-props">
+      <div class="prop"><span class="prop-key">Sim+Real</span><span class="prop-val">both</span></div>
+      <div class="prop"><span class="prop-key">Arms</span><span class="prop-val">mobile arm + navigation</span></div>
+      <div class="prop"><span class="prop-key">Language</span><span class="prop-val">yes</span></div>
+    </div>
+    <div class="compat no"><span class="dot"></span>VLA only — mobile navigation outside WAM scope</div>
+    <div class="note-inline"><strong>Why not WAM:</strong> Tasks span room-to-room navigation combined with manipulation. Current WAMs are trained for tabletop manipulation and have no navigation action space. The embodiment mismatch makes comparison meaningless.</div>
+  </div>
+
+</div>
+
+<!-- ══ SECTION 4: ROBUSTNESS ══ -->
+<div class="section">
+  <div class="section-label">
+    <h2>Robustness-focused benchmarks</h2>
+    <span class="count">4 benchmarks</span>
+  </div>
+</div>
+<div class="ds-grid" style="margin:0 80px 48px">
+
+  <div class="ds-card highlighted">
+    <div class="card-top"><span class="card-name">RoboTwin 2.0-Plus</span><span class="new-pill">★ recommended</span></div>
+    <div class="card-sub">Zhang et al., Mar 2026</div>
+    <div class="card-tags"><span class="tag t-both">VLA + WAM</span><span class="tag">bimanual</span><span class="tag">7 perturbations</span></div>
+    <div class="card-props">
+      <div class="prop"><span class="prop-key">Simulator</span><span class="prop-val">Genesis</span></div>
+      <div class="prop"><span class="prop-key">Arms</span><span class="prop-val">2 arms — 14D action</span></div>
+      <div class="prop"><span class="prop-key">Same axes as LIBERO-plus</span><span class="prop-val">yes</span></div>
+      <div class="prop"><span class="prop-key">Language</span><span class="prop-val">yes</span></div>
+    </div>
+    <div class="compat yes"><span class="dot"></span>VLA + WAM — used in same Mar 2026 robustness study</div>
+  </div>
+
+  <div class="ds-card">
+    <div class="card-top"><span class="card-name">KitchenShift</span></div>
+    <div class="card-sub">Xing et al., NeurIPS Workshop 2021</div>
+    <div class="card-tags"><span class="tag t-vla">VLA only</span><span class="tag">domain shift</span></div>
+    <div class="card-props">
+      <div class="prop"><span class="prop-key">Simulator</span><span class="prop-val">MuJoCo</span></div>
+      <div class="prop"><span class="prop-key">Arms</span><span class="prop-val">1 arm — 7D</span></div>
+      <div class="prop"><span class="prop-key">Focus</span><span class="prop-val">zero-shot OOD eval</span></div>
+    </div>
+    <div class="compat no"><span class="dot"></span>VLA only — older benchmark, no WAM code</div>
+    <div class="note-inline"><strong>Why not WAM:</strong> Predates the WAM paradigm (2021). No WAM paper has targeted it. Has been largely superseded by LIBERO-plus for robustness evaluation.</div>
+  </div>
+
+  <div class="ds-card fresh">
+    <div class="card-top"><span class="card-name">REALM</span><span class="new-pill">Dec 2025</span></div>
+    <div class="card-sub">2025 · SAPIEN</div>
+    <div class="card-tags"><span class="tag t-vla">VLA only</span><span class="tag">real-to-sim validated</span></div>
+    <div class="card-props">
+      <div class="prop"><span class="prop-key">Simulator</span><span class="prop-val">SAPIEN</span></div>
+      <div class="prop"><span class="prop-key">Focus</span><span class="prop-val">sim-to-real ranking validation</span></div>
+      <div class="prop"><span class="prop-key">Arms</span><span class="prop-val">1 arm — 7D</span></div>
+    </div>
+    <div class="compat partial"><span class="dot"></span>Partial — too new for WAM baselines</div>
+    <div class="wam-candidate"><span class="dot"></span>WAM candidate — SAPIEN + language + 7D action + real-to-sim validation. Particularly valuable for testing whether WAM robustness advantages transfer to real-world scenarios</div>
+  </div>
+
+  <div class="ds-card">
+    <div class="card-top"><span class="card-name">RoboVerse</span></div>
+    <div class="card-sub">MetaSim · RSS 2025</div>
+    <div class="card-tags"><span class="tag t-both">VLA + WAM growing</span><span class="tag">cross-sim</span></div>
+    <div class="card-props">
+      <div class="prop"><span class="prop-key">Simulator</span><span class="prop-val">ManiSkill3 + 30+ others</span></div>
+      <div class="prop"><span class="prop-key">Arms</span><span class="prop-val">1–2 arms</span></div>
+      <div class="prop"><span class="prop-key">Datasets</span><span class="prop-val">50M+ state transitions</span></div>
+    </div>
+    <div class="compat partial"><span class="dot"></span>Growing — unified API, WAM integration in progress</div>
+    <div class="wam-candidate"><span class="dot"></span>WAM candidate — highest long-term potential. MetaSim's unified API means integrating one WAM gives results across 30+ simulators simultaneously. Community contribution highly impactful</div>
+  </div>
+
+</div>
+
+<!-- ══ SECTION 5: BIMANUAL ══ -->
+<div class="section">
+  <div class="section-label">
+    <h2>Bimanual / dual-arm</h2>
+    <span class="count">3 benchmarks</span>
+  </div>
+</div>
+<div class="ds-grid" style="margin:0 80px 48px">
+
+  <div class="ds-card highlighted">
+    <div class="card-top"><span class="card-name">RoboTwin 2.0</span><span class="new-pill">★</span></div>
+    <div class="card-sub">Chen et al., Jun 2025 · Genesis</div>
+    <div class="card-tags"><span class="tag t-both">VLA + WAM</span><span class="tag">bimanual</span></div>
+    <div class="card-props">
+      <div class="prop"><span class="prop-key">Tasks</span><span class="prop-val">50 bimanual tasks</span></div>
+      <div class="prop"><span class="prop-key">Simulator</span><span class="prop-val">Genesis</span></div>
+      <div class="prop"><span class="prop-key">Arms</span><span class="prop-val">2 arms — 14D action</span></div>
+      <div class="prop"><span class="prop-key">Robots</span><span class="prop-val">5 embodiments</span></div>
+      <div class="prop"><span class="prop-key">Objects</span><span class="prop-val">731 instances · 147 categories</span></div>
+    </div>
+    <div class="compat yes"><span class="dot"></span>VLA + WAM — official eval scripts for both</div>
+  </div>
+
+  <div class="ds-card">
+    <div class="card-top"><span class="card-name">ALOHA / Mobile ALOHA</span></div>
+    <div class="card-sub">Zhao et al., 2023</div>
+    <div class="card-tags"><span class="tag t-vla">VLA only</span><span class="tag">real robot</span><span class="tag">bimanual</span></div>
+    <div class="card-props">
+      <div class="prop"><span class="prop-key">Type</span><span class="prop-val">real robot only</span></div>
+      <div class="prop"><span class="prop-key">Arms</span><span class="prop-val">2 arms — 14D</span></div>
+      <div class="prop"><span class="prop-key">Demos</span><span class="prop-val">~10K teleoperated</span></div>
+    </div>
+    <div class="compat no"><span class="dot"></span>VLA only — real robot, no simulation env</div>
+    <div class="note-inline"><strong>Why not WAM:</strong> ALOHA is a real hardware platform with no live simulation. Closed-loop WAM evaluation requires a simulator — you cannot run 10,030 perturbation variants on a physical robot.</div>
+  </div>
+
+  <div class="ds-card fresh">
+    <div class="card-top"><span class="card-name">RMBench</span><span class="new-pill">Mar 2026</span></div>
+    <div class="card-sub">Built on RoboTwin 2.0</div>
+    <div class="card-tags"><span class="tag t-both">VLA + WAM growing</span><span class="tag">memory</span></div>
+    <div class="card-props">
+      <div class="prop"><span class="prop-key">Simulator</span><span class="prop-val">Genesis</span></div>
+      <div class="prop"><span class="prop-key">Arms</span><span class="prop-val">2 arms — 14D</span></div>
+      <div class="prop"><span class="prop-key">Focus</span><span class="prop-val">memory-dependent manipulation</span></div>
+    </div>
+    <div class="compat partial"><span class="dot"></span>Growing — inherits RoboTwin infrastructure, WAM eval in progress</div>
+    <div class="wam-candidate"><span class="dot"></span>WAM candidate — built on Genesis (same as RoboTwin 2.0 which already has WAM eval). Memory-dependent tasks are a natural test of WAM temporal priors. Low integration effort</div>
+  </div>
+
+</div>
+
+<!-- ══ SECTION 6: REAL-TO-SIM ══ -->
+<div class="section">
+  <div class="section-label">
+    <h2>Real-to-sim bridges</h2>
+    <span class="count">2 benchmarks</span>
+  </div>
+</div>
+<div class="ds-grid" style="margin:0 80px 48px">
+
+  <div class="ds-card fresh">
+    <div class="card-top"><span class="card-name">RobotArena∞</span></div>
+    <div class="card-sub">Atreya et al., 2025</div>
+    <div class="card-tags"><span class="tag t-both">VLA + WAM</span><span class="tag">auto digital twin</span></div>
+    <div class="card-props">
+      <div class="prop"><span class="prop-key">Method</span><span class="prop-val">video → digital twin via VLM</span></div>
+      <div class="prop"><span class="prop-key">Eval</span><span class="prop-val">VLM scoring + human preference</span></div>
+      <div class="prop"><span class="prop-key">Real robot needed</span><span class="prop-val">no</span></div>
+    </div>
+    <div class="compat yes"><span class="dot"></span>VLA + WAM — both produce 7D actions compatible with the platform</div>
+  </div>
+
+  <div class="ds-card fresh">
+    <div class="card-top"><span class="card-name">VLA-REPLICA</span><span class="new-pill">May 2026</span></div>
+    <div class="card-sub">2026 · real robot</div>
+    <div class="card-tags"><span class="tag t-vla">VLA only</span><span class="tag">real robot</span><span class="tag">low-cost</span></div>
+    <div class="card-props">
+      <div class="prop"><span class="prop-key">Hardware</span><span class="prop-val">low-cost single arm</span></div>
+      <div class="prop"><span class="prop-key">Focus</span><span class="prop-val">reproducible real-world eval</span></div>
+      <div class="prop"><span class="prop-key">Scale</span><span class="prop-val">small — OOD settings</span></div>
+    </div>
+    <div class="compat no"><span class="dot"></span>VLA only — real hardware, no simulation loop</div>
+    <div class="note-inline"><strong>Why not WAM:</strong> Uses a single physical robot. WAM evaluation at scale (thousands of trials across perturbation levels) requires simulation. Published May 2026 — too new for WAM community adoption.</div>
+  </div>
+
+</div>
+
+<!-- ══ SECTION 7: REAL ROBOT ══ -->
+<div class="section">
+  <div class="section-label">
+    <h2>Real-robot datasets</h2>
+    <span class="count">2 benchmarks</span>
+  </div>
+</div>
+<div class="ds-grid" style="margin:0 80px 48px">
+
+
+
+  <div class="ds-card">
+    <div class="card-top"><span class="card-name">FurnitureBench</span></div>
+    <div class="card-sub">Heo et al., RSS 2023</div>
+    <div class="card-tags"><span class="tag t-vla">VLA only</span><span class="tag">real robot</span><span class="tag">long-horizon</span></div>
+    <div class="card-props">
+      <div class="prop"><span class="prop-key">Tasks</span><span class="prop-val">furniture assembly</span></div>
+      <div class="prop"><span class="prop-key">Demos</span><span class="prop-val">5000+ · 200+ hrs</span></div>
+      <div class="prop"><span class="prop-key">Closed-loop</span><span class="prop-val">yes (real hardware)</span></div>
+    </div>
+    <div class="compat no"><span class="dot"></span>VLA only — requires physical robot lab</div>
+    <div class="note-inline"><strong>Why not WAM:</strong> Real hardware benchmark. Running WAM baselines requires a Franka Panda setup and significant lab infrastructure. WAMs have not been published on FurnitureBench. The task horizon (~1000+ steps for full assembly) is also well beyond current WAM chunk sizes.</div>
+  </div>
+
+  <div class="ds-card fresh">
+    <div class="card-top"><span class="card-name">RoboChallenge</span><span class="new-pill">2025</span></div>
+    <div class="card-sub">Yakefu et al., 2025</div>
+    <div class="card-tags"><span class="tag t-vla">VLA only</span><span class="tag">real robot</span></div>
+    <div class="card-props">
+      <div class="prop"><span class="prop-key">Focus</span><span class="prop-val">large-scale real-robot eval</span></div>
+      <div class="prop"><span class="prop-key">Closed-loop</span><span class="prop-val">yes (distributed hardware)</span></div>
+    </div>
+    <div class="compat no"><span class="dot"></span>VLA only — distributed real hardware evaluation</div>
+    <div class="note-inline"><strong>Why not WAM:</strong> Requires physical robot infrastructure across multiple labs. The distributed eval format is designed for VLA deployment — WAM inference latency (2–5s per action for Cosmos-Policy) makes real-time closed-loop evaluation impractical at scale.</div>
+  </div>
+
+</div>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div style="display:flex;gap:40px;flex-wrap:wrap">
+    <span>May 2026</span>
+    <span>VLA &amp; WAM Robustness Study</span>
+    <span>25 benchmarks catalogued</span>
+    <span>Only 2 support both VLA + WAM with published results: LIBERO-plus &amp; RoboTwin 2.0-Plus</span>
+  </div>
+</footer>
+
+</body>
+</html>
