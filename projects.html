@@ -141,14 +141,14 @@
   .card-desc,
   .card-links { grid-column: 2; }
   .card-link {
-    font-family: var(--mono); font-size: 0.8rem; letter-spacing: 0.04em;
-    color: var(--accent); text-decoration: none; text-transform: uppercase;
+    font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.04em;
+    color: var(--accent-mid); text-decoration: none; text-transform: uppercase;
     display: flex; align-items: center; gap: 0.25rem;
-    border-bottom: 1px solid var(--accent-mid) !important;
-    transition: color 0.15s, border-color 0.15s;
+    border-bottom: none !important;
+    transition: color 0.15s;
   }
   .card-link::before { content: '→ '; }
-  .card-link:hover { color: var(--highlight); border-bottom-color: var(--highlight) !important; }
+  .card-link:hover { color: var(--accent); text-decoration: underline; }
   .card-media {
     width: 195px;
     margin: 0.1rem 0 0;

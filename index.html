@@ -297,15 +297,15 @@ section {
 .pub-links { margin-top: 0.5rem; display: flex; gap: 1rem; }
 .pub-link {
   font-family: var(--mono);
-  font-size: 0.8rem;
+  font-size: 0.68rem;
   letter-spacing: 0.04em;
-  color: var(--accent);
+  color: var(--accent-mid);
   text-transform: uppercase;
-  border-bottom: 1px solid var(--accent-mid) !important;
-  transition: color 0.15s, border-color 0.15s;
+  border-bottom: none !important;
+  transition: color 0.15s;
 }
 .pub-link::before { content: '→ '; }
-.pub-link:hover { color: var(--highlight); border-bottom-color: var(--highlight) !important; }
+.pub-link:hover { color: var(--accent); }
 .pub-img-wrap { margin-top: 0.9rem; }
 .pub-img { width: 100%; max-width: 560px; display: block; border: 1px solid var(--rule); border-radius: 2px; }
 
