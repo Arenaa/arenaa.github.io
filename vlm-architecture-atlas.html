@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The VLM Architecture Atlas</title>
+<meta name="description" content="A visual tour of modern vision-language models: the shared encoder-connector-decoder skeleton, the seven axes that separate LLaVA, Qwen-VL, InternVL, Flamingo, and early-fusion families, and the frontier where the trunk starts to act.">
+<meta name="color-scheme" content="light">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;450;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FFFFFF;
+    --paper-2:#EEF2F5;
+    --card:#F7F9FB;
+    --card-line:#C7D0D9;
+    --ink:#12171D;
+    --ink-soft:#39434E;
+    --muted:#66727F;
+    --faint:#7B8794;
+    --vision:#C06A1E;      /* vision pathway */
+    --vision-soft:#EFD9BF;
+    --lang:#0E7C7B;        /* language pathway */
+    --lang-soft:#C4E3E2;
+    --fuse:#3B3A7A;        /* where modalities meet */
+    --grid:#D3DBE2;
+    --shadow:0 1px 0 rgba(18,23,29,.04), 0 12px 30px -18px rgba(18,23,29,.35);
+    --display:'Space Grotesk',sans-serif;
+    --body:'Inter',sans-serif;
+    --mono:'IBM Plex Mono',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--body);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1060px;margin:0 auto;padding:0 24px}
+  .mono{font-family:var(--mono)}
+  a{color:inherit}
+  :focus-visible{outline:2px solid var(--fuse);outline-offset:3px}
+
+  /* ---- atlas navigation ---- */
+  .topbar{border-bottom:1px solid var(--card-line);background:var(--paper)}
+  .topbar .wrap{display:flex;justify-content:space-between;align-items:center;gap:14px 26px;flex-wrap:wrap;padding-top:13px;padding-bottom:13px}
+  .topbar a{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-decoration:none}
+  .topbar a:hover{color:var(--ink)}
+  .topbar .home{color:var(--ink)}
+  .topbar .set{display:flex;gap:20px;flex-wrap:wrap}
+  .topbar .set a[aria-current="page"]{color:var(--vision)}
+
+  /* ---- eyebrow / section scaffolding ---- */
+  .eyebrow{
+    font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--muted);display:flex;align-items:center;gap:10px;margin-bottom:14px;
+  }
+  .eyebrow::before{content:"";width:26px;height:1px;background:var(--ink);opacity:.5}
+  section{padding:64px 0;border-top:1px solid var(--card-line)}
+  h2{font-family:var(--display);font-weight:600;font-size:clamp(26px,4vw,38px);line-height:1.08;letter-spacing:-.02em;margin-bottom:14px}
+  h2 .n{font-family:var(--mono);font-weight:500;font-size:.5em;color:var(--vision);vertical-align:super;margin-right:2px}
+  .lede{font-size:17px;color:var(--ink-soft);max-width:66ch;margin-bottom:8px}
+  .lede b{font-weight:600;color:var(--ink)}
+
+  /* ---- hero ---- */
+  header{padding:64px 0 40px;border-top:none;position:relative;overflow:hidden}
+  .kicker{font-family:var(--mono);font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--vision);margin-bottom:22px}
+  h1{font-family:var(--display);font-weight:700;font-size:clamp(40px,7.5vw,76px);line-height:.98;letter-spacing:-.035em;margin-bottom:22px}
+  h1 .l1{display:block}
+  h1 .em{color:var(--muted);font-weight:500}
+  .sub{font-size:19px;color:var(--ink-soft);max-width:60ch;margin-bottom:8px}
+  .sub .v{color:var(--vision);font-weight:600}
+  .sub .t{color:var(--lang);font-weight:600}
+  .legend{display:flex;gap:22px;flex-wrap:wrap;margin-top:26px;font-family:var(--mono);font-size:12.5px;color:var(--muted)}
+  .legend span{display:inline-flex;align-items:center;gap:8px}
+  .dot{width:11px;height:11px;border-radius:2px;display:inline-block}
+  .dot.v{background:var(--vision)}
+  .dot.t{background:var(--lang)}
+  .dot.f{background:var(--fuse)}
+
+  /* ---- skeleton diagram (hero, signature) ---- */
+  .stage{margin:40px 0 8px}
+  .skel{width:100%;height:auto;display:block}
+  .flow{stroke-dasharray:5 7;animation:dash 1.1s linear infinite}
+  @keyframes dash{to{stroke-dashoffset:-24}}
+  @media (prefers-reduced-motion:reduce){.flow{animation:none}}
+  .modlabel{font-family:var(--mono);font-size:12.5px;fill:var(--ink)}
+  .modsub{font-family:var(--mono);font-size:10px;fill:var(--muted)}
+
+  /* ---- axis grid ---- */
+  .axes{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:34px}
+  .axis{background:var(--card);border:1px solid var(--card-line);border-radius:10px;padding:20px 20px 18px;box-shadow:var(--shadow)}
+  .axis .ax-n{font-family:var(--mono);font-size:11px;color:var(--vision);letter-spacing:.1em}
+  .axis h3{font-family:var(--display);font-weight:600;font-size:18px;margin:6px 0 8px;letter-spacing:-.01em}
+  .axis p{font-size:14.5px;color:var(--ink-soft)}
+  .axis .opts{margin-top:12px;display:flex;flex-wrap:wrap;gap:6px}
+  .chip{font-family:var(--mono);font-size:11px;padding:3px 8px;border-radius:20px;background:var(--paper-2);border:1px solid var(--card-line);color:var(--ink-soft)}
+  .chip.hot{border-color:var(--vision);color:var(--vision);background:#F4E7D6}
+
+  /* ---- family cards ---- */
+  .fam{background:var(--card);border:1px solid var(--card-line);border-radius:12px;padding:26px;margin-top:22px;box-shadow:var(--shadow)}
+  .fam-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:4px}
+  .fam-head .fid{font-family:var(--mono);font-size:12px;color:var(--vision);border:1px solid var(--vision);border-radius:5px;padding:2px 7px}
+  .fam-head h3{font-family:var(--display);font-weight:600;font-size:22px;letter-spacing:-.015em}
+  .fam .tag{font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+  .fam-body{display:grid;grid-template-columns:1.05fr .95fr;gap:26px;align-items:center;margin-top:16px}
+  .fam-body p{font-size:15px;color:var(--ink-soft);margin-bottom:12px}
+  .fam-body p b{color:var(--ink);font-weight:600}
+  .models{display:flex;flex-wrap:wrap;gap:7px;margin-top:6px}
+  .mchip{font-family:var(--mono);font-size:11.5px;padding:4px 9px;border-radius:6px;background:var(--paper-2);border:1px solid var(--card-line);color:var(--ink)}
+  .diag{background:#FCFDFE;border:1px solid var(--card-line);border-radius:9px;padding:14px}
+  .diag svg{width:100%;height:auto;display:block}
+  .costline{margin-top:14px;font-family:var(--mono);font-size:12px;color:var(--muted);display:flex;gap:8px;align-items:flex-start}
+  .costline b{color:var(--fuse);font-weight:600}
+
+  /* ---- philosophy split ---- */
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:30px}
+  .phil{border-radius:12px;padding:24px;border:1px solid var(--card-line);box-shadow:var(--shadow)}
+  .phil.warm{background:linear-gradient(180deg,#F7EFE4,#FBF7F1)}
+  .phil.cool{background:linear-gradient(180deg,#E4F0F0,#F1F8F8)}
+  .phil .who{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase}
+  .phil.warm .who{color:var(--vision)}
+  .phil.cool .who{color:var(--lang)}
+  .phil h3{font-family:var(--display);font-weight:600;font-size:21px;margin:6px 0 10px;letter-spacing:-.015em}
+  .phil p{font-size:14.5px;color:var(--ink-soft)}
+  .phil ul{list-style:none;margin-top:12px;font-size:13.5px}
+  .phil li{padding:5px 0 5px 20px;position:relative;color:var(--ink-soft)}
+  .phil li::before{content:"▸";position:absolute;left:0;font-family:var(--mono)}
+  .phil.warm li::before{color:var(--vision)}
+  .phil.cool li::before{color:var(--lang)}
+
+  /* ---- table ---- */
+  .tablewrap{margin-top:28px;overflow-x:auto;border:1px solid var(--card-line);border-radius:12px;box-shadow:var(--shadow)}
+  table{border-collapse:collapse;width:100%;min-width:760px;background:var(--card);font-size:13.5px}
+  th,td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--card-line);vertical-align:top}
+  thead th{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:var(--paper-2);position:sticky;top:0}
+  tbody td:first-child{font-family:var(--display);font-weight:600;color:var(--ink);white-space:nowrap}
+  td .mono{font-size:12.5px;color:var(--ink-soft)}
+  .pill{font-family:var(--mono);font-size:11px;padding:2px 7px;border-radius:20px;display:inline-block}
+  .pill.cat{background:var(--vision-soft);color:#7a4110}
+  .pill.xa{background:var(--lang-soft);color:#0a4f4e}
+  .pill.ef{background:#DED9F0;color:#33307a}
+  .pill.closed{background:#E7EBEF;color:#5B6673}
+
+  /* ---- interview lens ---- */
+  .qa{margin-top:26px}
+  .q{background:var(--card);border:1px solid var(--card-line);border-radius:10px;padding:18px 20px;margin-bottom:14px;box-shadow:var(--shadow)}
+  .q .qq{font-family:var(--display);font-weight:600;font-size:16.5px;margin-bottom:8px;letter-spacing:-.01em;display:flex;gap:10px}
+  .q .qq::before{content:"Q";font-family:var(--mono);font-size:12px;color:var(--vision);border:1px solid var(--vision);border-radius:4px;padding:1px 6px;height:fit-content;flex:none}
+  .q .aa{font-size:14.5px;color:var(--ink-soft)}
+  .q .aa b{color:var(--ink);font-weight:600}
+  .q .aa .k{font-family:var(--mono);font-size:12.5px;color:var(--fuse);background:#E7E5F4;padding:1px 5px;border-radius:4px}
+
+  footer{border-top:1px solid var(--card-line);padding:40px 0 70px;color:var(--muted);font-size:13px;font-family:var(--mono)}
+  footer b{color:var(--ink-soft)}
+  footer a{color:var(--ink-soft);text-decoration:underline;text-underline-offset:3px}
+  .sibs{margin-top:16px;display:flex;gap:18px;flex-wrap:wrap}
+  .sibs a{text-decoration:none;color:var(--muted);border-bottom:1px solid var(--card-line);padding-bottom:2px}
+  .sibs a:hover{color:var(--ink);border-color:var(--ink)}
+
+  .eras{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:30px 0 6px}
+  .era{background:var(--card);border:1px solid var(--card-line);border-radius:10px;padding:16px;position:relative}
+  .era .yr{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.06em}
+  .era .et{font-family:var(--display);font-weight:600;font-size:15px;margin:7px 0 6px;letter-spacing:-.01em}
+  .era p{font-size:12.5px;color:var(--ink-soft)}
+  .era.now{border-color:var(--vision)}
+  .era.now::after{content:"now";position:absolute;top:12px;right:12px;font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--vision)}
+  .era.now .yr{color:var(--vision)}
+
+  .reveal{opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease}
+  .reveal.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
+
+  @media(max-width:760px){
+    .axes{grid-template-columns:1fr}
+    .fam-body{grid-template-columns:1fr}
+    .split{grid-template-columns:1fr}
+    .eras{grid-template-columns:1fr 1fr}
+  }
+  @media(max-width:460px){.eras{grid-template-columns:1fr}}
+</style>
+<noscript><style>.reveal{opacity:1;transform:none}</style></noscript>
+</head>
+<body>
+
+<nav class="topbar" aria-label="Atlas navigation">
+  <div class="wrap">
+    <a href="index.html" class="home">Mahsa Khoshnoodi</a>
+    <span class="set">
+      <a href="notes.html">All notes</a>
+      <a href="vlm-architecture-atlas.html" aria-current="page">VLM architecture</a>
+      <a href="video-generation-atlas.html">Video generation</a>
+      <a href="world-action-model-atlas.html">World action models</a>
+    </span>
+  </div>
+</nav>
+
+<header class="wrap">
+  <div class="kicker">The VLM Architecture Atlas</div>
+  <h1><span class="l1">A visual tour of</span><span class="l1">modern <span class="em">vision-language</span> models</span></h1>
+  <p class="sub">Every current VLM is the same three-part machine: a <span class="v">vision encoder</span> turns pixels into tokens, a connector reshapes them, and a <span class="t">language decoder</span> reasons over vision and text together. The whole field is a set of choices about those three boxes. This is the map of those choices.</p>
+  <div class="legend">
+    <span><i class="dot v"></i> vision pathway</span>
+    <span><i class="dot t"></i> language pathway</span>
+    <span><i class="dot f"></i> fusion point</span>
+  </div>
+
+  <div class="stage">
+    <svg class="skel" viewBox="0 0 980 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The shared VLM skeleton: image to vision encoder to connector to decoder, with text tokens joining at fusion">
+      <!-- image in -->
+      <rect x="12" y="78" width="86" height="64" rx="8" fill="#FCFDFE" stroke="var(--vision)" stroke-width="1.5"/>
+      <text x="55" y="106" text-anchor="middle" class="modlabel">image</text>
+      <text x="55" y="122" text-anchor="middle" class="modsub">H×W×3</text>
+      <!-- arrow -->
+      <line x1="98" y1="110" x2="150" y2="110" stroke="var(--vision)" stroke-width="2" class="flow"/>
+      <!-- vision encoder -->
+      <rect x="150" y="66" width="150" height="88" rx="9" fill="#F6EADB" stroke="var(--vision)" stroke-width="1.5"/>
+      <text x="225" y="102" text-anchor="middle" class="modlabel">Vision encoder</text>
+      <text x="225" y="120" text-anchor="middle" class="modsub">ViT · SigLIP · InternViT</text>
+      <line x1="300" y1="110" x2="352" y2="110" stroke="var(--vision)" stroke-width="2" class="flow"/>
+      <!-- connector -->
+      <rect x="352" y="72" width="118" height="76" rx="9" fill="#FCFDFE" stroke="var(--fuse)" stroke-width="1.5"/>
+      <text x="411" y="104" text-anchor="middle" class="modlabel">Connector</text>
+      <text x="411" y="121" text-anchor="middle" class="modsub">MLP · resampler</text>
+      <line x1="470" y1="110" x2="560" y2="110" stroke="var(--fuse)" stroke-width="2" class="flow"/>
+      <!-- text in -->
+      <rect x="352" y="176" width="118" height="34" rx="7" fill="#FCFDFE" stroke="var(--lang)" stroke-width="1.5"/>
+      <text x="411" y="198" text-anchor="middle" class="modlabel">text tokens</text>
+      <path d="M470 193 H520 Q540 193 540 165 V140" fill="none" stroke="var(--lang)" stroke-width="2" class="flow"/>
+      <!-- fusion node -->
+      <circle cx="560" cy="110" r="7" fill="var(--fuse)"/>
+      <!-- decoder -->
+      <rect x="588" y="60" width="200" height="100" rx="9" fill="#E9F3F3" stroke="var(--lang)" stroke-width="1.5"/>
+      <text x="688" y="98" text-anchor="middle" class="modlabel">LLM decoder</text>
+      <text x="688" y="116" text-anchor="middle" class="modsub">joint self-attention</text>
+      <line x1="788" y1="110" x2="840" y2="110" stroke="var(--lang)" stroke-width="2" class="flow"/>
+      <!-- out -->
+      <rect x="840" y="82" width="126" height="56" rx="8" fill="#FCFDFE" stroke="var(--lang)" stroke-width="1.5"/>
+      <text x="903" y="107" text-anchor="middle" class="modlabel">tokens out</text>
+      <text x="903" y="123" text-anchor="middle" class="modsub">autoregressive</text>
+    </svg>
+  </div>
+</header>
+
+<!-- ============ THE SKELETON ============ -->
+<section class="wrap reveal">
+  <div class="eyebrow">The one diagram</div>
+  <h2>One skeleton, everything else is a choice</h2>
+  <p class="lede">A text LLM is a stack of decoder blocks. A VLM wraps that stack with two extra jobs: <b>see</b> and <b>merge</b>. The vision encoder maps an image to a grid of feature vectors. The connector projects those vectors into the decoder's embedding space (and often shrinks their count). Then the visual tokens sit in the same sequence as the text tokens, and the decoder's self-attention does the actual reasoning across both.</p>
+  <p class="lede">Hold that skeleton fixed and the entire modern zoo (LLaVA, Qwen3-VL, InternVL3.5, Llama 4 Vision, Flamingo, Fuyu) is just different fillings for three slots, plus one question about <b>how</b> vision reaches the decoder. That last question is the real fork, so keep it in view: does vision join the sequence, or get injected from the side.</p>
+</section>
+
+<!-- ============ THE AXES ============ -->
+<section class="wrap reveal">
+  <div class="eyebrow">The design axes</div>
+  <h2><span class="n">01</span>Where VLMs actually differ</h2>
+  <p class="lede">In the LLM tour, the axes were attention variant, positional encoding, norm placement, and dense vs MoE. VLMs inherit all of those in the decoder, then add their own. Learn these seven and you can place almost any new model on sight.</p>
+
+  <div class="axes">
+    <div class="axis">
+      <div class="ax-n">AXIS A</div>
+      <h3>Vision encoder</h3>
+      <p>What turns pixels into features, and how big it is. A small bolt-on encoder rides along; the InternVL school scales the encoder up until it rivals the LLM.</p>
+      <div class="opts"><span class="chip">CLIP ViT</span><span class="chip hot">SigLIP-2</span><span class="chip hot">InternViT</span><span class="chip">none (raw patches)</span></div>
+    </div>
+    <div class="axis">
+      <div class="ax-n">AXIS B</div>
+      <h3>Resolution strategy</h3>
+      <p>Fixed square resize throws away aspect ratio and fine text. The field moved to tiling, then to processing images at native resolution and shape.</p>
+      <div class="opts"><span class="chip">fixed 336/448</span><span class="chip">AnyRes tiling</span><span class="chip hot">native dynamic</span></div>
+    </div>
+    <div class="axis">
+      <div class="ax-n">AXIS C</div>
+      <h3>Connector</h3>
+      <p>How visual features enter the decoder's space, and how many survive. This is the main lever on the visual token budget.</p>
+      <div class="opts"><span class="chip hot">MLP projector</span><span class="chip">pixel shuffle</span><span class="chip">Q-Former</span><span class="chip">Perceiver resampler</span></div>
+    </div>
+    <div class="axis">
+      <div class="ax-n">AXIS D</div>
+      <h3>Fusion mechanism</h3>
+      <p>The real fork. Either concatenate visual tokens into the sequence and let self-attention mix them, or keep the sequence text-only and inject vision through added cross-attention layers.</p>
+      <div class="opts"><span class="chip hot">concatenation</span><span class="chip">cross-attention</span></div>
+    </div>
+    <div class="axis">
+      <div class="ax-n">AXIS E</div>
+      <h3>Positional encoding</h3>
+      <p>Text RoPE is 1D. Images are 2D and video adds time, so modern VLMs extend RoPE across height, width, and frame index.</p>
+      <div class="opts"><span class="chip">learned 2D</span><span class="chip hot">m-RoPE</span><span class="chip">time-aware RoPE</span></div>
+    </div>
+    <div class="axis">
+      <div class="ax-n">AXIS F</div>
+      <h3>Training paradigm</h3>
+      <p>Bolt-on alignment freezes a pretrained LLM and teaches a projector, then fine-tunes. Native multimodal pretraining mixes image and text from the start.</p>
+      <div class="opts"><span class="chip hot">bolt-on align</span><span class="chip hot">native multimodal</span></div>
+    </div>
+    <div class="axis" style="grid-column:1 / -1">
+      <div class="ax-n">AXIS G · the one interviewers love</div>
+      <h3>Visual token budget</h3>
+      <p>Every image injects hundreds of tokens into the sequence, and every one of them lives in the KV cache. High resolution and tiling multiply this fast, so a big part of VLM design is quietly a token-compression problem: pixel shuffle, resamplers, and cross-attention all exist to keep this number down. Size a VLM like a text model and you hit OOM under load.</p>
+      <div class="opts"><span class="chip">~256/image (compressed)</span><span class="chip">~576 (LLaVA)</span><span class="chip">thousands (tiled hi-res)</span><span class="chip hot">variable (native res)</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ THE TOUR ============ -->
+<section class="wrap reveal">
+  <div class="eyebrow">The tour</div>
+  <h2><span class="n">02</span>Six families, one spine</h2>
+  <p class="lede">Now walk the gallery. Each card is the same skeleton with one or two slots changed. Watch the connector slot and the fusion arrows: that is where the identity of each family lives.</p>
+
+  <!-- F1 -->
+  <div class="fam">
+    <div class="fam-head">
+      <span class="fid">F1</span>
+      <h3>Decoder-only concatenation</h3>
+      <span class="tag">the dominant modern paradigm · LLaVA lineage</span>
+    </div>
+    <div class="fam-body">
+      <div>
+        <p>The simplest thing that works, and the one that won. Run the image through a frozen ViT, push the patch features through a small <b>MLP projector</b>, and drop the resulting visual tokens straight into the sequence next to the text tokens. No new attention machinery: the decoder's own <b>self-attention</b> fuses everything. Cheap to build, scales with data, and almost every current open model is a descendant.</p>
+        <p>The cost is bluntness: every patch becomes a token in the sequence, so resolution is expensive and the burden of fusion falls entirely on the decoder.</p>
+        <div class="models"><span class="mchip">LLaVA-1.5</span><span class="mchip">LLaVA-NeXT</span><span class="mchip">most open VLMs</span></div>
+      </div>
+      <div class="diag">
+        <svg viewBox="0 0 380 190" xmlns="http://www.w3.org/2000/svg" aria-label="Image to ViT to MLP to concatenated sequence into decoder">
+          <rect x="8" y="30" width="60" height="46" rx="7" fill="#F6EADB" stroke="var(--vision)" stroke-width="1.4"/>
+          <text x="38" y="58" text-anchor="middle" class="modsub">ViT</text>
+          <line x1="68" y1="53" x2="96" y2="53" stroke="var(--vision)" stroke-width="1.8"/>
+          <rect x="96" y="34" width="58" height="38" rx="7" fill="#FCFDFE" stroke="var(--fuse)" stroke-width="1.4"/>
+          <text x="125" y="57" text-anchor="middle" class="modsub">MLP</text>
+          <!-- concat sequence -->
+          <g>
+            <rect x="182" y="40" width="16" height="16" fill="var(--vision)" opacity=".85"/>
+            <rect x="200" y="40" width="16" height="16" fill="var(--vision)" opacity=".85"/>
+            <rect x="218" y="40" width="16" height="16" fill="var(--vision)" opacity=".85"/>
+            <rect x="236" y="40" width="16" height="16" fill="var(--lang)" opacity=".85"/>
+            <rect x="254" y="40" width="16" height="16" fill="var(--lang)" opacity=".85"/>
+          </g>
+          <text x="217" y="30" text-anchor="middle" class="modsub">one sequence</text>
+          <line x1="154" y1="53" x2="178" y2="49" stroke="var(--fuse)" stroke-width="1.8"/>
+          <rect x="150" y="112" width="140" height="52" rx="8" fill="#E9F3F3" stroke="var(--lang)" stroke-width="1.4"/>
+          <text x="220" y="142" text-anchor="middle" class="modsub">decoder · self-attn</text>
+          <line x1="217" y1="56" x2="217" y2="110" stroke="var(--fuse)" stroke-width="1.8"/>
+        </svg>
+      </div>
+    </div>
+    <div class="costline"><b>token budget →</b> high: patches map 1:1 to sequence tokens, so resolution scales the KV cache linearly.</div>
+  </div>
+
+  <!-- F2 -->
+  <div class="fam">
+    <div class="fam-head">
+      <span class="fid">F2</span>
+      <h3>Query-based compression</h3>
+      <span class="tag">the fixed-budget idea · BLIP-2 Q-Former</span>
+    </div>
+    <div class="fam-body">
+      <div>
+        <p>Before concatenation won, the worry was token count. BLIP-2's answer: a small set of <b>learned query vectors</b> that cross-attend to the frozen visual features and distill them into a fixed, tiny number of tokens (often 32), regardless of image size. That bundle is what the LLM sees.</p>
+        <p>Mostly superseded now (the compression discards detail that OCR and grounding need), but the idea is alive everywhere: a resampler is the same move. Worth knowing as the origin of the token-budget conversation.</p>
+        <div class="models"><span class="mchip">BLIP-2</span><span class="mchip">InstructBLIP</span><span class="mchip">MiniGPT-4</span></div>
+      </div>
+      <div class="diag">
+        <svg viewBox="0 0 380 190" xmlns="http://www.w3.org/2000/svg" aria-label="Learned queries cross-attend to frozen visual features producing a fixed small token set">
+          <rect x="8" y="70" width="58" height="46" rx="7" fill="#F6EADB" stroke="var(--vision)" stroke-width="1.4"/>
+          <text x="37" y="90" text-anchor="middle" class="modsub">ViT</text>
+          <text x="37" y="104" text-anchor="middle" class="modsub" style="fill:var(--faint)">frozen</text>
+          <g>
+            <rect x="150" y="18" width="14" height="14" rx="3" fill="var(--fuse)"/>
+            <rect x="150" y="36" width="14" height="14" rx="3" fill="var(--fuse)"/>
+            <rect x="150" y="54" width="14" height="14" rx="3" fill="var(--fuse)"/>
+          </g>
+          <text x="157" y="12" text-anchor="middle" class="modsub">N queries</text>
+          <rect x="96" y="72" width="96" height="42" rx="8" fill="#FCFDFE" stroke="var(--fuse)" stroke-width="1.4"/>
+          <text x="144" y="97" text-anchor="middle" class="modsub">Q-Former</text>
+          <line x1="66" y1="93" x2="94" y2="93" stroke="var(--vision)" stroke-width="1.8"/>
+          <line x1="157" y1="68" x2="150" y2="74" stroke="var(--fuse)" stroke-width="1.4"/>
+          <g>
+            <rect x="228" y="86" width="14" height="14" fill="var(--fuse)"/>
+            <rect x="246" y="86" width="14" height="14" fill="var(--fuse)"/>
+          </g>
+          <text x="243" y="80" text-anchor="middle" class="modsub">fixed = 32</text>
+          <line x1="192" y1="93" x2="224" y2="93" stroke="var(--fuse)" stroke-width="1.8"/>
+          <rect x="286" y="70" width="86" height="46" rx="8" fill="#E9F3F3" stroke="var(--lang)" stroke-width="1.4"/>
+          <text x="329" y="97" text-anchor="middle" class="modsub">LLM</text>
+          <line x1="260" y1="93" x2="284" y2="93" stroke="var(--lang)" stroke-width="1.8"/>
+        </svg>
+      </div>
+    </div>
+    <div class="costline"><b>token budget →</b> tiny and constant, at the price of detail. The trade every compressor makes.</div>
+  </div>
+
+  <!-- F3 -->
+  <div class="fam">
+    <div class="fam-head">
+      <span class="fid">F3</span>
+      <h3>Cross-attention injection</h3>
+      <span class="tag">vision from the side · Flamingo → Llama Vision</span>
+    </div>
+    <div class="fam-body">
+      <div>
+        <p>The other side of the fork. Keep the LLM sequence <b>text-only</b> and leave the base model's language ability untouched. Insert new <b>gated cross-attention</b> layers between the frozen decoder blocks; those layers attend from text to a compressed set of visual features (Flamingo used a Perceiver Resampler). Vision never enters the main sequence, so image token count is decoupled from sequence length.</p>
+        <p>Pros: protects text skills, handles many images cleanly, controls KV growth. Cons: extra parameters and a more complex model. This is how Llama's vision models graft sight onto a strong text backbone.</p>
+        <div class="models"><span class="mchip">Flamingo</span><span class="mchip">Llama 3.2 Vision</span><span class="mchip">Llama 4 Scout (mm)</span></div>
+      </div>
+      <div class="diag">
+        <svg viewBox="0 0 380 200" xmlns="http://www.w3.org/2000/svg" aria-label="Text-only sequence in decoder with gated cross-attention pulling from compressed visual features">
+          <rect x="8" y="86" width="54" height="44" rx="7" fill="#F6EADB" stroke="var(--vision)" stroke-width="1.4"/>
+          <text x="35" y="112" text-anchor="middle" class="modsub">ViT</text>
+          <rect x="86" y="88" width="70" height="40" rx="8" fill="#FCFDFE" stroke="var(--fuse)" stroke-width="1.4"/>
+          <text x="121" y="112" text-anchor="middle" class="modsub">resampler</text>
+          <line x1="62" y1="108" x2="84" y2="108" stroke="var(--vision)" stroke-width="1.8"/>
+          <!-- decoder stack, text only -->
+          <rect x="214" y="20" width="150" height="30" rx="6" fill="#E9F3F3" stroke="var(--lang)" stroke-width="1.3"/>
+          <rect x="214" y="86" width="150" height="30" rx="6" fill="#EFE7F5" stroke="var(--fuse)" stroke-width="1.3"/>
+          <rect x="214" y="152" width="150" height="30" rx="6" fill="#E9F3F3" stroke="var(--lang)" stroke-width="1.3"/>
+          <text x="289" y="40" text-anchor="middle" class="modsub">self-attn (text)</text>
+          <text x="289" y="105" text-anchor="middle" class="modsub">gated cross-attn</text>
+          <text x="289" y="172" text-anchor="middle" class="modsub">self-attn (text)</text>
+          <!-- injection arrow -->
+          <path d="M156 108 H196 Q210 108 212 101" fill="none" stroke="var(--fuse)" stroke-width="1.8"/>
+          <line x1="289" y1="50" x2="289" y2="86" stroke="var(--lang)" stroke-width="1.5"/>
+          <line x1="289" y1="116" x2="289" y2="152" stroke="var(--lang)" stroke-width="1.5"/>
+        </svg>
+      </div>
+    </div>
+    <div class="costline"><b>token budget →</b> decoupled: image count does not inflate the sequence, it inflates the cross-attention only.</div>
+  </div>
+
+  <!-- F4 -->
+  <div class="fam">
+    <div class="fam-head">
+      <span class="fid">F4</span>
+      <h3>Native dynamic resolution</h3>
+      <span class="tag">let the model see the image as-is · Qwen-VL lineage</span>
+    </div>
+    <div class="fam-body">
+      <div>
+        <p>The Qwen school's bet: do not resize the world into a square. The ViT processes images at <b>native resolution and aspect ratio</b> (NaViT-style packing), emitting a <b>variable</b> number of visual tokens. A light MLP merger feeds them in via concatenation, and <b>m-RoPE</b> gives every token a position across height, width, and (for video) time, so the decoder knows where and when each patch sits.</p>
+        <p>Qwen3-VL sharpens this with a <b>SigLIP-2</b> encoder and a <b>DeepStack</b> path that mixes multi-level ViT features instead of only the last layer. Strong at OCR, documents, grounding, and long video because nothing gets squashed. The catch is exactly axis G: a big image can mean a lot of tokens.</p>
+        <div class="models"><span class="mchip">Qwen2-VL</span><span class="mchip">Qwen2.5-VL</span><span class="mchip">Qwen3-VL</span></div>
+      </div>
+      <div class="diag">
+        <svg viewBox="0 0 380 200" xmlns="http://www.w3.org/2000/svg" aria-label="Native resolution image producing variable length tokens with m-RoPE into decoder">
+          <rect x="8" y="60" width="70" height="80" rx="6" fill="#FCFDFE" stroke="var(--vision)" stroke-width="1.4"/>
+          <text x="43" y="46" text-anchor="middle" class="modsub">native H×W</text>
+          <g stroke="var(--vision)" stroke-width=".8" opacity=".6">
+            <line x1="8" y1="80" x2="78" y2="80"/><line x1="8" y1="100" x2="78" y2="100"/><line x1="8" y1="120" x2="78" y2="120"/>
+            <line x1="31" y1="60" x2="31" y2="140"/><line x1="54" y1="60" x2="54" y2="140"/>
+          </g>
+          <rect x="104" y="78" width="62" height="44" rx="8" fill="#F6EADB" stroke="var(--vision)" stroke-width="1.4"/>
+          <text x="135" y="97" text-anchor="middle" class="modsub">SigLIP-2</text>
+          <text x="135" y="111" text-anchor="middle" class="modsub" style="fill:var(--faint)">NaViT</text>
+          <line x1="78" y1="100" x2="102" y2="100" stroke="var(--vision)" stroke-width="1.8"/>
+          <!-- variable tokens -->
+          <g>
+            <rect x="188" y="92" width="12" height="16" fill="var(--vision)" opacity=".85"/>
+            <rect x="204" y="92" width="12" height="16" fill="var(--vision)" opacity=".85"/>
+            <rect x="220" y="92" width="12" height="16" fill="var(--vision)" opacity=".85"/>
+            <rect x="236" y="92" width="12" height="16" fill="var(--vision)" opacity=".7"/>
+            <rect x="252" y="92" width="12" height="16" fill="var(--vision)" opacity=".5"/>
+          </g>
+          <text x="222" y="84" text-anchor="middle" class="modsub">variable · m-RoPE</text>
+          <line x1="166" y1="100" x2="184" y2="100" stroke="var(--vision)" stroke-width="1.8"/>
+          <rect x="286" y="76" width="86" height="48" rx="8" fill="#E9F3F3" stroke="var(--lang)" stroke-width="1.4"/>
+          <text x="329" y="104" text-anchor="middle" class="modsub">decoder</text>
+          <line x1="264" y1="100" x2="284" y2="100" stroke="var(--lang)" stroke-width="1.8"/>
+        </svg>
+      </div>
+    </div>
+    <div class="costline"><b>token budget →</b> variable, tracks true image size. Great fidelity, needs real KV planning at deploy time.</div>
+  </div>
+
+  <!-- F5 -->
+  <div class="fam">
+    <div class="fam-head">
+      <span class="fid">F5</span>
+      <h3>Strong encoder, tile, then compress</h3>
+      <span class="tag">invest in perception · InternVL lineage</span>
+    </div>
+    <div class="fam-body">
+      <div>
+        <p>The opposite instinct to Qwen. If perception is the bottleneck, spend on it: scale <b>InternViT</b> until the encoder rivals the language model in size. Handle high resolution by <b>dynamic tiling</b> (slice the image into 448px crops plus a thumbnail), then tame the token explosion with <b>pixel shuffle</b>, which folds a 2×2 patch block into one token and cuts visual tokens ~4×.</p>
+        <p>InternVL3 added <b>native multimodal pretraining</b> (train on image and text jointly from the start rather than bolting vision onto a finished LLM), and InternVL3.5 pushed the post-training alignment. The result leans hard on high-fidelity visual features.</p>
+        <div class="models"><span class="mchip">InternVL2.5</span><span class="mchip">InternVL3</span><span class="mchip">InternVL3.5</span></div>
+      </div>
+      <div class="diag">
+        <svg viewBox="0 0 380 200" xmlns="http://www.w3.org/2000/svg" aria-label="Image tiled into crops through a large encoder then pixel shuffle compresses tokens into decoder">
+          <g>
+            <rect x="8" y="64" width="26" height="26" fill="#F6EADB" stroke="var(--vision)" stroke-width="1"/>
+            <rect x="36" y="64" width="26" height="26" fill="#F6EADB" stroke="var(--vision)" stroke-width="1"/>
+            <rect x="8" y="92" width="26" height="26" fill="#F6EADB" stroke="var(--vision)" stroke-width="1"/>
+            <rect x="36" y="92" width="26" height="26" fill="#F6EADB" stroke="var(--vision)" stroke-width="1"/>
+          </g>
+          <text x="35" y="56" text-anchor="middle" class="modsub">tiles</text>
+          <rect x="86" y="66" width="70" height="52" rx="8" fill="#F6EADB" stroke="var(--vision)" stroke-width="1.6"/>
+          <text x="121" y="88" text-anchor="middle" class="modsub">InternViT</text>
+          <text x="121" y="102" text-anchor="middle" class="modsub" style="fill:var(--faint)">large</text>
+          <line x1="62" y1="92" x2="84" y2="92" stroke="var(--vision)" stroke-width="1.8"/>
+          <rect x="176" y="70" width="72" height="44" rx="8" fill="#FCFDFE" stroke="var(--fuse)" stroke-width="1.4"/>
+          <text x="212" y="89" text-anchor="middle" class="modsub">pixel</text>
+          <text x="212" y="103" text-anchor="middle" class="modsub">shuffle ÷4</text>
+          <line x1="156" y1="92" x2="174" y2="92" stroke="var(--vision)" stroke-width="1.8"/>
+          <g>
+            <rect x="270" y="84" width="13" height="16" fill="var(--vision)" opacity=".85"/>
+            <rect x="286" y="84" width="13" height="16" fill="var(--vision)" opacity=".85"/>
+          </g>
+          <line x1="248" y1="92" x2="266" y2="92" stroke="var(--fuse)" stroke-width="1.8"/>
+          <rect x="316" y="70" width="56" height="44" rx="8" fill="#E9F3F3" stroke="var(--lang)" stroke-width="1.4"/>
+          <text x="344" y="96" text-anchor="middle" class="modsub">LLM</text>
+          <line x1="299" y1="92" x2="314" y2="92" stroke="var(--lang)" stroke-width="1.8"/>
+        </svg>
+      </div>
+    </div>
+    <div class="costline"><b>token budget →</b> tiling raises it, pixel shuffle claws ~4× back. The compression is the whole point.</div>
+  </div>
+
+  <!-- F6 -->
+  <div class="fam">
+    <div class="fam-head">
+      <span class="fid">F6</span>
+      <h3>Encoder-free and early fusion</h3>
+      <span class="tag">skip the ViT entirely · Fuyu · Chameleon</span>
+    </div>
+    <div class="fam-body">
+      <div>
+        <p>The radical branch: do you even need a separate vision encoder? <b>Fuyu</b> says no. Slice the image into patches and linearly project them straight into the decoder, which does all the visual work itself. One model, no CLIP.</p>
+        <p><b>Chameleon</b> goes further into <b>early fusion</b>: quantize images into discrete tokens (VQ), then train a single transformer over one interleaved stream of image and text tokens from scratch. Because images are just tokens, the same model can read and <b>generate</b> them. This is the "natively multimodal, one vocabulary" frontier, distinct from the encoder-plus-decoder mainstream.</p>
+        <div class="models"><span class="mchip">Fuyu-8B</span><span class="mchip">Chameleon</span><span class="mchip">early-fusion research</span></div>
+      </div>
+      <div class="diag">
+        <svg viewBox="0 0 380 190" xmlns="http://www.w3.org/2000/svg" aria-label="Image patches and text tokens interleaved into a single early-fusion transformer">
+          <g>
+            <rect x="10" y="40" width="20" height="20" fill="var(--vision)" opacity=".85"/>
+            <rect x="10" y="62" width="20" height="20" fill="var(--vision)" opacity=".85"/>
+            <rect x="32" y="40" width="20" height="20" fill="var(--vision)" opacity=".85"/>
+            <rect x="32" y="62" width="20" height="20" fill="var(--vision)" opacity=".85"/>
+          </g>
+          <text x="31" y="32" text-anchor="middle" class="modsub">patches</text>
+          <rect x="18" y="120" width="34" height="20" rx="4" fill="var(--lang)" opacity=".85"/>
+          <text x="35" y="112" text-anchor="middle" class="modsub">text</text>
+          <!-- interleaved -->
+          <g>
+            <rect x="150" y="80" width="16" height="18" fill="var(--vision)" opacity=".85"/>
+            <rect x="168" y="80" width="16" height="18" fill="var(--lang)" opacity=".85"/>
+            <rect x="186" y="80" width="16" height="18" fill="var(--vision)" opacity=".85"/>
+            <rect x="204" y="80" width="16" height="18" fill="var(--vision)" opacity=".85"/>
+            <rect x="222" y="80" width="16" height="18" fill="var(--lang)" opacity=".85"/>
+          </g>
+          <text x="194" y="72" text-anchor="middle" class="modsub">one interleaved stream</text>
+          <path d="M52 55 Q110 58 148 84" fill="none" stroke="var(--vision)" stroke-width="1.6"/>
+          <path d="M52 130 Q110 120 148 96" fill="none" stroke="var(--lang)" stroke-width="1.6"/>
+          <rect x="150" y="128" width="140" height="42" rx="8" fill="#EFE7F5" stroke="var(--fuse)" stroke-width="1.5"/>
+          <text x="220" y="154" text-anchor="middle" class="modsub">single transformer</text>
+          <line x1="194" y1="98" x2="194" y2="126" stroke="var(--fuse)" stroke-width="1.8"/>
+        </svg>
+      </div>
+    </div>
+    <div class="costline"><b>token budget →</b> no encoder overhead, but the decoder carries all perception. Elegant, still a minority path.</div>
+  </div>
+</section>
+
+<!-- ============ FRONTIER ============ -->
+<section class="wrap reveal">
+  <div class="eyebrow">The 2026 frontier</div>
+  <h2><span class="n">03</span>Where it is heading now</h2>
+  <p class="lede">The tour so far is the settled core. The recent turn, roughly the last year, is that <b>the bridge is dissolving</b>. Vision stops being an adapter bolted onto a finished LLM and gets pretrained into one early-fused stream, and the trunk starts doing more than describe. Four eras in six years:</p>
+
+  <div class="eras">
+    <div class="era"><div class="yr">2021–22</div><div class="et">Frozen towers</div><p>Contrastive alignment, or a small bridge into a frozen LLM. CLIP, Flamingo, BLIP-2.</p></div>
+    <div class="era"><div class="yr">2023–25</div><div class="et">LLM trunk, bolt-on vision</div><p>A pretrained LLM is the trunk, vision an adapter tuned onto it. LLaVA, Qwen2.5-VL.</p></div>
+    <div class="era now"><div class="yr">2025–26</div><div class="et">Early fusion by default</div><p>Drop the bridge. Modalities enter one early-fused stream, pretrained together from the start.</p></div>
+    <div class="era"><div class="yr">2026 →</div><div class="et">A trunk that acts</div><p>Predict and act, not just caption: omni agents, vision-language-action, world models.</p></div>
+  </div>
+
+  <div class="axes">
+    <div class="axis">
+      <div class="ax-n">SHIFT 1</div>
+      <h3>Early fusion goes mainstream</h3>
+      <p>What was radical for Fuyu and Chameleon (card F6) is now where flagships sit. Image, video, and often audio enter a single stream, the connector shrinks toward nothing, and vision is pretrained in rather than aligned afterward. Generation stays autoregressive text for most, so the live split is now the output axis (text-out vs also generating images), not the input.</p>
+    </div>
+    <div class="axis">
+      <div class="ax-n">SHIFT 2</div>
+      <h3>Omni and any-to-any</h3>
+      <p>Text-image VLMs generalize to text, image, audio, and video in one model. Qwen's omni line uses a <b>Thinker-Talker</b> split (a reasoning module feeding a streaming speech module) on an MoE backbone. NVIDIA's open Nemotron 3 Nano Omni folds vision and audio encoders into one model and, unusually, runs a <b>hybrid Mamba-Transformer-MoE</b> backbone instead of a pure transformer, the only non-standard decoder in this whole map.</p>
+      <div class="opts"><span class="chip hot">Qwen3.5-Omni</span><span class="chip hot">Nemotron 3 Omni</span><span class="chip">Thinker-Talker</span><span class="chip">Mamba-MoE hybrid</span></div>
+    </div>
+    <div class="axis">
+      <div class="ax-n">SHIFT 3</div>
+      <h3>Agentic, and token-thrifty</h3>
+      <p>Newer models take visual tool use end to end: screenshots and document pages go straight in as tool inputs, and the model reads visual tool outputs (charts, results) back. That needs many images in long context, so aggressive <b>visual-context compression</b> (reported near 20× while holding OCR quality) attacks axis G directly.</p>
+      <div class="opts"><span class="chip hot">GLM-4.6V</span><span class="chip">native visual tools</span><span class="chip">128K context</span></div>
+    </div>
+    <div class="axis">
+      <div class="ax-n">SHIFT 4</div>
+      <h3>The trunk starts to act</h3>
+      <p>The frontier direction turns the trunk into something that predicts and acts, not just answers. NVIDIA's open stack makes it concrete: <b>GR00T</b> pairs an Eagle-based VL backbone with a diffusion-transformer action head for robot manipulation, and <b>Cosmos</b> pairs an autoregressive reasoner with a diffusion generator to unify perception, world generation, and action. Perception, reasoning, and control begin to share one backbone.</p>
+      <div class="opts"><span class="chip">VLA</span><span class="chip">world models</span><span class="chip hot">GR00T</span><span class="chip hot">Cosmos</span></div>
+    </div>
+    <div class="axis" style="grid-column:1 / -1">
+      <div class="ax-n">THE CLOSED FRONTIER · Gemini · GPT · Claude</div>
+      <h3>What you cannot see inside</h3>
+      <p>The most capable general models are proprietary, and their internals are not published. Google and OpenAI describe their flagships as natively multimodal, trained across modalities from the start, and Anthropic's Claude is strong on documents and vision, but none of the three disclose encoder, connector, resolution, or token-budget details. You can place all three in the early-fusion, natively-multimodal era by stated design and behavior, not by architecture. That distinction is itself worth saying in an interview: for closed models you reason from what they do and what the vendor claims, not from a diagram.</p>
+      <div class="opts"><span class="chip">Gemini · stated native mm</span><span class="chip">GPT omni · stated native mm</span><span class="chip">Claude · vision-capable</span><span class="chip">internals undisclosed</span></div>
+    </div>
+  </div>
+  <p class="lede" style="margin-top:22px">The interview compression of all this is one sentence: the field moved from <b>aligning vision onto a language model</b> to <b>pretraining one multimodal model that early-fuses everything and increasingly acts</b>. Place a new release on the eras strip, name which shift it embodies, and you are reading it the way the field does.</p>
+</section>
+
+<!-- ============ PHILOSOPHIES ============ -->
+<section class="wrap reveal">
+  <div class="eyebrow">The live tension</div>
+  <h2><span class="n">04</span>Two philosophies, one benchmark board</h2>
+  <p class="lede">The two strongest open lineages right now disagree about where to spend the compute. This is the single most useful comparison to have loaded, because papers routinely pick one representative from each camp.</p>
+  <div class="split">
+    <div class="phil warm">
+      <div class="who">Camp Qwen</div>
+      <h3>See it as it is</h3>
+      <p>Keep the connector minimal, feed the decoder native-resolution tokens, and let position encoding (m-RoPE) plus a strong decoder do the reasoning. Perception stays light; intelligence lives in the language model.</p>
+      <ul>
+        <li>native dynamic resolution, variable tokens</li>
+        <li>light MLP merger, SigLIP-2 encoder</li>
+        <li>m-RoPE across height, width, time</li>
+        <li>excels at OCR, documents, long video</li>
+      </ul>
+    </div>
+    <div class="phil cool">
+      <div class="who">Camp InternVL</div>
+      <h3>Invest in seeing</h3>
+      <p>Scale the vision encoder until it rivals the LLM, tile for high resolution, compress with pixel shuffle, and pretrain the whole thing multimodally from scratch. Perception is treated as the hard part.</p>
+      <ul>
+        <li>large InternViT, scaled encoder</li>
+        <li>dynamic tiling plus pixel shuffle</li>
+        <li>native multimodal pretraining</li>
+        <li>high-fidelity features, strong grounding</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TABLE ============ -->
+<section class="wrap reveal">
+  <div class="eyebrow">The board</div>
+  <h2><span class="n">05</span>The landscape on one row each</h2>
+  <p class="lede">Read this left to right and you are reading the axes. Fusion is the column that splits the field in two.</p>
+  <div class="tablewrap">
+    <table>
+      <thead>
+        <tr><th>Model</th><th>Vision encoder</th><th>Resolution</th><th>Connector</th><th>Fusion</th><th>Signature</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>LLaVA-1.5</td><td class="mono">CLIP ViT-L</td><td class="mono">fixed 336</td><td class="mono">MLP</td><td><span class="pill cat">concat</span></td><td class="mono">the baseline everyone forks</td></tr>
+        <tr><td>Qwen3-VL</td><td class="mono">SigLIP-2</td><td class="mono">native dynamic</td><td class="mono">MLP + DeepStack</td><td><span class="pill cat">concat</span></td><td class="mono">m-RoPE, multi-level features</td></tr>
+        <tr><td>InternVL3.5</td><td class="mono">InternViT (large)</td><td class="mono">tiling</td><td class="mono">pixel shuffle</td><td><span class="pill cat">concat</span></td><td class="mono">scaled encoder, native mm pretrain</td></tr>
+        <tr><td>Llama Vision</td><td class="mono">ViT</td><td class="mono">tiling</td><td class="mono">resampler</td><td><span class="pill xa">cross-attn</span></td><td class="mono">grafts sight onto a text backbone</td></tr>
+        <tr><td>Flamingo</td><td class="mono">frozen ViT</td><td class="mono">fixed</td><td class="mono">Perceiver</td><td><span class="pill xa">cross-attn</span></td><td class="mono">the cross-attention blueprint</td></tr>
+        <tr><td>BLIP-2</td><td class="mono">frozen ViT</td><td class="mono">fixed</td><td class="mono">Q-Former</td><td><span class="pill cat">concat</span></td><td class="mono">fixed 32-token bottleneck</td></tr>
+        <tr><td>Fuyu</td><td class="mono">none</td><td class="mono">patch grid</td><td class="mono">linear</td><td><span class="pill ef">early</span></td><td class="mono">no encoder, patches into decoder</td></tr>
+        <tr><td>Chameleon</td><td class="mono">VQ tokenizer</td><td class="mono">discrete tokens</td><td class="mono">shared vocab</td><td><span class="pill ef">early</span></td><td class="mono">one stream, reads and generates</td></tr>
+        <tr><td>GLM-4.6V</td><td class="mono">ViT</td><td class="mono">native</td><td class="mono">heavy compression</td><td><span class="pill cat">concat</span></td><td class="mono">native visual tool use, ~20× token compression</td></tr>
+        <tr><td>Qwen3.5-Omni</td><td class="mono">vision + audio</td><td class="mono">native</td><td class="mono">Thinker-Talker</td><td><span class="pill ef">early · omni</span></td><td class="mono">text·image·audio·video, streaming, MoE</td></tr>
+        <tr><td>Nemotron 3 Omni</td><td class="mono">C-RADIOv4-H + audio</td><td class="mono">dynamic</td><td class="mono">MLP projectors</td><td><span class="pill ef">early · omni</span></td><td class="mono">open; hybrid Mamba-Transformer-MoE backbone, 256K</td></tr>
+        <tr><td>Gemini 3</td><td class="mono">undisclosed</td><td class="mono">undisclosed</td><td class="mono">undisclosed</td><td><span class="pill closed">closed</span></td><td class="mono">stated natively multimodal</td></tr>
+        <tr><td>GPT (omni)</td><td class="mono">undisclosed</td><td class="mono">undisclosed</td><td class="mono">undisclosed</td><td><span class="pill closed">closed</span></td><td class="mono">stated natively multimodal / omni</td></tr>
+        <tr><td>Claude</td><td class="mono">undisclosed</td><td class="mono">undisclosed</td><td class="mono">undisclosed</td><td><span class="pill closed">closed</span></td><td class="mono">strong document + vision, architecture unpublished</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============ INTERVIEW LENS ============ -->
+<section class="wrap reveal">
+  <div class="eyebrow">The interview lens</div>
+  <h2><span class="n">06</span>What they will actually ask</h2>
+  <p class="lede">Same method as your other foundations days: cover the topic, then rehearse the questions out loud. Here are the five an interviewer reaches for, with the crisp framing each one wants.</p>
+
+  <div class="qa">
+    <div class="q">
+      <div class="qq">Walk me through a modern VLM forward pass.</div>
+      <div class="aa">Image goes through the <b>vision encoder</b> to a grid of patch features. The <b>connector</b> projects them into the decoder's embedding space and often reduces their count. Visual tokens are <b>concatenated</b> with text tokens into one sequence, the decoder's <span class="k">self-attention</span> reasons over both, and it decodes autoregressively. Name the three modules, name the fusion step, done.</div>
+    </div>
+    <div class="q">
+      <div class="qq">Why do high-resolution images blow up your KV cache?</div>
+      <div class="aa">Each visual token lives in the sequence, so it lives in the <span class="k">KV cache</span>. More resolution or tiling means more tokens per image, and unlike text the count scales with image count and size, not just prompt length. That is why the mitigations exist: <b>pixel shuffle</b>, <b>resamplers</b>, and <b>cross-attention</b> all keep vision out of, or compressed within, the sequence. This is axis G, and it is the deploy-time gotcha.</div>
+    </div>
+    <div class="q">
+      <div class="qq">Concatenation vs cross-attention: trade-offs?</div>
+      <div class="aa">Concatenation is simple, scales with data, and lets one attention mechanism fuse everything, but every visual token costs sequence length and it can erode text ability. Cross-attention <b>decouples</b> image count from sequence length and protects the base LLM, at the cost of extra parameters and complexity. The field mostly chose concatenation for open models; Llama's vision line is the notable cross-attention holdout.</div>
+    </div>
+    <div class="q">
+      <div class="qq">Why did the field move to native resolution?</div>
+      <div class="aa">Fixed square resizing destroys aspect ratio and shrinks fine detail, which wrecks OCR, dense documents, and small-object grounding. The progression was <b>fixed → AnyRes tiling → native dynamic resolution</b>, with <span class="k">m-RoPE</span> added so the decoder still knows the 2D (and temporal) position of every patch once counts vary.</div>
+    </div>
+    <div class="q">
+      <div class="qq">What breaks specifically in video?</div>
+      <div class="aa">Frame budget and <b>temporal binding</b>. You cannot feed every frame, so sampling loses events, and once frames are tokens the model can <b>misbind</b> what happened when unless position encoding carries a real time axis. Time-aware m-RoPE and frame-token compression are the levers. Good place to note that temporal grounding is an open failure mode, not a solved one.</div>
+    </div>
+  </div>
+</section>
+
+<footer class="wrap">
+  <p><b>The VLM Architecture Atlas</b> · a foundations-day study tour, from the LLaVA baseline through the early-fusion, omni, and vision-language-action frontier. Landscape current to mid-2026: Qwen3-VL, InternVL3.5, GLM-4.6V, Qwen3.5-Omni, NVIDIA Nemotron 3 Omni, and the lineages they descend from. Closed flagships (Gemini, GPT, Claude) are placed by stated design, not disclosed architecture.</p>
+  <p style="margin-top:8px">Method: cover one section, close the page, redraw the skeleton from memory, then answer the five questions out loud.</p>
+  <div class="sibs">
+    <a href="video-generation-atlas.html">The Video Generation Atlas →</a>
+    <a href="world-action-model-atlas.html">The World Action Model Atlas →</a>
+  </div>
+</footer>
+
+<script>
+  // threshold 0: sections are often taller than the viewport, so any
+  // percentage threshold can be unreachable and leave them stuck at opacity 0.
+  const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:0,rootMargin:'0px 0px -8% 0px'});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>

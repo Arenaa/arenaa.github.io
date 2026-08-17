@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notes, Mahsa Khoshnoodi</title>
+<meta name="description" content="Long-form study notes on multimodal AI: visual atlases of vision-language model architectures, video generation models, and world action models.">
+<link rel="icon" href="/assets/img/favicon.png" type="image/png">
+<link rel="shortcut icon" href="/assets/img/favicon.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #1a1916;
+    --ink-soft: #4a4844;
+    --ink-muted: #8a8780;
+    --page: #faf9f6;
+    --surface: #f2f0eb;
+    --rule: #d8d5ce;
+    --accent: #1e3a5f;
+    --accent-light: #e8eef5;
+    --accent-mid: #3d6b9e;
+    --highlight: #b5491c;
+    --serif: 'EB Garamond', Georgia, serif;
+    --sans: 'Instrument Sans', system-ui, sans-serif;
+    --mono: 'DM Mono', monospace;
+    --max: 860px;
+  }
+
+  html { font-size: 18px; scroll-behavior: smooth; }
+  body { font-family: var(--serif); background: var(--page); color: var(--ink); line-height: 1.75; min-height: 100vh; }
+
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--page); border-bottom: 1px solid var(--rule);
+    padding: 0 2rem;
+  }
+  nav ul { max-width: var(--max); margin: 0 auto; display: flex; gap: 2rem; list-style: none; padding: 0.75rem 0; align-items: center; }
+  nav ul li:first-child { margin-right: auto; }
+  nav a { font-family: var(--serif); font-size: 0.95rem; font-weight: 600; color: var(--ink-soft); text-decoration: none; letter-spacing: 0; text-transform: none; transition: color 0.15s; }
+  nav a:hover { color: var(--accent); }
+  nav a.active { color: var(--accent); }
+  nav .site-name { font-family: var(--serif); font-size: 1rem; font-weight: 600; color: var(--ink); text-transform: none; letter-spacing: 0; }
+
+  main { max-width: var(--max); margin: 0 auto; padding: 3.5rem 2rem 6rem; }
+
+  .page-header {
+    margin-bottom: 2.5rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .page-header h1 { font-family: var(--serif); font-size: 1.85rem; font-weight: 400; margin-bottom: 0.5rem; }
+  .page-header p { font-size: 0.95rem; color: var(--ink-soft); max-width: 560px; line-height: 1.75; }
+
+  .note-list { display: flex; flex-direction: column; }
+
+  .note-card {
+    padding: 1.75rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .note-card:last-child { border-bottom: none; }
+
+  .note-top { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+  .topic-tag {
+    font-family: var(--mono); font-size: 0.62rem; font-weight: 500;
+    letter-spacing: 0.06em; padding: 0.2rem 0.45rem; border-radius: 2px;
+    white-space: nowrap; background: #0f4f5c; color: #b7e4ea;
+  }
+  .kind-tag {
+    font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.06em;
+    padding: 0.2rem 0.45rem; border-radius: 2px; white-space: nowrap;
+    background: var(--surface); color: var(--ink-muted); border: 1px solid var(--rule);
+  }
+  .date-tag { font-family: var(--mono); font-size: 0.62rem; color: var(--ink-muted); }
+
+  .note-title { font-family: var(--serif); font-size: 1.15rem; font-weight: 500; line-height: 1.35; margin-bottom: 0.4rem; }
+  .note-title a,
+  .note-title a:hover { color: inherit; text-decoration: none; border-bottom: none !important; }
+
+  .note-desc { font-size: 0.9rem; color: var(--ink-soft); line-height: 1.75; margin-bottom: 0.6rem; }
+
+  .note-covers { font-family: var(--sans); font-size: 0.78rem; color: var(--ink-muted); margin-bottom: 0.75rem; line-height: 1.6; }
+
+  .note-links { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .note-link {
+    font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.04em;
+    color: var(--accent-mid); text-decoration: none; text-transform: uppercase;
+    display: flex; align-items: center; gap: 0.25rem;
+    border-bottom: none !important;
+    transition: color 0.15s;
+  }
+  .note-link::before { content: '→ '; }
+  .note-link:hover { color: var(--accent); text-decoration: underline; }
+
+  .note-foot {
+    margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--rule);
+    font-family: var(--sans); font-size: 0.82rem; color: var(--ink-muted); line-height: 1.7;
+  }
+
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; transition: border-color 0.15s; }
+  a:hover { border-bottom-color: var(--accent-mid); }
+
+  footer { border-top: 1px solid var(--rule); padding: 2rem; text-align: center; }
+  footer p { font-family: var(--mono); font-size: 0.7rem; color: var(--ink-muted); letter-spacing: 0.04em; }
+
+  @media (max-width: 640px) {
+    nav ul { gap: 1rem; flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <ul>
+    <li><a href="index.html" class="site-name">Mahsa Khoshnoodi</a></li>
+    <li><a href="index.html#research">Research</a></li>
+    <li><a href="index.html#publications">Publications</a></li>
+    <li><a href="projects.html">Projects</a></li>
+    <li><a href="notes.html" class="active">Notes</a></li>
+    <li><a href="mailto:mk2524@georgetown.edu">Contact</a></li>
+  </ul>
+</nav>
+
+<main>
+
+  <div class="page-header">
+    <h1>Notes</h1>
+    <p>Long-form study notes on multimodal AI, written as visual atlases. Each one holds a single architecture family fixed and walks the design choices that separate the models inside it.</p>
+  </div>
+
+  <div class="note-list">
+
+    <div class="note-card">
+      <div class="note-top">
+        <span class="topic-tag">Vision-Language</span>
+        <span class="kind-tag">Atlas</span>
+        <span class="date-tag">2026</span>
+      </div>
+      <div class="note-title"><a href="vlm-architecture-atlas.html">The VLM Architecture Atlas</a></div>
+      <div class="note-desc">
+        Every current vision-language model is the same three-part machine: a vision encoder turns pixels into tokens, a connector reshapes them, and a language decoder reasons over vision and text together. This atlas holds that skeleton fixed and maps the choices that fill it, from the LLaVA baseline through to models that early-fuse everything and act.
+      </div>
+      <div class="note-covers">Seven design axes · six families · the visual token budget · the Qwen and InternVL camps · a landscape table · five interview questions</div>
+      <div class="note-links">
+        <a href="vlm-architecture-atlas.html" class="note-link">Read the atlas</a>
+      </div>
+    </div>
+
+    <div class="note-card">
+      <div class="note-top">
+        <span class="topic-tag">Video Generation</span>
+        <span class="kind-tag">Atlas</span>
+        <span class="date-tag">2026</span>
+      </div>
+      <div class="note-title"><a href="video-generation-atlas.html">The Video Generation Atlas</a></div>
+      <div class="note-desc">
+        Almost every modern text-to-video model runs one loop: a text encoder sets the target, a denoiser cleans noise step by step inside a compressed latent space, and a decoder returns pixels. The atlas walks the four slots that loop leaves open, and the quadratic wall that explains why clips stay short.
+      </div>
+      <div class="note-covers">Seven design axes · six families from temporal-layer U-Nets to world models · bidirectional versus autoregressive · a landscape table · five interview questions</div>
+      <div class="note-links">
+        <a href="video-generation-atlas.html" class="note-link">Read the atlas</a>
+      </div>
+    </div>
+
+    <div class="note-card">
+      <div class="note-top">
+        <span class="topic-tag">Embodied AI</span>
+        <span class="kind-tag">Survey walkthrough</span>
+        <span class="date-tag">2026</span>
+      </div>
+      <div class="note-title"><a href="world-action-model-atlas.html">The World Action Model Atlas</a></div>
+      <div class="note-desc">
+        A world action model predicts a future and keeps that forecast in the path that produces the action. That contract, not any particular backbone, is what separates it from a vision-language-action policy or a plain world model. A full walkthrough of the survey that named the family, and of its thesis that the strongest models generate less of the future while keeping what control needs.
+      </div>
+      <div class="note-covers">The WAM contract · three design philosophies · the four-axis anatomy · a census table · the five properties embodiment demands · seven open challenges</div>
+      <div class="note-links">
+        <a href="world-action-model-atlas.html" class="note-link">Read the atlas</a>
+        <a href="https://arxiv.org/abs/2606.20781" target="_blank" class="note-link">Source survey</a>
+      </div>
+    </div>
+
+  </div>
+
+  <p class="note-foot">These are study notes, not survey papers. They compress public technical reports and papers into one consistent frame so that new releases can be placed quickly. Closed models are described by stated design rather than disclosed architecture.</p>
+
+</main>
+
+<footer>
+  <p>Mahsa Khoshnoodi &nbsp;&middot;&nbsp; Georgetown University &nbsp;&middot;&nbsp; mk2524@georgetown.edu</p>
+</footer>
+
+</body>
+</html>
