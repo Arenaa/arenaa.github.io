@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The World Action Model Atlas</title>
+<meta name="description" content="A walkthrough of the World Action Model survey: what separates a WAM from a VLA or a world model, the three design philosophies, the four-axis anatomy, the five properties embodiment demands, and the dream-less-act-more thesis.">
+<meta name="color-scheme" content="light">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;450;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FFFFFF;--paper-2:#EEF2F5;--card:#F7F9FB;--card-line:#C7D0D9;
+    --ink:#12171D;--ink-soft:#39434E;--muted:#66727F;--faint:#7B8794;
+    --dream:#B06A1F;--dream-soft:#F0DEC7;--act:#0E7C7B;--act-soft:#C4E3E2;--couple:#3B3A7A;
+    --shadow:0 1px 0 rgba(18,23,29,.04), 0 12px 30px -18px rgba(18,23,29,.35);
+    --display:'Space Grotesk',sans-serif;--body:'Inter',sans-serif;--mono:'IBM Plex Mono',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--paper);color:var(--ink);font-family:var(--body);line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+  .mono{font-family:var(--mono)}
+  a{color:inherit}
+  :focus-visible{outline:2px solid var(--couple);outline-offset:3px}
+  .topbar{border-bottom:1px solid var(--card-line);background:var(--paper)}
+  .topbar .wrap{display:flex;justify-content:space-between;align-items:center;gap:14px 26px;flex-wrap:wrap;padding-top:13px;padding-bottom:13px}
+  .topbar a{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-decoration:none}
+  .topbar a:hover{color:var(--ink)}
+  .topbar .home{color:var(--ink)}
+  .topbar .set{display:flex;gap:20px;flex-wrap:wrap}
+  .topbar .set a[aria-current="page"]{color:var(--dream)}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:10px;margin-bottom:14px}
+  .eyebrow::before{content:"";width:26px;height:1px;background:var(--ink);opacity:.5}
+  section{padding:60px 0;border-top:1px solid var(--card-line)}
+  h2{font-family:var(--display);font-weight:600;font-size:clamp(26px,4vw,38px);line-height:1.08;letter-spacing:-.02em;margin-bottom:14px}
+  h2 .n{font-family:var(--mono);font-weight:500;font-size:.5em;color:var(--dream);vertical-align:super;margin-right:2px}
+  .lede{font-size:17px;color:var(--ink-soft);max-width:70ch;margin-bottom:8px}
+  .lede b{font-weight:600;color:var(--ink)}
+  .eq{font-family:var(--mono);font-size:13px;color:var(--couple);background:var(--paper-2);border:1px solid var(--card-line);border-radius:8px;padding:9px 13px;display:inline-block;margin:6px 0}
+  header{padding:60px 0 40px;border-top:none}
+  .kicker{font-family:var(--mono);font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--dream);margin-bottom:20px}
+  h1{font-family:var(--display);font-weight:700;font-size:clamp(40px,7.5vw,76px);line-height:.98;letter-spacing:-.035em;margin-bottom:10px}
+  h1 .l1{display:block}
+  .thesis{font-family:var(--display);font-weight:500;font-size:clamp(17px,2.4vw,22px);color:var(--muted);margin-bottom:22px;letter-spacing:-.01em}
+  .thesis .d{color:var(--dream)} .thesis .a{color:var(--act)}
+  .sub{font-size:19px;color:var(--ink-soft);max-width:66ch;margin-bottom:6px}
+  .sub .v{color:var(--dream);font-weight:600} .sub .t{color:var(--act);font-weight:600}
+  .src{font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:14px}
+  .src a{color:var(--ink-soft);text-decoration:underline;text-underline-offset:3px}
+  .legend{display:flex;gap:22px;flex-wrap:wrap;margin-top:22px;font-family:var(--mono);font-size:12.5px;color:var(--muted)}
+  .legend span{display:inline-flex;align-items:center;gap:8px}
+  .dot{width:11px;height:11px;border-radius:2px;display:inline-block}
+  .dot.v{background:var(--dream)} .dot.t{background:var(--act)} .dot.f{background:var(--couple)}
+  .stage{margin:40px 0 8px}
+  .skel{width:100%;height:auto;display:block}
+  .flow{stroke-dasharray:5 7;animation:dash 1.1s linear infinite}
+  @keyframes dash{to{stroke-dashoffset:-24}}
+  @media (prefers-reduced-motion:reduce){.flow{animation:none}}
+  .modlabel{font-family:var(--mono);font-size:12.5px;fill:var(--ink)}
+  .modsub{font-family:var(--mono);font-size:10px;fill:var(--muted)}
+  .axes{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:30px}
+  .axis{background:var(--card);border:1px solid var(--card-line);border-radius:10px;padding:20px 20px 18px;box-shadow:var(--shadow)}
+  .axis .ax-n{font-family:var(--mono);font-size:11px;color:var(--dream);letter-spacing:.1em}
+  .axis h3{font-family:var(--display);font-weight:600;font-size:18px;margin:6px 0 8px;letter-spacing:-.01em}
+  .axis p{font-size:14px;color:var(--ink-soft)}
+  .axis .opts{margin-top:12px;display:flex;flex-wrap:wrap;gap:6px}
+  .chip{font-family:var(--mono);font-size:11px;padding:3px 8px;border-radius:20px;background:var(--paper-2);border:1px solid var(--card-line);color:var(--ink-soft)}
+  .chip.hot{border-color:var(--dream);color:var(--dream);background:#F2E2CF}
+  .fam{background:var(--card);border:1px solid var(--card-line);border-radius:12px;padding:26px;margin-top:22px;box-shadow:var(--shadow)}
+  .fam-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:4px}
+  .fam-head .fid{font-family:var(--mono);font-size:12px;color:var(--dream);border:1px solid var(--dream);border-radius:5px;padding:2px 7px}
+  .fam-head h3{font-family:var(--display);font-weight:600;font-size:22px;letter-spacing:-.015em}
+  .fam .tag{font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+  .fam>p{font-size:15px;color:var(--ink-soft);margin-top:14px}
+  .fam>p b{color:var(--ink);font-weight:600}
+  .fam-top{display:grid;grid-template-columns:1.05fr .95fr;gap:26px;align-items:center;margin-top:16px}
+  .fam-top p{font-size:15px;color:var(--ink-soft)} .fam-top p b{color:var(--ink);font-weight:600}
+  .diag{background:#FCFDFE;border:1px solid var(--card-line);border-radius:9px;padding:14px}
+  .diag svg{width:100%;height:auto;display:block}
+  .branches{margin-top:16px;border-top:1px solid var(--card-line);padding-top:6px}
+  .branch{padding:11px 0;border-bottom:1px dashed var(--card-line)}
+  .branch:last-child{border-bottom:none}
+  .branch .bl{font-family:var(--mono);font-size:11px;color:var(--dream);letter-spacing:.05em;margin-bottom:3px;text-transform:uppercase}
+  .branch p{font-size:13.5px;color:var(--ink-soft);margin:0}
+  .branch p b{color:var(--ink);font-weight:600}
+  .branch .mm{font-family:var(--mono);color:var(--couple)}
+  .costline{margin-top:16px;font-family:var(--mono);font-size:12px;color:var(--muted);display:flex;gap:8px;align-items:flex-start}
+  .costline b{color:var(--couple);font-weight:600}
+  .subhead{font-family:var(--display);font-weight:600;font-size:20px;margin:32px 0 4px;letter-spacing:-.01em}
+  .subhead .sx{font-family:var(--mono);font-size:12px;color:var(--dream);margin-right:8px}
+  .subnote{font-size:14.5px;color:var(--ink-soft);margin-bottom:4px;max-width:70ch}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}
+  .grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:14px}
+  .opt{background:var(--card);border:1px solid var(--card-line);border-radius:9px;padding:15px;box-shadow:var(--shadow)}
+  .opt h5{font-family:var(--display);font-weight:600;font-size:14.5px;margin-bottom:5px;letter-spacing:-.01em}
+  .opt p{font-size:12.5px;color:var(--ink-soft)}
+  .opt .ex{font-family:var(--mono);font-size:10.5px;color:var(--muted);margin-top:8px;display:block}
+  .props{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:28px}
+  .prop{background:var(--card);border:1px solid var(--card-line);border-radius:10px;padding:16px;box-shadow:var(--shadow)}
+  .prop .pn{font-family:var(--mono);font-size:10.5px;color:var(--couple);letter-spacing:.08em}
+  .prop h4{font-family:var(--display);font-weight:600;font-size:15px;margin:6px 0 6px;letter-spacing:-.01em}
+  .prop p{font-size:12.5px;color:var(--ink-soft)}
+  .tablewrap{margin-top:26px;overflow-x:auto;border:1px solid var(--card-line);border-radius:12px;box-shadow:var(--shadow)}
+  table{border-collapse:collapse;width:100%;min-width:900px;background:var(--card);font-size:12.5px}
+  th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--card-line);vertical-align:top}
+  thead th{font-family:var(--mono);font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);background:var(--paper-2);position:sticky;top:0}
+  tbody td:first-child{font-family:var(--display);font-weight:600;color:var(--ink);white-space:nowrap}
+  td .mono{font-size:11.5px;color:var(--ink-soft)}
+  .pill{font-family:var(--mono);font-size:10px;padding:2px 6px;border-radius:20px;display:inline-block}
+  .pill.rd{background:var(--dream-soft);color:#7a4310} .pill.lo{background:#EAE3D2;color:#6a5320} .pill.gf{background:var(--act-soft);color:#0a4f4e}
+  .chal{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:26px}
+  .c1{background:var(--card);border:1px solid var(--card-line);border-radius:10px;padding:18px;box-shadow:var(--shadow)}
+  .c1 .cn{font-family:var(--mono);font-size:10.5px;color:var(--dream);letter-spacing:.08em}
+  .c1 h4{font-family:var(--display);font-weight:600;font-size:16px;margin:6px 0 6px;letter-spacing:-.01em}
+  .c1 p{font-size:13px;color:var(--ink-soft)}
+  .qa{margin-top:26px}
+  .q{background:var(--card);border:1px solid var(--card-line);border-radius:10px;padding:18px 20px;margin-bottom:14px;box-shadow:var(--shadow)}
+  .q .qq{font-family:var(--display);font-weight:600;font-size:16.5px;margin-bottom:8px;letter-spacing:-.01em;display:flex;gap:10px}
+  .q .qq::before{content:"Q";font-family:var(--mono);font-size:12px;color:var(--dream);border:1px solid var(--dream);border-radius:4px;padding:1px 6px;height:fit-content;flex:none}
+  .q .aa{font-size:14.5px;color:var(--ink-soft)} .q .aa b{color:var(--ink);font-weight:600}
+  .q .aa .k{font-family:var(--mono);font-size:12.5px;color:var(--couple);background:#E7E5F4;padding:1px 5px;border-radius:4px}
+  footer{border-top:1px solid var(--card-line);padding:40px 0 70px;color:var(--muted);font-size:13px;font-family:var(--mono)}
+  footer b{color:var(--ink-soft)}
+  footer a{color:var(--ink-soft);text-decoration:underline;text-underline-offset:3px}
+  .sibs{margin-top:16px;display:flex;gap:18px;flex-wrap:wrap}
+  .sibs a{text-decoration:none;color:var(--muted);border-bottom:1px solid var(--card-line);padding-bottom:2px}
+  .sibs a:hover{color:var(--ink);border-color:var(--ink)}
+  .eras{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:28px 0 6px}
+  .era{background:var(--card);border:1px solid var(--card-line);border-radius:10px;padding:16px;position:relative}
+  .era .yr{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.06em}
+  .era .et{font-family:var(--display);font-weight:600;font-size:15px;margin:7px 0 6px;letter-spacing:-.01em}
+  .era p{font-size:12.5px;color:var(--ink-soft)}
+  .era.now{border-color:var(--dream)}
+  .era.now::after{content:"trend";position:absolute;top:12px;right:12px;font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--dream)}
+  .era.now .yr{color:var(--dream)}
+  .reveal{opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease}
+  .reveal.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
+  @media(max-width:980px){.props{grid-template-columns:repeat(3,1fr)}}
+  @media(max-width:760px){.axes,.chal{grid-template-columns:1fr}.fam-top{grid-template-columns:1fr}.grid3,.grid4{grid-template-columns:1fr 1fr}.eras,.props{grid-template-columns:1fr 1fr}}
+  @media(max-width:460px){.grid3,.grid4,.eras,.props{grid-template-columns:1fr}}
+</style>
+<noscript><style>.reveal{opacity:1;transform:none}</style></noscript>
+</head>
+<body>
+
+<nav class="topbar" aria-label="Atlas navigation">
+  <div class="wrap">
+    <a href="index.html" class="home">Mahsa Khoshnoodi</a>
+    <span class="set">
+      <a href="notes.html">All notes</a>
+      <a href="vlm-architecture-atlas.html">VLM architecture</a>
+      <a href="video-generation-atlas.html">Video generation</a>
+      <a href="world-action-model-atlas.html" aria-current="page">World action models</a>
+    </span>
+  </div>
+</nav>
+
+<header class="wrap">
+  <div class="kicker">The World Action Model Atlas</div>
+  <h1><span class="l1">World Action</span><span class="l1">Models</span></h1>
+  <p class="thesis"><span class="d">Dream Less</span>, <span class="a">Act More</span></p>
+  <p class="sub">A World Action Model predicts a <span class="v">future</span> and keeps that forecast in the path that produces the <span class="t">action</span>. That contract, not any particular backbone, is what makes it a WAM. This is a full walkthrough of the survey that named the family: the boundaries it draws, its two viewpoints, its four-axis anatomy, the properties embodiment demands, and its thesis that the strongest models generate less of the future while keeping what control needs.</p>
+  <p class="src">Following Shen, Zhang, Liao, Li, Tan, Wang, Yan &amp; Wang (NUS), <a href="https://arxiv.org/abs/2606.20781">World Action Models: A Survey</a> (arXiv 2606.20781v1, Jun 2026). A study map of one survey's framework, not a settled consensus. Method names are the survey's; any census-cell assignment is a reading of its prose.</p>
+  <div class="legend">
+    <span><i class="dot v"></i> prediction / future (dream)</span>
+    <span><i class="dot t"></i> action (act)</span>
+    <span><i class="dot f"></i> the action-facing coupling</span>
+  </div>
+  <div class="stage">
+    <svg class="skel" viewBox="0 0 980 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A VLA maps observation and instruction straight to action; a WAM predicts a future substrate and makes it action-facing before acting">
+      <rect x="12" y="96" width="150" height="60" rx="8" fill="#FCFDFE" stroke="var(--ink-soft)" stroke-width="1.4"/>
+      <text x="87" y="122" text-anchor="middle" class="modlabel">observation + task</text>
+      <text x="87" y="139" text-anchor="middle" class="modsub">o&#8804;t , l</text>
+      <path d="M162 112 Q300 60 470 60 Q640 60 700 108" fill="none" stroke="var(--act)" stroke-width="1.6" stroke-dasharray="4 6" opacity=".65"/>
+      <text x="410" y="50" text-anchor="middle" class="modsub" style="fill:var(--faint)">VLA: skip the future, act from the present</text>
+      <line x1="162" y1="132" x2="214" y2="150" stroke="var(--dream)" stroke-width="2" class="flow"/>
+      <rect x="214" y="118" width="184" height="74" rx="10" fill="#F2E2CF" stroke="var(--dream)" stroke-width="1.6"/>
+      <text x="306" y="150" text-anchor="middle" class="modlabel">predict future</text>
+      <text x="306" y="168" text-anchor="middle" class="modsub">substrate s</text>
+      <text x="306" y="112" text-anchor="middle" class="modsub" style="fill:var(--dream)">DREAM</text>
+      <line x1="398" y1="155" x2="452" y2="155" stroke="var(--couple)" stroke-width="2" class="flow"/>
+      <rect x="452" y="122" width="150" height="66" rx="9" fill="#EEE9F6" stroke="var(--couple)" stroke-width="1.6"/>
+      <text x="527" y="150" text-anchor="middle" class="modlabel">make it</text>
+      <text x="527" y="167" text-anchor="middle" class="modsub">action-facing</text>
+      <line x1="602" y1="155" x2="656" y2="155" stroke="var(--act)" stroke-width="2" class="flow"/>
+      <rect x="656" y="122" width="170" height="66" rx="9" fill="#E9F3F3" stroke="var(--act)" stroke-width="1.6"/>
+      <text x="741" y="150" text-anchor="middle" class="modlabel">action chunk</text>
+      <text x="741" y="167" text-anchor="middle" class="modsub">a_(t:t+H-1)</text>
+      <text x="741" y="112" text-anchor="middle" class="modsub" style="fill:var(--act)">ACT</text>
+      <path d="M700 108 Q720 116 726 122" fill="none" stroke="var(--act)" stroke-width="1.6" stroke-dasharray="4 6" opacity=".65"/>
+      <line x1="826" y1="155" x2="880" y2="155" stroke="var(--act)" stroke-width="2" class="flow"/>
+      <text x="912" y="159" text-anchor="middle" class="modsub">robot</text>
+    </svg>
+  </div>
+</header>
+
+<!-- BOUNDARIES -->
+<section class="wrap reveal">
+  <div class="eyebrow">Section 01 &middot; the definition</div>
+  <h2><span class="n">01</span>What separates a WAM from its neighbors</h2>
+  <p class="lede">The label spread across three communities faster than the idea did, so the survey opens by drawing hard lines. Five nearby objects, told apart by what each is required to model. The point to hold: a WAM is defined by a <b>contract</b> on where the future goes, not by which backbone produces it.</p>
+  <div class="axes">
+    <div class="axis"><div class="ax-n">POLICY</div><h3>Vision-Language-Action</h3><p>Maps an observation and instruction straight to an action. It inherits semantic and spatial priors from a pretrained VLM, but it never models what will be observed after it acts, so it cannot reason about the consequence of its own intervention.</p><div class="eq">p( a | o, l )</div></div>
+    <div class="axis"><div class="ax-n">PREDICTOR</div><h3>World model</h3><p>Predicts the future observation that follows from the current state and an intervention. The future may be pixels, a hidden feature, a geometric state, an affordance, audio, or a symbol. It imagines, but does not necessarily choose the action.</p><div class="eq">p( o' | o, a, l )</div></div>
+    <div class="axis"><div class="ax-n">GENERATOR</div><h3>Video generation &rarr; video world model</h3><p>Generates a future visual from conditioning. When the conditioning includes the agent's action and the output is a future observation, the same family becomes a video world model: a high-capacity, internet-pretrained source of visual dynamics priors (Wan, CogVideoX, Cosmos, Sora).</p><div class="eq">p( o' | r ) &nbsp;&rarr;&nbsp; p( o' | o, a, l )</div></div>
+    <div class="axis" style="border-color:var(--couple)"><div class="ax-n" style="color:var(--couple)">THE WAM CONTRACT</div><h3>World Action Model</h3><p>Links the two. The predicted future is kept <b>in the action path</b>: it helps produce the action, score a candidate action, or train the action head inside one model. A direct VLA with an auxiliary future loss, a simulator used only as an RL environment, or a future head discarded before action use does <b>not</b> qualify.</p><div class="eq" style="color:var(--couple)">p( o', a | o, l )</div></div>
+  </div>
+
+  <h3 class="subhead"><span class="sx">1.1</span>Three ways the future reaches the action</h3>
+  <p class="subnote">The coupling is a factorization of the joint. All three are WAMs; they differ in whether prediction leads, follows, or fuses with the action.</p>
+  <div class="grid3">
+    <div class="opt"><h5>Predict-then-act (cascade)</h5><p>Imagine a future, then decode the action from it with a separate module: inverse dynamics, a pose tracker, a trajectory optimizer, a planner, or a policy. The historically early form.</p><span class="ex">p(o',a|o,l) = p(o'|o,l) &middot; q(a|o,o',l)</span><span class="ex">UniPi, VLP, AVDC</span></div>
+    <div class="opt"><h5>Act-then-predict (scoring)</h5><p>Propose an action, predict its consequence, and let the predicted consequence decide which action executes. Covers candidate scoring and planning.</p><span class="ex">p(o',a|o,l) = q(a|o,l) &middot; p(o'|o,a,l)</span><span class="ex">3D-ALP, PointWorld</span></div>
+    <div class="opt"><h5>Joint generation</h5><p>One backbone or tightly coupled experts emit the future and the action together in a shared state, through diffusion, autoregression, or a hybrid.</p><span class="ex">L = E[ -log p(o',a|o,l) ]</span><span class="ex">GR-1/2, PAD, UWM, WorldVLA</span></div>
+  </div>
+</section>
+
+<!-- VIEW ONE -->
+<section class="wrap reveal">
+  <div class="eyebrow">Section 02 &middot; view one &middot; design philosophy</div>
+  <h2><span class="n">02</span>How far do you carry the dream?</h2>
+  <p class="lede">The first viewpoint sorts every WAM by <b>where action is decoded along the inference path</b>: at rendered pixels, at an intermediate latent, or outside the video path entirely. It is a spectrum of how much future you generate before you act, it is exhaustive over the census, and the field is sliding down it. Three mutually exclusive philosophies, each with its internal branches.</p>
+
+  <!-- P1 -->
+  <div class="fam">
+    <div class="fam-head"><span class="fid">P1</span><h3>Render-and-Decode</h3><span class="tag">carry generation to pixels</span></div>
+    <div class="fam-top">
+      <div><p>Run the video backbone <b>all the way to pixel output</b>, then decode the action from the rendered future. The premise is that a full visual future is worth producing inside the control loop because it preserves the entire visual prior and exposes appearance, motion, and contact in an inspectable form. The standing cost: <b>synthesis is in the latency budget</b> every step, and video-quality metrics only weakly predict task success.</p></div>
+      <div class="diag"><svg viewBox="0 0 380 150" xmlns="http://www.w3.org/2000/svg" aria-label="Observation through a video generator to pixels, then an action decoder"><rect x="10" y="58" width="52" height="34" rx="6" fill="#FCFDFE" stroke="var(--ink-soft)" stroke-width="1.3"/><text x="36" y="79" text-anchor="middle" class="modsub">o, l</text><line x1="62" y1="75" x2="86" y2="75" stroke="var(--dream)" stroke-width="1.8"/><rect x="86" y="54" width="80" height="42" rx="8" fill="#F2E2CF" stroke="var(--dream)" stroke-width="1.5"/><text x="126" y="72" text-anchor="middle" class="modsub">video gen</text><text x="126" y="86" text-anchor="middle" class="modsub" style="fill:var(--faint)">to pixels</text><line x1="166" y1="75" x2="190" y2="75" stroke="var(--dream)" stroke-width="1.8"/><rect x="190" y="56" width="58" height="38" rx="6" fill="#FCFDFE" stroke="var(--dream)" stroke-width="1.5"/><text x="219" y="79" text-anchor="middle" class="modsub">frames</text><line x1="248" y1="75" x2="272" y2="75" stroke="var(--couple)" stroke-width="1.8"/><rect x="272" y="56" width="98" height="38" rx="8" fill="#E9F3F3" stroke="var(--act)" stroke-width="1.5"/><text x="321" y="79" text-anchor="middle" class="modsub">action decoder</text></svg></div>
+    </div>
+    <div class="branches">
+      <div class="branch"><div class="bl">Founding &middot; video as the plan</div><p>Text-conditioned video, then recover action. <span class="mm">UniPi</span> (inverse dynamics), <span class="mm">VLP</span> (search over language plans), <span class="mm">AVDC</span> (dense correspondences replace action labels).</p></div>
+      <div class="branch"><div class="bl">Demonstration sources</div><p>Move the interface onto human and task video. <span class="mm">Dreamitate</span> (track stereo video), <span class="mm">Gen2Act</span> (generated human motion), <span class="mm">This&amp;That</span> (gesture coords), <span class="mm">GR-MG</span> (progress-aware goal image).</p></div>
+      <div class="branch"><div class="bl">Modular recovery</div><p>Keep world model and actor separate and reusable across embodiments. <span class="mm">DreamGen</span> (offline pseudo-actions), <span class="mm">RIGVid</span>, <span class="mm">VERA</span> (action-free planner plus Jacobian inverse-dynamics translator).</p></div>
+      <div class="branch"><div class="bl">Geometry and search between future and action</div><p><span class="mm">NovaFlow</span>, <span class="mm">Dream2Flow</span> (distill video into 3D object flow), <span class="mm">3D-ALP</span> (3D world model as a rollout oracle in test-time search).</p></div>
+      <div class="branch"><div class="bl">Joint (action inside the backbone)</div><p><span class="mm">GR-1</span> anchors it: future image tokens and action tokens in one autoregressive stream. <span class="mm">GR-2</span> scales it, <span class="mm">WorldVLA</span> masks to cut action leakage, <span class="mm">PAD</span> denoises images and actions in one DiT, <span class="mm">Motus</span> denoises sparse video and action together.</p></div>
+      <div class="branch"><div class="bl">Richer rendered state</div><p>Render more than RGB so geometry is easy to extract. <span class="mm">TesserAct</span> (RGB-D-Normal 4D), <span class="mm">X-WAM</span> (multi-view RGB-D plus 3D reconstruction), <span class="mm">Dex4D</span> (frames to 3D point tracks).</p></div>
+      <div class="branch"><div class="bl">Sparse future</div><p>Render only the milestones the actor needs. <span class="mm">CoT-VLA</span> (visual chain-of-thought before action), <span class="mm">pi0.7</span> (async subgoal images to a PaliGemma action expert), <span class="mm">BagelVLA</span>.</p></div>
+      <div class="branch"><div class="bl">Foundation-scale and selective</div><p>Make a large video prior responsive. <span class="mm">DreamZero</span> (Wan-class online video-action policy, chunked KV-cache replacement), <span class="mm">Vidar</span>, <span class="mm">Veo-Act</span>; and spend it only when it helps: <span class="mm">DreamAvoid</span> (imagine on critical phases), <span class="mm">CKT-WAM</span>.</p></div>
+    </div>
+    <div class="costline"><b>dreams &rarr;</b> the most. Full visual prior, full pixel cost every step, only weakly measured by video fidelity.</div>
+  </div>
+
+  <!-- P2 -->
+  <div class="fam">
+    <div class="fam-head"><span class="fid">P2</span><h3>Latent-Only</h3><span class="tag">keep the video prior, stop before pixels</span></div>
+    <div class="fam-top">
+      <div><p>Keep the video-world-model lineage but <b>remove pixel decoding from the control path</b>. Action is read from an intermediate latent, a partially denoised feature, a flow field, a mask, or a value map, each cheaper than a full render. The recurring move: a video trunk whose VAE decoder is simply bypassed at inference. You keep the temporal and physical structure learned from video and drop the renderer, which is what lets several of these reach <b>real time</b>, at the cost of the pixel-space supervision that makes rendered futures inspectable.</p></div>
+      <div class="diag"><svg viewBox="0 0 380 150" xmlns="http://www.w3.org/2000/svg" aria-label="Video trunk stopped at the latent, decoder bypassed, action from the latent"><rect x="10" y="58" width="52" height="34" rx="6" fill="#FCFDFE" stroke="var(--ink-soft)" stroke-width="1.3"/><text x="36" y="79" text-anchor="middle" class="modsub">o, l</text><line x1="62" y1="75" x2="86" y2="75" stroke="var(--dream)" stroke-width="1.8"/><rect x="86" y="54" width="80" height="42" rx="8" fill="#F2E2CF" stroke="var(--dream)" stroke-width="1.5"/><text x="126" y="72" text-anchor="middle" class="modsub">video trunk</text><text x="126" y="86" text-anchor="middle" class="modsub" style="fill:var(--faint)">latent</text><line x1="166" y1="75" x2="190" y2="75" stroke="var(--dream)" stroke-width="1.8"/><rect x="190" y="56" width="58" height="38" rx="6" fill="#F0DEC7" stroke="var(--dream)" stroke-width="1.5"/><text x="219" y="79" text-anchor="middle" class="modsub">latent</text><rect x="190" y="104" width="58" height="26" rx="5" fill="#FCFDFE" stroke="var(--faint)" stroke-width="1.2" stroke-dasharray="3 3"/><text x="219" y="121" text-anchor="middle" class="modsub" style="fill:var(--faint)">decoder</text><line x1="193" y1="107" x2="245" y2="127" stroke="var(--faint)" stroke-width="1.3"/><line x1="248" y1="75" x2="272" y2="75" stroke="var(--couple)" stroke-width="1.8"/><rect x="272" y="56" width="98" height="38" rx="8" fill="#E9F3F3" stroke="var(--act)" stroke-width="1.5"/><text x="321" y="79" text-anchor="middle" class="modsub">action head</text></svg></div>
+    </div>
+    <div class="branches">
+      <div class="branch"><div class="bl">Interception point (stop at the latent)</div><p><span class="mm">VPP</span> (inverse dynamics on Stable Video Diffusion features), <span class="mm">VILP</span>, <span class="mm">UVA</span>, and <span class="mm">Genie Envisioner</span> (GE-Base video DiT; GE-Act decodes action chunks from a one-step denoised latent via flow matching).</p></div>
+      <div class="branch"><div class="bl">Tap the denoising trajectory</div><p><span class="mm">mimic-video</span> (action decoder on an intermediate ODE checkpoint of Cosmos-Predict2), <span class="mm">DiT4DiT</span>, <span class="mm">S-VAM</span> (self-distill multi-step denoising to one pass), <span class="mm">Fast-WAM</span> (make full generation optional at inference).</p></div>
+      <div class="branch"><div class="bl">Structured motion instead of texture</div><p><span class="mm">Im2Flow2Act</span>, <span class="mm">3DFlowAction</span> (object flow), <span class="mm">TraceGen</span> (3D traces to joint commands via IK), <span class="mm">3PoinTr</span>, <span class="mm">RoboFlow4D</span>.</p></div>
+      <div class="branch"><div class="bl">Structured substrate, contact and task state</div><p><span class="mm">MWM</span> (semantic-mask evolution), <span class="mm">OmniVTA</span> (tactile latents), <span class="mm">EgoExo-WM</span> (DINOv3 latent regressor under MPC).</p></div>
+      <div class="branch"><div class="bl">Joint backbone, latent action path</div><p><span class="mm">UWM</span> is the reference: independent diffusion timesteps let it collapse the visual branch at inference while keeping the video-trained representation. <span class="mm">CosmosPolicy</span>, <span class="mm">MotuBrain</span>, <span class="mm">AIM</span> (action through a spatial value map).</p></div>
+      <div class="branch"><div class="bl">Adaptive imagination and memory</div><p><span class="mm">DAWN</span> (refine V-JEPA latent world tokens against DiT action hypotheses), <span class="mm">CLWM</span> (forecast DINOv3 features, Dual-State test-time-training memory), <span class="mm">FFDC-WAM</span> and <span class="mm">tau0-WM</span> (invoke the heavy future model only when confidence drops).</p></div>
+    </div>
+    <div class="costline"><b>dreams &rarr;</b> in latent space. Video prior kept, renderer skipped, often real-time, less interpretable.</div>
+  </div>
+
+  <!-- P3 -->
+  <div class="fam">
+    <div class="fam-head"><span class="fid">P3</span><h3>Video-Generation-Free</h3><span class="tag">drop the video backbone entirely</span></div>
+    <div class="fam-top">
+      <div><p>Remove the pixel-level video generator from the predictive path (the LLM, VLM, JEPA, and flow-matching parts are still generative in the broad sense). The future is predicted in a <b>compact space</b>: LLM or VLM tokens, a joint-embedding-predictive encoder, a deterministic regressor over frozen vision features, or a non-video diffusion head over flow or affordances. The predictive signal survives, judged by action success rather than photorealism. The newest of the three families, and the sharp end of "dream less."</p></div>
+      <div class="diag"><svg viewBox="0 0 380 150" xmlns="http://www.w3.org/2000/svg" aria-label="Observation into a VLM or JEPA predicting a compact future token, then an action expert, no video generator"><rect x="10" y="58" width="52" height="34" rx="6" fill="#FCFDFE" stroke="var(--ink-soft)" stroke-width="1.3"/><text x="36" y="79" text-anchor="middle" class="modsub">o, l</text><line x1="62" y1="75" x2="90" y2="75" stroke="var(--dream)" stroke-width="1.8"/><rect x="90" y="52" width="96" height="46" rx="8" fill="#F2E2CF" stroke="var(--dream)" stroke-width="1.5"/><text x="138" y="72" text-anchor="middle" class="modsub">VLM / JEPA</text><text x="138" y="87" text-anchor="middle" class="modsub" style="fill:var(--faint)">no video gen</text><g><rect x="206" y="66" width="14" height="16" fill="var(--dream)" opacity=".8"/><rect x="224" y="66" width="14" height="16" fill="var(--dream)" opacity=".6"/></g><text x="222" y="58" text-anchor="middle" class="modsub">future tokens</text><line x1="186" y1="75" x2="204" y2="75" stroke="var(--dream)" stroke-width="1.8"/><line x1="242" y1="75" x2="272" y2="75" stroke="var(--couple)" stroke-width="1.8"/><rect x="272" y="56" width="98" height="38" rx="8" fill="#E9F3F3" stroke="var(--act)" stroke-width="1.5"/><text x="321" y="79" text-anchor="middle" class="modsub">action expert</text></svg></div>
+    </div>
+    <div class="branches">
+      <div class="branch"><div class="bl">Feature prediction (teacher / foundation targets)</div><p><span class="mm">FLARE</span> aligns policy tokens to future-observation embeddings from a frozen teacher; <span class="mm">FRAPPE</span> uses multiple vision foundation models; <span class="mm">DexWM</span> regresses future features; <span class="mm">LDA-1B</span> learns dynamics, policy, and forecasting in a structured DINO latent on a Qwen3-VL stack.</p></div>
+      <div class="branch"><div class="bl">Learned token or latent transition</div><p><span class="mm">DUST</span> augments an Eagle-2 VLM with a dual-stream diffusion head predicting future embedding tokens and action together; <span class="mm">ALAM</span> learns latent transitions from action-free video with composition and reversal consistency.</p></div>
+      <div class="branch"><div class="bl">Structured non-pixel futures</div><p><span class="mm">PointWorld</span> (action-conditioned 3D point flow, MPPI planning), <span class="mm">PALM</span> (affordance maps plus progress), <span class="mm">HiF-VLA</span> (motion-vector foresight tokens), <span class="mm">ICLR-VR</span> (gripper-keypoint polyline).</p></div>
+      <div class="branch"><div class="bl">Other modalities and feedback</div><p><span class="mm">Audio-WM</span> (future Mel latents when contact sound carries task evidence), <span class="mm">DDP</span> (latent imagination on out-of-distribution events), <span class="mm">Feedback-WM</span> (latent transition model as an observer correcting diffusion-policy denoising online).</p></div>
+    </div>
+    <div class="costline"><b>dreams &rarr;</b> the least. No video backbone, the future lives as tokens, features, geometry, or audio.</div>
+  </div>
+
+  <p class="lede" style="margin-top:22px">Two clarifications the survey stresses. This <b>where-is-action-decoded</b> split is separate from cascaded-versus-joint: a Latent-Only WAM can be either, and so can a Render-and-Decode one. And the split is chronological: Render-and-Decode came first, Latent-Only emerged as the field dropped pixel decoding from the control path, and Video-Generation-Free arrived as LLM, VLM, and JEPA backbones learned to carry the future without a video core. The application domain broadened over the same period to tabletop manipulation, dexterous hands, tactile contact, driving, and aerial work.</p>
+</section>
+
+<!-- VIEW TWO -->
+<section class="wrap reveal">
+  <div class="eyebrow">Section 03 &middot; view two &middot; component anatomy</div>
+  <h2><span class="n">03</span>Every WAM as a 4-tuple</h2>
+  <p class="lede">The second viewpoint treats a WAM as a conditional joint over a future trajectory and an action chunk, then reads off <b>four separable axes</b>. The philosophy fixes what must be generated; the 4-tuple fixes how it is built. Two methods with the same name but different choices on any one axis behave nothing alike.</p>
+  <div class="eq" style="display:block;max-width:100%;overflow-x:auto">p<sub>&Theta;</sub>( s<sub>t+1:t+H</sub> , a<sub>t:t+H-1</sub> | o<sub>&#8804;t</sub> , a<sub>&lt;t</sub> , l )&nbsp;&nbsp;&middot;&nbsp;&nbsp;predict a future substrate s and an action chunk a of horizon H from the context</div>
+
+  <h3 class="subhead"><span class="sx">Axis 1</span>Predictive substrate &middot; where it dreams</h3>
+  <p class="subnote">The space of the future the WAM exposes to the actor. Richer substrates carry more and cost more.</p>
+  <div class="grid4">
+    <div class="opt"><h5>Pixel-grounded</h5><p>Decoded future frames, or the VAE / VQ latent grid that decodes to a clip. Full appearance and motion.</p><span class="ex">GR-2, TesserAct, DreamZero</span></div>
+    <div class="opt"><h5>Feature</h5><p>A learned hidden state or token block with no decodable image: a teacher target, a generative-trunk feature tap, or a VLM future-token block.</p><span class="ex">VPP, FLARE, DAWN</span></div>
+    <div class="opt"><h5>Geometric primitive</h5><p>A structured object in physical coordinates: flow, point clouds, depth, pose, or motion vectors.</p><span class="ex">PointWorld, TraceGen, 3DFlowAction</span></div>
+    <div class="opt"><h5>Affordance map</h5><p>A task-relevant label or score map: a value map, affordance, or end-effector heatmap.</p><span class="ex">AIM, PALM</span></div>
+  </div>
+
+  <h3 class="subhead"><span class="sx">Axis 2</span>Action coupling &middot; how action enters and leaves</h3>
+  <p class="subnote">A factorization of the joint. Rollout can be chunk-level (predict a whole action chunk, then the future) or step-wise (interleave one action and one future step at a time).</p>
+  <div class="grid3">
+    <div class="opt"><h5>Action-conditioned rollout</h5><p>The action drives the prediction. Chunk-level or step-wise, the latter giving finer causal control at higher cost.</p><span class="ex">q(a|c) p(s|c,a)</span></div>
+    <div class="opt"><h5>Joint generation</h5><p>Future and action emerge together in one generative state, coupled tightly by construction.</p><span class="ex">p(s,a|c)</span></div>
+    <div class="opt"><h5>Post-prediction head</h5><p>Predict the future first, then a separate head reads it to produce the action. The cascade form.</p><span class="ex">p(s|c) q(a|s,c)</span></div>
+  </div>
+  <p class="subnote" style="margin-top:12px">A fourth choice sits underneath all three: <b>action representation and chunk size</b>, discrete tokens versus continuous flow, and how many steps H are committed before replanning. Larger chunks are cheaper but stale faster.</p>
+
+  <h3 class="subhead"><span class="sx">Axis 3</span>Architectural backbone &middot; how the prediction is produced</h3>
+  <p class="subnote">Five function families realize the future-prediction factor. The first two dominate Render-and-Decode; JEPA and LLM/VLM backbones power most Video-Generation-Free work.</p>
+  <div class="grid3">
+    <div class="opt"><h5>Iterative-denoising (video diffusion)</h5><p>Denoise future frames or latents over multiple steps. Highest fidelity, highest per-step cost.</p><span class="ex">PAD, UWM, Genie Envisioner</span></div>
+    <div class="opt"><h5>Autoregressive (next-frame, next-token)</h5><p>Predict the next frame or token, interleaving image and action tokens in one causal stream.</p><span class="ex">GR-1, GR-2, WorldVLA</span></div>
+    <div class="opt"><h5>Joint-embedding-predictive (JEPA)</h5><p>Predict in a learned embedding space, no pixel decode. Cheap, abstract, hard to inspect.</p><span class="ex">V-JEPA, DAWN</span></div>
+    <div class="opt"><h5>Hybrid (generative head + action head)</h5><p>A shared trunk feeding a generation head and an action head, tuned to route work between them.</p><span class="ex">DUST, AIM</span></div>
+    <div class="opt"><h5>LLM- and VLM-backbone</h5><p>Attach a lightweight action expert to a language or vision-language model; the future is a token block.</p><span class="ex">FLARE, LDA-1B</span></div>
+  </div>
+
+  <h3 class="subhead"><span class="sx">Axis 4</span>Deployment regime &middot; how it runs in a loop</h3>
+  <p class="subnote">Where latency meets the three choices above. This axis decides whether a design is usable in real control.</p>
+  <div class="grid4">
+    <div class="opt"><h5>Open-loop rollout</h5><p>Predict a future and execute the derived actions without re-observing mid-rollout. Simplest, most drift-prone.</p></div>
+    <div class="opt"><h5>Chunked closed-loop</h5><p>Predict a chunk, execute it, re-observe, replan. The common practical middle ground.</p></div>
+    <div class="opt"><h5>Single-step closed-loop</h5><p>Re-observe and re-predict every step. Tightest control, highest compute per action.</p></div>
+    <div class="opt"><h5>Interactive simulator</h5><p>Run the model as a steerable world you feed actions into, for planning, evaluation, or data generation.</p></div>
+  </div>
+</section>
+
+<!-- CENSUS -->
+<section class="wrap reveal">
+  <div class="eyebrow">Section 04 &middot; the census</div>
+  <h2><span class="n">04</span>Representative WAMs on one row each</h2>
+  <p class="lede">The two viewpoints on a grid: philosophy on the left, then the four-tuple. Read a row and you have placed a method. Assignments follow the survey's prose; treat any single cell as a reading, not a quoted table.</p>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Method</th><th>Philosophy</th><th>Substrate</th><th>Backbone</th><th>Coupling</th><th>Regime</th></tr></thead>
+      <tbody>
+        <tr><td>UniPi</td><td><span class="pill rd">Render-and-Decode</span></td><td class="mono">pixel</td><td class="mono">denoising</td><td class="mono">post-head (inv. dyn.)</td><td class="mono">open-loop</td></tr>
+        <tr><td>AVDC</td><td><span class="pill rd">Render-and-Decode</span></td><td class="mono">pixel</td><td class="mono">denoising</td><td class="mono">post-head (correspondence)</td><td class="mono">open-loop</td></tr>
+        <tr><td>GR-1 / GR-2</td><td><span class="pill rd">Render-and-Decode</span></td><td class="mono">pixel (VQ tokens)</td><td class="mono">autoregressive</td><td class="mono">joint</td><td class="mono">chunked closed-loop</td></tr>
+        <tr><td>WorldVLA</td><td><span class="pill rd">Render-and-Decode</span></td><td class="mono">pixel (VQ)</td><td class="mono">autoregressive</td><td class="mono">joint (masked)</td><td class="mono">chunked closed-loop</td></tr>
+        <tr><td>PAD</td><td><span class="pill rd">Render-and-Decode</span></td><td class="mono">pixel</td><td class="mono">denoising (DiT)</td><td class="mono">joint</td><td class="mono">chunked</td></tr>
+        <tr><td>Motus</td><td><span class="pill rd">Render-and-Decode</span></td><td class="mono">pixel (sparse)</td><td class="mono">denoising</td><td class="mono">joint</td><td class="mono">chunked</td></tr>
+        <tr><td>TesserAct</td><td><span class="pill rd">Render-and-Decode</span></td><td class="mono">pixel (RGB-D-Normal 4D)</td><td class="mono">denoising</td><td class="mono">post-head</td><td class="mono">open-loop</td></tr>
+        <tr><td>CoT-VLA</td><td><span class="pill rd">Render-and-Decode</span></td><td class="mono">pixel (sparse CoT)</td><td class="mono">autoregressive / VLM</td><td class="mono">post-head</td><td class="mono">chunked</td></tr>
+        <tr><td>DreamZero</td><td><span class="pill rd">Render-and-Decode</span></td><td class="mono">pixel</td><td class="mono">AR video diffusion</td><td class="mono">joint (online)</td><td class="mono">chunked closed-loop</td></tr>
+        <tr><td>VPP</td><td><span class="pill lo">Latent-Only</span></td><td class="mono">feature (SVD latent)</td><td class="mono">denoising</td><td class="mono">post-head</td><td class="mono">closed-loop</td></tr>
+        <tr><td>Genie Envisioner</td><td><span class="pill lo">Latent-Only</span></td><td class="mono">feature (1-step latent)</td><td class="mono">denoising (DiT)</td><td class="mono">post-head (flow)</td><td class="mono">chunked closed-loop</td></tr>
+        <tr><td>mimic-video</td><td><span class="pill lo">Latent-Only</span></td><td class="mono">feature (ODE checkpoint)</td><td class="mono">denoising</td><td class="mono">post-head</td><td class="mono">closed-loop</td></tr>
+        <tr><td>TraceGen</td><td><span class="pill lo">Latent-Only</span></td><td class="mono">geometric (3D trace)</td><td class="mono">denoising</td><td class="mono">post-head (IK)</td><td class="mono">open-loop</td></tr>
+        <tr><td>UWM</td><td><span class="pill lo">Latent-Only</span></td><td class="mono">pixel-latent</td><td class="mono">denoising</td><td class="mono">joint</td><td class="mono">closed-loop</td></tr>
+        <tr><td>AIM</td><td><span class="pill lo">Latent-Only</span></td><td class="mono">affordance (value map)</td><td class="mono">hybrid</td><td class="mono">post-head</td><td class="mono">closed-loop</td></tr>
+        <tr><td>DAWN</td><td><span class="pill lo">Latent-Only</span></td><td class="mono">feature (V-JEPA)</td><td class="mono">JEPA</td><td class="mono">joint refine</td><td class="mono">closed-loop</td></tr>
+        <tr><td>FLARE</td><td><span class="pill gf">Video-Gen-Free</span></td><td class="mono">feature (teacher target)</td><td class="mono">LLM / VLM</td><td class="mono">post-head</td><td class="mono">closed-loop</td></tr>
+        <tr><td>DUST</td><td><span class="pill gf">Video-Gen-Free</span></td><td class="mono">feature / token</td><td class="mono">VLM + diffusion head</td><td class="mono">joint</td><td class="mono">closed-loop</td></tr>
+        <tr><td>LDA-1B</td><td><span class="pill gf">Video-Gen-Free</span></td><td class="mono">feature (DINO latent)</td><td class="mono">LLM / VLM</td><td class="mono">joint</td><td class="mono">closed-loop</td></tr>
+        <tr><td>PointWorld</td><td><span class="pill gf">Video-Gen-Free</span></td><td class="mono">geometric (3D point flow)</td><td class="mono">deterministic regressor</td><td class="mono">act-then-predict (MPPI)</td><td class="mono">closed-loop</td></tr>
+        <tr><td>Audio-WM</td><td><span class="pill gf">Video-Gen-Free</span></td><td class="mono">feature (Mel latent)</td><td class="mono">non-video</td><td class="mono">post-head</td><td class="mono">closed-loop</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- PROPERTIES -->
+<section class="wrap reveal">
+  <div class="eyebrow">Section 05 &middot; the embodiment test</div>
+  <h2><span class="n">05</span>Five properties control actually demands</h2>
+  <p class="lede">Placing a WAM is half the survey. The other half is a critical checklist: what a predictive-action model must satisfy once a robot depends on it. Every design choice above is ultimately judged against these, and against what each solution costs in compute, memory, data, and evaluation effort.</p>
+  <div class="props">
+    <div class="prop"><div class="pn">01</div><h4>Interactability</h4><p>Accept control signals during generation, not only at the start of a rollout, so the future can be steered as intent changes.</p></div>
+    <div class="prop"><div class="pn">02</div><h4>Causality</h4><p>Never let a predicted future leak into the action executed now. The forecast informs; it must not encode the answer it is meant to help find.</p></div>
+    <div class="prop"><div class="pn">03</div><h4>Persistence</h4><p>Hold long-horizon predictions together as the robot acts and replans, without drift or forgetting across the episode.</p></div>
+    <div class="prop"><div class="pn">04</div><h4>Physical plausibility</h4><p>Predict futures the embodiment can actually realize, respecting contact and dynamics, not merely plausible-looking video.</p></div>
+    <div class="prop"><div class="pn">05</div><h4>Generalization</h4><p>Keep the predictive-action contract useful across tasks, objects, scenes, cameras, and embodiments, not just the training distribution.</p></div>
+  </div>
+</section>
+
+<!-- DATA AND EVAL -->
+<section class="wrap reveal">
+  <div class="eyebrow">Section 06 &middot; data and evaluation</div>
+  <h2><span class="n">06</span>What trains a WAM, and how you judge it</h2>
+  <p class="lede">The survey organizes the fuel and the yardsticks. Both are unsettled, and the mismatch between them is itself a finding: the metrics inherited from video generation do not measure what control cares about.</p>
+
+  <h3 class="subhead"><span class="sx">6.1</span>Data sources</h3>
+  <div class="grid3">
+    <div class="opt"><h5>Robot teleoperation</h5><p>Action-labeled demonstrations collected on the target robot. Highest fidelity, lowest scale, most expensive.</p></div>
+    <div class="opt"><h5>Portable human demonstrations</h5><p>Handheld or wearable capture of people doing tasks. Cheaper and broader, but the embodiment gap must be crossed.</p></div>
+    <div class="opt"><h5>Internet-scale video</h5><p>Egocentric and instructional video at web scale. Rich dynamics priors, but action-free, so the action must be recovered or inferred.</p></div>
+    <div class="opt"><h5>Simulation</h5><p>Cheap, labeled, resettable, and safe. The sim-to-real gap in appearance and contact is the standing tax.</p></div>
+    <div class="opt"><h5>Synthetic from WAMs</h5><p>A WAM generates its own training futures, a data engine that risks compounding its own errors if unfiltered.</p></div>
+  </div>
+
+  <h3 class="subhead"><span class="sx">6.2</span>Evaluation practices</h3>
+  <div class="grid4">
+    <div class="opt"><h5>Visual fidelity</h5><p>Video-quality metrics on the predicted future. Easy to compute, but they only weakly predict task success.</p></div>
+    <div class="opt"><h5>Closed-loop benchmarks</h5><p>Task success in the loop, in sim or on hardware. What actually matters, and the hardest to standardize.</p></div>
+    <div class="opt"><h5>Physical plausibility &amp; coherence</h5><p>Whether long-horizon futures stay dynamically consistent and realizable, not just sharp per frame.</p></div>
+    <div class="opt"><h5>What current evaluation misses</h5><p>The gap between fidelity and success, causality leaks, and cost inside the loop go largely unmeasured.</p></div>
+  </div>
+</section>
+
+<!-- OPEN CHALLENGES -->
+<section class="wrap reveal">
+  <div class="eyebrow">Section 07 &middot; open challenges</div>
+  <h2><span class="n">07</span>What the four-axis view brings into focus</h2>
+  <p class="lede">The survey closes on seven open problems, grouped by where they arise in the WAM stack. Each is a live research direction, not a solved trade-off.</p>
+  <div class="chal">
+    <div class="c1"><div class="cn">7.1</div><h4>Dream more or act more?</h4><p>When is a richer imagined future worth its latency, and when is a compact substrate, or no rendered future at all, the better bet? The field's central open tension.</p></div>
+    <div class="c1"><div class="cn">7.2</div><h4>What data should each stage learn from?</h4><p>Pretraining, alignment, and action learning may each want different sources. Matching data to stage is unresolved.</p></div>
+    <div class="c1"><div class="cn">7.3</div><h4>Can memory keep up?</h4><p>Long-horizon control needs persistent state, but caches grow and attention costs rise. What memory mechanism scales?</p></div>
+    <div class="c1"><div class="cn">7.4</div><h4>How can WAMs generalize?</h4><p>Holding the predictive-action contract useful across tasks, embodiments, cameras, and scenes remains hard.</p></div>
+    <div class="c1"><div class="cn">7.5</div><h4>What grounds abstract action?</h4><p>Bridging a compact or latent future to an executable, embodiment-specific action is an open interface problem.</p></div>
+    <div class="c1"><div class="cn">7.6</div><h4>When is a future physical?</h4><p>Distinguishing a dynamically realizable prediction from a merely photoreal one needs better notions and tests.</p></div>
+    <div class="c1"><div class="cn">7.7</div><h4>What should evaluation report?</h4><p>Given that fidelity weakly predicts success, the field still lacks agreed measures that capture control-relevant quality and cost.</p></div>
+  </div>
+</section>
+
+<!-- THESIS -->
+<section class="wrap reveal">
+  <div class="eyebrow">Section 08 &middot; the thesis</div>
+  <h2><span class="n">08</span>Dream less, act more</h2>
+  <p class="lede">Across every axis the same pattern emerges: predictive richness is bought with compute, memory, latency, and action-label cost, all of which land <b>inside a control loop</b>. So the strongest WAMs tend to generate less of the future while still acting on what they need. The chronological arc is that trajectory made visible.</p>
+  <div class="eras">
+    <div class="era"><div class="yr">2023</div><div class="et">Render the plan</div><p>Generate a full video future, then decode action. UniPi, VLP, AVDC.</p></div>
+    <div class="era"><div class="yr">2024</div><div class="et">Join future and action</div><p>Shared video-action streams and diffusion. GR-1/2, PAD.</p></div>
+    <div class="era now"><div class="yr">2025</div><div class="et">Drop the renderer</div><p>Stop at latents and features, reach real time. VPP, Genie Envisioner, UWM.</p></div>
+    <div class="era"><div class="yr">2026 &rarr;</div><div class="et">Drop the video model</div><p>Predict in VLM, JEPA, or geometric space. FLARE, DUST, PointWorld.</p></div>
+  </div>
+  <p class="lede" style="margin-top:20px">The interesting question, the survey insists, is never how much a WAM costs on its own. It is how that cost trades against the five properties embodiment imposes. That trade is the whole design space, and it is where your own work gets positioned.</p>
+</section>
+
+<!-- LENS -->
+<section class="wrap reveal">
+  <div class="eyebrow">Section 09 &middot; the positioning lens</div>
+  <h2><span class="n">09</span>Placing a model, and your own work</h2>
+  <p class="lede">Five questions that force the framework into working memory, phrased the way they get asked.</p>
+  <div class="qa">
+    <div class="q"><div class="qq">What makes a WAM, versus a VLA or a world model?</div><div class="aa">A VLA is <span class="k">p(a | o, l)</span>, action from the present, no future. A world model is <span class="k">p(o' | o, a, l)</span>, a future with no committed action. A WAM keeps the predicted future <b>action-facing</b>: it produces, scores, or trains the action. A future generated and discarded before the action does not count, and neither does a sim used only as an RL environment.</div></div>
+    <div class="q"><div class="qq">Give me the three design philosophies in one breath.</div><div class="aa"><b>Render-and-Decode</b> goes to pixels then decodes action. <b>Latent-Only</b> keeps the video prior but stops before pixel decoding, reading action from a latent or feature. <b>Video-Generation-Free</b> drops the video backbone and predicts in VLM, JEPA, or geometric space. A "dream less" spectrum the field is moving down.</div></div>
+    <div class="q"><div class="qq">How would you specify a WAM precisely?</div><div class="aa">As a 4-tuple: <b>substrate</b> (pixel, feature, geometric, affordance), <b>coupling</b> (rollout, joint, post-head, plus chunk size), <b>backbone</b> (denoising, autoregressive, JEPA, hybrid, LLM/VLM), and <b>deployment regime</b> (open-loop, chunked or single-step closed-loop, interactive). Same name, different axis, different behavior.</div></div>
+    <div class="q"><div class="qq">Why "dream less, act more"?</div><div class="aa">Because predictive richness costs compute, memory, latency, and action labels inside the loop, and rendering a full future rarely pays off relative to a compact substrate carrying what the action needs. The strongest recent WAMs generate less future, judged by the five embodiment properties rather than video fidelity.</div></div>
+    <div class="q"><div class="qq">What are the five properties, and why do they bite?</div><div class="aa"><b>Interactability</b> (steer during generation), <b>causality</b> (no future leakage into the current action), <b>persistence</b> (hold long horizons), <b>physical plausibility</b> (realizable, not just photoreal), and <b>generalization</b> (across tasks, cameras, embodiments). They bite because visual-quality metrics do not measure any of them, which is why evaluation is an open problem.</div></div>
+  </div>
+</section>
+
+<footer class="wrap">
+  <p><b>The World Action Model Atlas</b> &middot; a full walkthrough of <a href="https://arxiv.org/abs/2606.20781">World Action Models: A Survey</a> (Shen et al., NUS, arXiv 2606.20781v1). Third in a set with the VLM and video-generation atlases. Boundaries, two viewpoints, anatomy, properties, data, evaluation, and open challenges follow the paper; census-cell assignments are a reading of its prose, and this is one survey's framework rather than a settled consensus.</p>
+  <p style="margin-top:8px">Method: read one section, close the page, redraw the VLA-vs-WAM contract from memory, then place three models as 4-tuples out loud and name which of the five properties each is weakest on.</p>
+  <div class="sibs">
+    <a href="vlm-architecture-atlas.html">← The VLM Architecture Atlas</a>
+    <a href="video-generation-atlas.html">← The Video Generation Atlas</a>
+  </div>
+</footer>
+
+<script>
+  // threshold 0: sections are often taller than the viewport, so any
+  // percentage threshold can be unreachable and leave them stuck at opacity 0.
+  const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:0,rootMargin:'0px 0px -8% 0px'});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>

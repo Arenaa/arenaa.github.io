@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Video Generation Atlas</title>
+<meta name="description" content="A visual tour of modern video generation models: the shared latent denoising loop, the design axes that separate DiT, MMDiT, cascade, autoregressive, and world-model families, and where the field is heading.">
+<meta name="color-scheme" content="light">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;450;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FFFFFF;
+    --paper-2:#EEF2F5;
+    --card:#F7F9FB;
+    --card-line:#C7D0D9;
+    --ink:#12171D;
+    --ink-soft:#39434E;
+    --muted:#66727F;
+    --faint:#7B8794;
+    --latent:#B0431F;      /* diffusion / latent-video pathway */
+    --latent-soft:#F0D9CF;
+    --cond:#0E7C7B;        /* text / conditioning pathway */
+    --cond-soft:#C4E3E2;
+    --fuse:#3B3A7A;        /* the denoiser, where they meet */
+    --grid:#D3DBE2;
+    --shadow:0 1px 0 rgba(18,23,29,.04), 0 12px 30px -18px rgba(18,23,29,.35);
+    --display:'Space Grotesk',sans-serif;
+    --body:'Inter',sans-serif;
+    --mono:'IBM Plex Mono',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--paper);color:var(--ink);font-family:var(--body);line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1060px;margin:0 auto;padding:0 24px}
+  .mono{font-family:var(--mono)}
+  a{color:inherit}
+  :focus-visible{outline:2px solid var(--fuse);outline-offset:3px}
+
+  .topbar{border-bottom:1px solid var(--card-line);background:var(--paper)}
+  .topbar .wrap{display:flex;justify-content:space-between;align-items:center;gap:14px 26px;flex-wrap:wrap;padding-top:13px;padding-bottom:13px}
+  .topbar a{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-decoration:none}
+  .topbar a:hover{color:var(--ink)}
+  .topbar .home{color:var(--ink)}
+  .topbar .set{display:flex;gap:20px;flex-wrap:wrap}
+  .topbar .set a[aria-current="page"]{color:var(--latent)}
+
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:10px;margin-bottom:14px}
+  .eyebrow::before{content:"";width:26px;height:1px;background:var(--ink);opacity:.5}
+  section{padding:64px 0;border-top:1px solid var(--card-line)}
+  h2{font-family:var(--display);font-weight:600;font-size:clamp(26px,4vw,38px);line-height:1.08;letter-spacing:-.02em;margin-bottom:14px}
+  h2 .n{font-family:var(--mono);font-weight:500;font-size:.5em;color:var(--latent);vertical-align:super;margin-right:2px}
+  .lede{font-size:17px;color:var(--ink-soft);max-width:66ch;margin-bottom:8px}
+  .lede b{font-weight:600;color:var(--ink)}
+
+  header{padding:64px 0 40px;border-top:none;position:relative;overflow:hidden}
+  .kicker{font-family:var(--mono);font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--latent);margin-bottom:22px}
+  h1{font-family:var(--display);font-weight:700;font-size:clamp(40px,7.5vw,76px);line-height:.98;letter-spacing:-.035em;margin-bottom:22px}
+  h1 .l1{display:block}
+  h1 .em{color:var(--muted);font-weight:500}
+  .sub{font-size:19px;color:var(--ink-soft);max-width:62ch;margin-bottom:8px}
+  .sub .v{color:var(--latent);font-weight:600}
+  .sub .t{color:var(--cond);font-weight:600}
+  .legend{display:flex;gap:22px;flex-wrap:wrap;margin-top:26px;font-family:var(--mono);font-size:12.5px;color:var(--muted)}
+  .legend span{display:inline-flex;align-items:center;gap:8px}
+  .dot{width:11px;height:11px;border-radius:2px;display:inline-block}
+  .dot.v{background:var(--latent)}
+  .dot.t{background:var(--cond)}
+  .dot.f{background:var(--fuse)}
+
+  .stage{margin:40px 0 8px}
+  .skel{width:100%;height:auto;display:block}
+  .flow{stroke-dasharray:5 7;animation:dash 1.1s linear infinite}
+  @keyframes dash{to{stroke-dashoffset:-24}}
+  .spin{transform-origin:center;animation:spin 4s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @media (prefers-reduced-motion:reduce){.flow{animation:none}.spin{animation:none}}
+  .modlabel{font-family:var(--mono);font-size:12.5px;fill:var(--ink)}
+  .modsub{font-family:var(--mono);font-size:10px;fill:var(--muted)}
+
+  .axes{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:34px}
+  .axis{background:var(--card);border:1px solid var(--card-line);border-radius:10px;padding:20px 20px 18px;box-shadow:var(--shadow)}
+  .axis .ax-n{font-family:var(--mono);font-size:11px;color:var(--latent);letter-spacing:.1em}
+  .axis h3{font-family:var(--display);font-weight:600;font-size:18px;margin:6px 0 8px;letter-spacing:-.01em}
+  .axis p{font-size:14.5px;color:var(--ink-soft)}
+  .axis .opts{margin-top:12px;display:flex;flex-wrap:wrap;gap:6px}
+  .chip{font-family:var(--mono);font-size:11px;padding:3px 8px;border-radius:20px;background:var(--paper-2);border:1px solid var(--card-line);color:var(--ink-soft)}
+  .chip.hot{border-color:var(--latent);color:var(--latent);background:#F4E1D6}
+
+  .fam{background:var(--card);border:1px solid var(--card-line);border-radius:12px;padding:26px;margin-top:22px;box-shadow:var(--shadow)}
+  .fam-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:4px}
+  .fam-head .fid{font-family:var(--mono);font-size:12px;color:var(--latent);border:1px solid var(--latent);border-radius:5px;padding:2px 7px}
+  .fam-head h3{font-family:var(--display);font-weight:600;font-size:22px;letter-spacing:-.015em}
+  .fam .tag{font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+  .fam-body{display:grid;grid-template-columns:1.05fr .95fr;gap:26px;align-items:center;margin-top:16px}
+  .fam-body p{font-size:15px;color:var(--ink-soft);margin-bottom:12px}
+  .fam-body p b{color:var(--ink);font-weight:600}
+  .models{display:flex;flex-wrap:wrap;gap:7px;margin-top:6px}
+  .mchip{font-family:var(--mono);font-size:11.5px;padding:4px 9px;border-radius:6px;background:var(--paper-2);border:1px solid var(--card-line);color:var(--ink)}
+  .diag{background:#FCFDFE;border:1px solid var(--card-line);border-radius:9px;padding:14px}
+  .diag svg{width:100%;height:auto;display:block}
+  .costline{margin-top:14px;font-family:var(--mono);font-size:12px;color:var(--muted);display:flex;gap:8px;align-items:flex-start}
+  .costline b{color:var(--fuse);font-weight:600}
+
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:30px}
+  .phil{border-radius:12px;padding:24px;border:1px solid var(--card-line);box-shadow:var(--shadow)}
+  .phil.warm{background:linear-gradient(180deg,#F6E7DF,#FBF6F2)}
+  .phil.cool{background:linear-gradient(180deg,#E4F0F0,#F1F8F8)}
+  .phil .who{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase}
+  .phil.warm .who{color:var(--latent)}
+  .phil.cool .who{color:var(--cond)}
+  .phil h3{font-family:var(--display);font-weight:600;font-size:21px;margin:6px 0 10px;letter-spacing:-.015em}
+  .phil p{font-size:14.5px;color:var(--ink-soft)}
+  .phil ul{list-style:none;margin-top:12px;font-size:13.5px}
+  .phil li{padding:5px 0 5px 20px;position:relative;color:var(--ink-soft)}
+  .phil li::before{content:"▸";position:absolute;left:0;font-family:var(--mono)}
+  .phil.warm li::before{color:var(--latent)}
+  .phil.cool li::before{color:var(--cond)}
+
+  .tablewrap{margin-top:28px;overflow-x:auto;border:1px solid var(--card-line);border-radius:12px;box-shadow:var(--shadow)}
+  table{border-collapse:collapse;width:100%;min-width:820px;background:var(--card);font-size:13.5px}
+  th,td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--card-line);vertical-align:top}
+  thead th{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:var(--paper-2);position:sticky;top:0}
+  tbody td:first-child{font-family:var(--display);font-weight:600;color:var(--ink);white-space:nowrap}
+  td .mono{font-size:12.5px;color:var(--ink-soft)}
+  .pill{font-family:var(--mono);font-size:11px;padding:2px 7px;border-radius:20px;display:inline-block}
+  .pill.dit{background:var(--latent-soft);color:#7a2c10}
+  .pill.mm{background:var(--cond-soft);color:#0a4f4e}
+  .pill.ar{background:#DED9F0;color:#33307a}
+  .pill.closed{background:#E7EBEF;color:#5B6673}
+
+  .qa{margin-top:26px}
+  .q{background:var(--card);border:1px solid var(--card-line);border-radius:10px;padding:18px 20px;margin-bottom:14px;box-shadow:var(--shadow)}
+  .q .qq{font-family:var(--display);font-weight:600;font-size:16.5px;margin-bottom:8px;letter-spacing:-.01em;display:flex;gap:10px}
+  .q .qq::before{content:"Q";font-family:var(--mono);font-size:12px;color:var(--latent);border:1px solid var(--latent);border-radius:4px;padding:1px 6px;height:fit-content;flex:none}
+  .q .aa{font-size:14.5px;color:var(--ink-soft)}
+  .q .aa b{color:var(--ink);font-weight:600}
+  .q .aa .k{font-family:var(--mono);font-size:12.5px;color:var(--fuse);background:#E7E5F4;padding:1px 5px;border-radius:4px}
+
+  footer{border-top:1px solid var(--card-line);padding:40px 0 70px;color:var(--muted);font-size:13px;font-family:var(--mono)}
+  footer b{color:var(--ink-soft)}
+  footer a{color:var(--ink-soft);text-decoration:underline;text-underline-offset:3px}
+  .sibs{margin-top:16px;display:flex;gap:18px;flex-wrap:wrap}
+  .sibs a{text-decoration:none;color:var(--muted);border-bottom:1px solid var(--card-line);padding-bottom:2px}
+  .sibs a:hover{color:var(--ink);border-color:var(--ink)}
+
+  .eras{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:30px 0 6px}
+  .era{background:var(--card);border:1px solid var(--card-line);border-radius:10px;padding:16px;position:relative}
+  .era .yr{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.06em}
+  .era .et{font-family:var(--display);font-weight:600;font-size:15px;margin:7px 0 6px;letter-spacing:-.01em}
+  .era p{font-size:12.5px;color:var(--ink-soft)}
+  .era.now{border-color:var(--latent)}
+  .era.now::after{content:"now";position:absolute;top:12px;right:12px;font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--latent)}
+  .era.now .yr{color:var(--latent)}
+
+  .reveal{opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease}
+  .reveal.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
+
+  @media(max-width:760px){
+    .axes{grid-template-columns:1fr}
+    .fam-body{grid-template-columns:1fr}
+    .split{grid-template-columns:1fr}
+    .eras{grid-template-columns:1fr 1fr}
+  }
+  @media(max-width:460px){.eras{grid-template-columns:1fr}}
+</style>
+<noscript><style>.reveal{opacity:1;transform:none}</style></noscript>
+</head>
+<body>
+
+<nav class="topbar" aria-label="Atlas navigation">
+  <div class="wrap">
+    <a href="index.html" class="home">Mahsa Khoshnoodi</a>
+    <span class="set">
+      <a href="notes.html">All notes</a>
+      <a href="vlm-architecture-atlas.html">VLM architecture</a>
+      <a href="video-generation-atlas.html" aria-current="page">Video generation</a>
+      <a href="world-action-model-atlas.html">World action models</a>
+    </span>
+  </div>
+</nav>
+
+<header class="wrap">
+  <div class="kicker">The Video Generation Atlas</div>
+  <h1><span class="l1">A visual tour of</span><span class="l1">modern <span class="em">video generation</span> models</span></h1>
+  <p class="sub">Almost every modern text-to-video model is the same machine: a <span class="t">text encoder</span> sets the target, a <span class="v">denoiser</span> starts from pure noise in a compressed latent space and cleans it step by step, and a decoder turns the final latent back into pixels. The whole field is choices about that loop. This is the map of those choices.</p>
+  <div class="legend">
+    <span><i class="dot v"></i> diffusion / latent pathway</span>
+    <span><i class="dot t"></i> text / conditioning pathway</span>
+    <span><i class="dot f"></i> the denoiser</span>
+  </div>
+
+  <div class="stage">
+    <svg class="skel" viewBox="0 0 980 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The shared video generation skeleton: text encoder conditions a DiT denoiser that iteratively cleans noise in latent space, then a 3D VAE decodes to video">
+      <!-- prompt / text encoder -->
+      <rect x="12" y="24" width="150" height="44" rx="8" fill="#FCFDFE" stroke="var(--cond)" stroke-width="1.5"/>
+      <text x="87" y="44" text-anchor="middle" class="modlabel">text encoder</text>
+      <text x="87" y="60" text-anchor="middle" class="modsub">T5 · CLIP · LLM</text>
+      <path d="M162 46 H264 Q288 46 288 70 V104" fill="none" stroke="var(--cond)" stroke-width="2" class="flow"/>
+      <!-- noise -->
+      <rect x="12" y="120" width="120" height="60" rx="8" fill="#FCFDFE" stroke="var(--latent)" stroke-width="1.5"/>
+      <text x="72" y="146" text-anchor="middle" class="modlabel">noise</text>
+      <text x="72" y="163" text-anchor="middle" class="modsub">latent z_T</text>
+      <line x1="132" y1="150" x2="188" y2="150" stroke="var(--latent)" stroke-width="2" class="flow"/>
+      <!-- denoiser -->
+      <rect x="188" y="104" width="200" height="92" rx="10" fill="#EEE9F6" stroke="var(--fuse)" stroke-width="1.6"/>
+      <!-- loop arrow, drawn behind the labels so it reads as the iteration ring -->
+      <g class="spin" style="transform-box:fill-box">
+        <path d="M288 150 m 0 -40 a 40 40 0 1 1 -0.1 0" fill="none" stroke="var(--fuse)" stroke-width="1.4" stroke-dasharray="4 6" opacity=".45"/>
+      </g>
+      <text x="288" y="140" text-anchor="middle" class="modlabel">DiT denoiser</text>
+      <text x="288" y="158" text-anchor="middle" class="modsub">conditioned, ×N steps</text>
+      <circle cx="384" cy="150" r="6" fill="var(--fuse)"/>
+      <line x1="388" y1="150" x2="440" y2="150" stroke="var(--latent)" stroke-width="2" class="flow"/>
+      <!-- clean latent -->
+      <rect x="440" y="122" width="118" height="56" rx="8" fill="#F0D9CF" stroke="var(--latent)" stroke-width="1.5"/>
+      <text x="499" y="147" text-anchor="middle" class="modlabel">clean latent</text>
+      <text x="499" y="163" text-anchor="middle" class="modsub">z_0</text>
+      <line x1="558" y1="150" x2="612" y2="150" stroke="var(--latent)" stroke-width="2" class="flow"/>
+      <!-- vae decoder -->
+      <rect x="612" y="116" width="150" height="68" rx="9" fill="#FCFDFE" stroke="var(--latent)" stroke-width="1.5"/>
+      <text x="687" y="146" text-anchor="middle" class="modlabel">3D VAE decoder</text>
+      <text x="687" y="163" text-anchor="middle" class="modsub">latent → pixels</text>
+      <line x1="762" y1="150" x2="816" y2="150" stroke="var(--latent)" stroke-width="2" class="flow"/>
+      <!-- video out -->
+      <rect x="816" y="120" width="150" height="60" rx="8" fill="#FCFDFE" stroke="var(--latent)" stroke-width="1.5"/>
+      <text x="891" y="146" text-anchor="middle" class="modlabel">video</text>
+      <text x="891" y="163" text-anchor="middle" class="modsub">T×H×W frames</text>
+    </svg>
+  </div>
+</header>
+
+<!-- SKELETON -->
+<section class="wrap reveal">
+  <div class="eyebrow">The one loop</div>
+  <h2>One loop, everything else is a choice</h2>
+  <p class="lede">Raw video is far too large to model pixel by pixel, so modern generators work in a <b>compressed latent space</b>. A 3D VAE squeezes a clip along height, width, and time into a small grid of latent tokens (typically around 16x smaller spatially and 4x shorter in time), the model does all its work there, and the decoder expands the result back to pixels at the very end.</p>
+  <p class="lede">Inside that space the recipe is diffusion: start from pure noise and run a <b>denoiser</b> that removes a little noise each step, steered by the text prompt, until a clean latent emerges. Hold that loop fixed and the whole zoo (Sora, Veo, Kling, Wan, HunyuanVideo, CogVideoX, LTX, Mochi) is different fillings for four slots: what the latent looks like, what the denoiser is built from, how its attention is wired, and what objective trained it. One newer question sits on top: are all frames denoised together, or one chunk after another.</p>
+</section>
+
+<!-- AXES -->
+<section class="wrap reveal">
+  <div class="eyebrow">The design axes</div>
+  <h2><span class="n">01</span>Where video models actually differ</h2>
+  <p class="lede">Six axes carry almost all the variation, plus one that is the whole cost story. Learn them and you can place any new release the moment its report drops.</p>
+
+  <div class="axes">
+    <div class="axis">
+      <div class="ax-n">AXIS A</div>
+      <h3>Latent representation</h3>
+      <p>Nobody diffuses raw pixels. A <b>3D causal VAE</b> compresses space and time jointly, so the model reasons over motion rather than independent frames. The compression ratio sets everything downstream.</p>
+      <div class="opts"><span class="chip">2D per-frame VAE</span><span class="chip hot">3D causal VAE</span><span class="chip">16x space · 4x time</span></div>
+    </div>
+    <div class="axis">
+      <div class="ax-n">AXIS B</div>
+      <h3>Denoiser backbone</h3>
+      <p>The engine that predicts the noise. The field walked from convolutional U-Nets to transformers, because transformers scale with compute and handle variable length and long-range motion.</p>
+      <div class="opts"><span class="chip">U-Net</span><span class="chip hot">DiT</span><span class="chip hot">MMDiT</span></div>
+    </div>
+    <div class="axis">
+      <div class="ax-n">AXIS C</div>
+      <h3>Attention structure</h3>
+      <p>Full 3D attention lets every spacetime token see every other, which gives the best consistency but is quadratic. Factorized or sparse tile attention trades some of that for tractability.</p>
+      <div class="opts"><span class="chip hot">3D full</span><span class="chip">factorized space/time</span><span class="chip">sparse / tiled</span></div>
+    </div>
+    <div class="axis">
+      <div class="ax-n">AXIS D</div>
+      <h3>Training objective</h3>
+      <p>Classic diffusion predicts noise over a curved path. <b>Flow matching</b> and rectified flow learn a straight velocity field from noise to data, which needs fewer sampling steps and now dominates.</p>
+      <div class="opts"><span class="chip">DDPM / eps-pred</span><span class="chip hot">flow matching</span><span class="chip hot">rectified flow</span></div>
+    </div>
+    <div class="axis">
+      <div class="ax-n">AXIS E</div>
+      <h3>Text conditioning</h3>
+      <p>A text encoder produces the target, then it enters the denoiser either through cross-attention or by sharing one token stream with the video (MMDiT), often modulated by adaptive LayerNorm.</p>
+      <div class="opts"><span class="chip">cross-attention</span><span class="chip hot">MMDiT joint tokens</span><span class="chip">expert adaLN</span></div>
+    </div>
+    <div class="axis">
+      <div class="ax-n">AXIS F</div>
+      <h3>Generation paradigm</h3>
+      <p>The live fork. Denoise every frame together (bidirectional, best quality, fixed length) or generate chunk after chunk conditioned on the past (autoregressive, streaming, long, interactive).</p>
+      <div class="opts"><span class="chip hot">bidirectional</span><span class="chip">autoregressive / causal</span></div>
+    </div>
+    <div class="axis" style="grid-column:1 / -1">
+      <div class="ax-n">AXIS G · the one that decides your bill</div>
+      <h3>The quadratic wall</h3>
+      <p>A five-second 480p clip is tens of thousands of spacetime tokens, and full 3D attention is quadratic in that count, so cost explodes with resolution and duration. Every efficiency trick in the field points here: heavier VAE compression, sparse and tiled attention, cascaded super-resolution, few-step distillation, and KV-cache compression for the autoregressive branch. When someone says a model is slow or capped at a few seconds, this is why.</p>
+      <div class="opts"><span class="chip">quadratic in tokens</span><span class="chip">long-range coherence is fragile</span><span class="chip hot">the class-wide weakness</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- TOUR -->
+<section class="wrap reveal">
+  <div class="eyebrow">The tour</div>
+  <h2><span class="n">02</span>Six families, one loop</h2>
+  <p class="lede">Each card is the same denoising loop with one part swapped. Watch the denoiser box and how frames relate to each other in time: that is where a family's identity lives.</p>
+
+  <!-- F1 -->
+  <div class="fam">
+    <div class="fam-head"><span class="fid">F1</span><h3>Temporal layers on an image model</h3><span class="tag">the origin · AnimateDiff · Stable Video Diffusion</span></div>
+    <div class="fam-body">
+      <div>
+        <p>The first thing that worked. Take a pretrained <b>image</b> diffusion U-Net and insert <b>temporal layers</b> (attention or convolution across frames) between its existing spatial blocks, so it learns motion on top of a model that already knows how to draw. Cheap, and it bootstrapped the whole field.</p>
+        <p>The ceiling is real: motion is a bolt-on, temporal windows are short, and long clips drift or flicker. Everything after this is an attempt to make time first-class instead of an add-on.</p>
+        <div class="models"><span class="mchip">AnimateDiff</span><span class="mchip">Stable Video Diffusion</span><span class="mchip">early T2V</span></div>
+      </div>
+      <div class="diag">
+        <svg viewBox="0 0 380 180" xmlns="http://www.w3.org/2000/svg" aria-label="An image U-Net with temporal layers inserted between spatial blocks">
+          <rect x="120" y="18" width="140" height="26" rx="6" fill="#FCFDFE" stroke="var(--latent)" stroke-width="1.3"/>
+          <text x="190" y="35" text-anchor="middle" class="modsub">spatial block</text>
+          <rect x="120" y="52" width="140" height="24" rx="6" fill="#EEE9F6" stroke="var(--fuse)" stroke-width="1.4"/>
+          <text x="190" y="68" text-anchor="middle" class="modsub">+ temporal layer</text>
+          <rect x="120" y="84" width="140" height="26" rx="6" fill="#FCFDFE" stroke="var(--latent)" stroke-width="1.3"/>
+          <text x="190" y="101" text-anchor="middle" class="modsub">spatial block</text>
+          <rect x="120" y="118" width="140" height="24" rx="6" fill="#EEE9F6" stroke="var(--fuse)" stroke-width="1.4"/>
+          <text x="190" y="134" text-anchor="middle" class="modsub">+ temporal layer</text>
+          <text x="190" y="164" text-anchor="middle" class="modsub" style="fill:var(--faint)">motion bolted onto an image U-Net</text>
+        </svg>
+      </div>
+    </div>
+    <div class="costline"><b>time is →</b> an add-on. Short windows, drift on long clips.</div>
+  </div>
+
+  <!-- F2 -->
+  <div class="fam">
+    <div class="fam-head"><span class="fid">F2</span><h3>Spacetime patches into a transformer</h3><span class="tag">the DiT turn · Sora</span></div>
+    <div class="fam-body">
+      <div>
+        <p>The move that reset the field. Encode the clip with a 3D VAE, cut the latent into <b>spacetime patches</b>, and treat each patch as a <b>token</b> for a Transformer denoiser (a DiT). Video becomes a sequence problem, which means it scales like an LLM and can absorb variable duration, resolution, and aspect ratio.</p>
+        <p>Sora popularized this and showed transformers beat U-Nets for long-range temporal dynamics and scalability. Every frontier model since is a DiT.</p>
+        <div class="models"><span class="mchip">Sora</span><span class="mchip">Latte</span><span class="mchip">the DiT lineage</span></div>
+      </div>
+      <div class="diag">
+        <svg viewBox="0 0 380 180" xmlns="http://www.w3.org/2000/svg" aria-label="A latent cube cut into spacetime patches flattened into tokens for a transformer">
+          <g stroke="var(--latent)" stroke-width="1.2" fill="#F0D9CF">
+            <rect x="18" y="52" width="66" height="66"/>
+            <line x1="40" y1="52" x2="40" y2="118"/><line x1="62" y1="52" x2="62" y2="118"/>
+            <line x1="18" y1="74" x2="84" y2="74"/><line x1="18" y1="96" x2="84" y2="96"/>
+            <path d="M18 52 l12 -12 h66 l-12 12 M84 52 l12 -12 v66 l-12 12" fill="#F6E7DF"/>
+          </g>
+          <text x="57" y="140" text-anchor="middle" class="modsub">latent cube</text>
+          <g>
+            <rect x="150" y="76" width="14" height="16" fill="var(--latent)" opacity=".85"/>
+            <rect x="168" y="76" width="14" height="16" fill="var(--latent)" opacity=".85"/>
+            <rect x="186" y="76" width="14" height="16" fill="var(--latent)" opacity=".85"/>
+            <rect x="204" y="76" width="14" height="16" fill="var(--latent)" opacity=".6"/>
+          </g>
+          <text x="184" y="68" text-anchor="middle" class="modsub">patch tokens</text>
+          <line x1="90" y1="85" x2="146" y2="85" stroke="var(--latent)" stroke-width="1.8"/>
+          <rect x="248" y="60" width="112" height="52" rx="9" fill="#EEE9F6" stroke="var(--fuse)" stroke-width="1.5"/>
+          <text x="304" y="90" text-anchor="middle" class="modsub">transformer (DiT)</text>
+          <line x1="222" y1="85" x2="246" y2="85" stroke="var(--fuse)" stroke-width="1.8"/>
+        </svg>
+      </div>
+    </div>
+    <div class="costline"><b>time is →</b> first-class. Patches are tokens, so it scales and handles any length.</div>
+  </div>
+
+  <!-- F3 -->
+  <div class="fam">
+    <div class="fam-head"><span class="fid">F3</span><h3>MMDiT with 3D full attention</h3><span class="tag">the modern open standard · Hunyuan · Wan · CogVideoX</span></div>
+    <div class="fam-body">
+      <div>
+        <p>Where the open field sits today. Text tokens and video tokens share <b>one attention stream</b> (MMDiT), often dual-stream early then merged, with <b>expert adaptive LayerNorm</b> handling each modality. Attention is <b>3D full</b> so every spacetime token sees every other, which fixed the consistency problems of factorized attention. Trained with flow matching, fed by a 3D causal VAE.</p>
+        <p>This is CogVideoX (3D full attention, expert adaLN), HunyuanVideo (dual then single stream, LLM text encoder, 13B), and Wan (open suite, MoE variants). Excellent quality, and the quadratic attention is exactly the price.</p>
+        <div class="models"><span class="mchip">CogVideoX</span><span class="mchip">HunyuanVideo 1.5</span><span class="mchip">Wan 2.x</span><span class="mchip">Mochi</span></div>
+      </div>
+      <div class="diag">
+        <svg viewBox="0 0 380 180" xmlns="http://www.w3.org/2000/svg" aria-label="Text tokens and video tokens joined into one MMDiT attention stream">
+          <g>
+            <rect x="20" y="42" width="34" height="16" rx="4" fill="var(--cond)" opacity=".85"/>
+            <rect x="20" y="62" width="34" height="16" rx="4" fill="var(--cond)" opacity=".85"/>
+          </g>
+          <text x="37" y="34" text-anchor="middle" class="modsub">text</text>
+          <g>
+            <rect x="20" y="104" width="16" height="16" fill="var(--latent)" opacity=".85"/>
+            <rect x="40" y="104" width="16" height="16" fill="var(--latent)" opacity=".85"/>
+            <rect x="20" y="124" width="16" height="16" fill="var(--latent)" opacity=".85"/>
+            <rect x="40" y="124" width="16" height="16" fill="var(--latent)" opacity=".85"/>
+          </g>
+          <text x="38" y="156" text-anchor="middle" class="modsub">video patches</text>
+          <path d="M54 60 Q120 66 150 82" fill="none" stroke="var(--cond)" stroke-width="1.6"/>
+          <path d="M60 122 Q120 116 150 98" fill="none" stroke="var(--latent)" stroke-width="1.6"/>
+          <rect x="152" y="60" width="128" height="60" rx="10" fill="#EEE9F6" stroke="var(--fuse)" stroke-width="1.6"/>
+          <text x="216" y="86" text-anchor="middle" class="modsub">MMDiT block</text>
+          <text x="216" y="102" text-anchor="middle" class="modsub" style="fill:var(--faint)">3D full attention</text>
+          <line x1="280" y1="90" x2="316" y2="90" stroke="var(--fuse)" stroke-width="1.8"/>
+          <text x="345" y="86" text-anchor="middle" class="modsub">×L</text>
+        </svg>
+      </div>
+    </div>
+    <div class="costline"><b>time is →</b> fully coupled. Best consistency, quadratic cost, the reason clips are short.</div>
+  </div>
+
+  <!-- F4 -->
+  <div class="fam">
+    <div class="fam-head"><span class="fid">F4</span><h3>Cascade and super-resolution</h3><span class="tag">buy quality in stages · Imagen Video lineage</span></div>
+    <div class="fam-body">
+      <div>
+        <p>A tax strategy, not a new engine. Generate at low resolution where attention is affordable, then run a separate <b>few-step super-resolution</b> stage to reach 1080p or 4K, fixing sharpness and detail along the way. Splitting the work keeps the expensive base model small.</p>
+        <p>Most production stacks have a version of this bolted on, whichever family the base is. HunyuanVideo 1.5 ships an explicit few-step upscaler; LTX pushes toward native 4K in fewer stages.</p>
+        <div class="models"><span class="mchip">Imagen Video</span><span class="mchip">Hunyuan 1.5 SR</span><span class="mchip">LTX-2</span></div>
+      </div>
+      <div class="diag">
+        <svg viewBox="0 0 380 180" xmlns="http://www.w3.org/2000/svg" aria-label="A small base video upscaled by a super-resolution stage to a large one">
+          <rect x="24" y="72" width="54" height="36" rx="5" fill="#F0D9CF" stroke="var(--latent)" stroke-width="1.4"/>
+          <text x="51" y="64" text-anchor="middle" class="modsub">base</text>
+          <text x="51" y="94" text-anchor="middle" class="modsub">480p</text>
+          <line x1="78" y1="90" x2="132" y2="90" stroke="var(--latent)" stroke-width="1.8" class="flow"/>
+          <rect x="132" y="66" width="86" height="48" rx="8" fill="#EEE9F6" stroke="var(--fuse)" stroke-width="1.5"/>
+          <text x="175" y="88" text-anchor="middle" class="modsub">few-step</text>
+          <text x="175" y="103" text-anchor="middle" class="modsub">super-res</text>
+          <line x1="218" y1="90" x2="266" y2="90" stroke="var(--latent)" stroke-width="1.8" class="flow"/>
+          <rect x="266" y="56" width="90" height="68" rx="6" fill="#FCFDFE" stroke="var(--latent)" stroke-width="1.6"/>
+          <text x="311" y="86" text-anchor="middle" class="modsub">1080p / 4K</text>
+        </svg>
+      </div>
+    </div>
+    <div class="costline"><b>time is →</b> unchanged; this axis is about resolution economics, not motion.</div>
+  </div>
+
+  <!-- F5 -->
+  <div class="fam">
+    <div class="fam-head"><span class="fid">F5</span><h3>Autoregressive and streaming</h3><span class="tag">the long-and-live branch · self-forcing · MAGI · SkyReels</span></div>
+    <div class="fam-body">
+      <div>
+        <p>The other side of axis F. Instead of denoising a whole fixed clip at once, use a <b>causal</b> denoiser that generates the next <b>frame or chunk</b> conditioned on the past, denoising within each chunk. That unlocks streaming, long or infinite length, and real-time interactivity.</p>
+        <p>The engineering fight is training-time versus test-time mismatch (<b>diffusion forcing</b>, self-forcing, causal forcing) and error accumulation as the rollout drifts. Distillation to a few or one step is what makes it real-time. It has not displaced bidirectional DiT for top-end quality, but it owns long and interactive.</p>
+        <div class="models"><span class="mchip">Self-Forcing</span><span class="mchip">MAGI-1</span><span class="mchip">SkyReels-V2</span><span class="mchip">LongLive</span></div>
+      </div>
+      <div class="diag">
+        <svg viewBox="0 0 380 180" xmlns="http://www.w3.org/2000/svg" aria-label="Chunks generated left to right with causal arrows from past to future">
+          <g>
+            <rect x="20" y="72" width="50" height="40" rx="6" fill="#F0D9CF" stroke="var(--latent)" stroke-width="1.3"/>
+            <rect x="90" y="72" width="50" height="40" rx="6" fill="#F0D9CF" stroke="var(--latent)" stroke-width="1.3"/>
+            <rect x="160" y="72" width="50" height="40" rx="6" fill="#F0D9CF" stroke="var(--latent)" stroke-width="1.3"/>
+            <rect x="230" y="72" width="50" height="40" rx="6" fill="#EEE9F6" stroke="var(--fuse)" stroke-width="1.4"/>
+            <rect x="300" y="72" width="50" height="40" rx="6" fill="#FCFDFE" stroke-dasharray="4 4" stroke="var(--faint)" stroke-width="1.3"/>
+          </g>
+          <g stroke="var(--fuse)" stroke-width="1.5" fill="none" marker-end="url(#ar)">
+            <path d="M70 92 H88"/><path d="M140 92 H158"/><path d="M210 92 H228"/><path d="M280 92 H298"/>
+          </g>
+          <defs><marker id="ar" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0 0 L6 3.5 L0 7 z" fill="var(--fuse)"/></marker></defs>
+          <text x="45" y="132" text-anchor="middle" class="modsub">past</text>
+          <text x="255" y="132" text-anchor="middle" class="modsub">now</text>
+          <text x="325" y="132" text-anchor="middle" class="modsub">next</text>
+        </svg>
+      </div>
+    </div>
+    <div class="costline"><b>time is →</b> a stream. Long and interactive, but error accumulates and quality is harder to hold.</div>
+  </div>
+
+  <!-- F6 -->
+  <div class="fam">
+    <div class="fam-head"><span class="fid">F6</span><h3>World models and action conditioning</h3><span class="tag">video as a simulator · Genie · Cosmos</span></div>
+    <div class="fam-body">
+      <div>
+        <p>Point the streaming branch at control and you get a <b>world model</b>: the next frame is conditioned not just on the past but on an <b>action</b>, so the model becomes an interactive simulator you can steer. Genie learns action-controllable rollouts from unlabeled internet video; NVIDIA's Cosmos consolidates this for physical AI and robotics.</p>
+        <p>Cosmos 3 even packs an autoregressive reasoning subsequence and a diffusion generation subsequence into one sequence, optionally emitting joint audio, so a single model reasons, predicts the world, and can act. This is the frontier where video generation meets embodied agents.</p>
+        <div class="models"><span class="mchip">Genie 3</span><span class="mchip">Cosmos / Cosmos-Predict</span><span class="mchip">Marble</span></div>
+      </div>
+      <div class="diag">
+        <svg viewBox="0 0 380 180" xmlns="http://www.w3.org/2000/svg" aria-label="A frame plus an action produce the next frame in a loop">
+          <rect x="30" y="66" width="60" height="48" rx="6" fill="#F0D9CF" stroke="var(--latent)" stroke-width="1.4"/>
+          <text x="60" y="94" text-anchor="middle" class="modsub">frame t</text>
+          <rect x="30" y="126" width="60" height="26" rx="6" fill="#E9F3F3" stroke="var(--cond)" stroke-width="1.4"/>
+          <text x="60" y="143" text-anchor="middle" class="modsub">action</text>
+          <rect x="150" y="72" width="90" height="52" rx="9" fill="#EEE9F6" stroke="var(--fuse)" stroke-width="1.6"/>
+          <text x="195" y="102" text-anchor="middle" class="modsub">world model</text>
+          <line x1="90" y1="90" x2="148" y2="94" stroke="var(--latent)" stroke-width="1.8"/>
+          <line x1="90" y1="139" x2="140" y2="118" stroke="var(--cond)" stroke-width="1.8"/>
+          <rect x="286" y="66" width="60" height="48" rx="6" fill="#FCFDFE" stroke="var(--latent)" stroke-width="1.5"/>
+          <text x="316" y="94" text-anchor="middle" class="modsub">frame t+1</text>
+          <line x1="240" y1="94" x2="284" y2="90" stroke="var(--latent)" stroke-width="1.8" class="flow"/>
+          <path d="M316 114 V150 Q316 160 306 160 H70 Q60 160 60 152" fill="none" stroke="var(--faint)" stroke-width="1.3" stroke-dasharray="4 5"/>
+        </svg>
+      </div>
+    </div>
+    <div class="costline"><b>time is →</b> a controllable loop. The model is a simulator, not just a renderer.</div>
+  </div>
+</section>
+
+<!-- FRONTIER -->
+<section class="wrap reveal">
+  <div class="eyebrow">The 2026 frontier</div>
+  <h2><span class="n">03</span>Where it is heading now</h2>
+  <p class="lede">The DiT plus 3D-VAE core is settled. The recent motion is at the edges: making it <b>fast</b>, making it <b>long</b>, giving it <b>sound</b>, and turning it into a <b>world</b>. Four eras in a few years:</p>
+
+  <div class="eras">
+    <div class="era"><div class="yr">2022–23</div><div class="et">Image model plus motion</div><p>Temporal layers on a 2D U-Net. Short, flickery, but it moved.</p></div>
+    <div class="era"><div class="yr">2024</div><div class="et">The DiT turn</div><p>Sora reframes video as spacetime patches. Transformers replace U-Nets.</p></div>
+    <div class="era now"><div class="yr">2025–26</div><div class="et">MMDiT plus flow, distilled</div><p>3D VAE, joint text-video attention, rectified flow, few-step and real-time.</p></div>
+    <div class="era"><div class="yr">2026 →</div><div class="et">Video becomes a world</div><p>Streaming, action-conditioned, audio-joint, interactive world models.</p></div>
+  </div>
+
+  <div class="axes">
+    <div class="axis">
+      <div class="ax-n">SHIFT 1</div>
+      <h3>Flow matching, then distillation</h3>
+      <p>Rectified flow learns straighter noise-to-data paths, cutting the step count. On top, distillation (distribution matching, self-forcing, causal forcing) collapses dozens of steps into a <b>few or one</b>, which is what turns an offline generator into a real-time one.</p>
+      <div class="opts"><span class="chip hot">rectified flow</span><span class="chip">few-step distillation</span><span class="chip">one-step</span></div>
+    </div>
+    <div class="axis">
+      <div class="ax-n">SHIFT 2</div>
+      <h3>Long and interactive</h3>
+      <p>The autoregressive branch matured into <b>streaming, minute-scale, interactive</b> generation. Diffusion forcing and its successors close the train-test gap, and KV-cache compression plus sparse attention keep the rollout affordable as it grows.</p>
+      <div class="opts"><span class="chip hot">streaming</span><span class="chip">infinite length</span><span class="chip">real-time interactive</span></div>
+    </div>
+    <div class="axis">
+      <div class="ax-n">SHIFT 3</div>
+      <h3>Native audio</h3>
+      <p>Video stops being silent. Models now generate <b>synchronized audio and speech</b> jointly with the picture rather than dubbing it afterward, by adding audio tokens to the same generative sequence.</p>
+      <div class="opts"><span class="chip hot">Veo 3 audio</span><span class="chip">joint A/V tokens</span><span class="chip">Movie Gen</span></div>
+    </div>
+    <div class="axis">
+      <div class="ax-n">SHIFT 4</div>
+      <h3>Video as a world model</h3>
+      <p>The biggest reframing: a large video generator is a <b>learned simulator</b>. Condition on actions and it supports interactive rollouts for games, robotics, and driving. Perception, prediction, and control start to share the generative backbone.</p>
+      <div class="opts"><span class="chip">Genie 3</span><span class="chip hot">NVIDIA Cosmos</span><span class="chip">action-conditioned</span></div>
+    </div>
+    <div class="axis" style="grid-column:1 / -1">
+      <div class="ax-n">THE CLOSED FRONTIER · Sora · Veo · Kling · Runway · Seedance</div>
+      <h3>What you cannot see inside</h3>
+      <p>The highest-quality general models are proprietary. They are known to be DiT-based and latent, and they compete on cinematic physics, character consistency, and now audio, but they do not publish VAE ratios, attention schemes, parameter counts, or objectives. You can place them on the eras strip by behavior and by what the labs say, not by a diagram. The open models (Wan, HunyuanVideo, LTX, CogVideoX, Cosmos-Predict) are where you can actually read the architecture, which is why every card above leans on them.</p>
+      <div class="opts"><span class="chip">Sora 2</span><span class="chip">Veo 3.1</span><span class="chip">Kling 2.x</span><span class="chip">Runway Gen-4.5</span><span class="chip">Seedance · Hailuo</span><span class="chip">internals undisclosed</span></div>
+    </div>
+  </div>
+  <p class="lede" style="margin-top:22px">One-sentence compression: the field went from <b>animating an image model</b> to <b>a DiT denoising spacetime patches in a 3D latent</b>, and is now bending toward <b>fast, long, audible, action-conditioned world models</b>. Place a release on that arc and name its axes, and you are reading it the way the field does.</p>
+</section>
+
+<!-- PHILOSOPHIES -->
+<section class="wrap reveal">
+  <div class="eyebrow">The live tension</div>
+  <h2><span class="n">04</span>Two paradigms, one benchmark board</h2>
+  <p class="lede">The single most useful comparison to have loaded, because papers routinely pit one representative of each against the other.</p>
+  <div class="split">
+    <div class="phil warm">
+      <div class="who">Bidirectional DiT</div>
+      <h3>Denoise the whole clip</h3>
+      <p>Every frame is refined together with full 3D attention, so the model can enforce global consistency across the entire clip. This is the production default and the quality leader.</p>
+      <ul>
+        <li>best temporal consistency and fidelity</li>
+        <li>fixed-length, planned as one clip</li>
+        <li>quadratic cost, so durations stay short</li>
+        <li>Wan, HunyuanVideo, CogVideoX, Sora-class</li>
+      </ul>
+    </div>
+    <div class="phil cool">
+      <div class="who">Autoregressive causal</div>
+      <h3>Generate the next chunk</h3>
+      <p>A causal denoiser rolls the video forward chunk by chunk, conditioning on the past. This buys streaming, unbounded length, and interactivity, at the cost of drift.</p>
+      <ul>
+        <li>streaming, long or infinite, interactive</li>
+        <li>error accumulates over the rollout</li>
+        <li>few-step distillation makes it real-time</li>
+        <li>Self-Forcing, MAGI-1, SkyReels-V2, world models</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- TABLE -->
+<section class="wrap reveal">
+  <div class="eyebrow">The board</div>
+  <h2><span class="n">05</span>The landscape on one row each</h2>
+  <p class="lede">Read left to right and you are reading the axes. Backbone and paradigm are the columns that split the field.</p>
+  <div class="tablewrap">
+    <table>
+      <thead>
+        <tr><th>Model</th><th>Latent (VAE)</th><th>Backbone</th><th>Attention</th><th>Objective</th><th>Signature</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Stable Video Diff.</td><td class="mono">2D + temporal</td><td class="mono">U-Net</td><td class="mono">factorized</td><td class="mono">diffusion</td><td><span class="pill dit">image + motion</span></td></tr>
+        <tr><td>CogVideoX</td><td class="mono">3D causal</td><td class="mono">MMDiT</td><td class="mono">3D full</td><td class="mono">diffusion</td><td><span class="pill mm">expert adaLN, 3D full attn</span></td></tr>
+        <tr><td>HunyuanVideo 1.5</td><td class="mono">3D causal 16x/4x</td><td class="mono">DiT (dual→single)</td><td class="mono">SSTA sparse</td><td class="mono">flow match</td><td><span class="pill mm">8.3B, LLM text enc, SR to 1080p</span></td></tr>
+        <tr><td>Wan 2.x</td><td class="mono">3D causal</td><td class="mono">MMDiT (MoE)</td><td class="mono">3D full</td><td class="mono">flow match</td><td><span class="pill mm">open suite, frame control</span></td></tr>
+        <tr><td>LTX-2</td><td class="mono">3D causal</td><td class="mono">DiT</td><td class="mono">sparse</td><td class="mono">flow match</td><td><span class="pill mm">native 4K + audio, efficient</span></td></tr>
+        <tr><td>Cosmos-Predict</td><td class="mono">3D causal</td><td class="mono">DiT / hybrid</td><td class="mono">3D + causal</td><td class="mono">flow / AR</td><td><span class="pill ar">world model, self-hostable</span></td></tr>
+        <tr><td>MAGI-1 / SkyReels</td><td class="mono">3D causal</td><td class="mono">causal DiT</td><td class="mono">causal</td><td class="mono">diff. forcing</td><td><span class="pill ar">autoregressive, long / infinite</span></td></tr>
+        <tr><td>Sora 2</td><td class="mono">undisclosed</td><td class="mono">DiT (stated)</td><td class="mono">undisclosed</td><td class="mono">undisclosed</td><td><span class="pill closed">closed, +audio</span></td></tr>
+        <tr><td>Veo 3.1</td><td class="mono">undisclosed</td><td class="mono">DiT (stated)</td><td class="mono">undisclosed</td><td class="mono">undisclosed</td><td><span class="pill closed">closed, synchronized audio</span></td></tr>
+        <tr><td>Kling / Runway / Seedance</td><td class="mono">undisclosed</td><td class="mono">DiT (stated)</td><td class="mono">undisclosed</td><td class="mono">undisclosed</td><td><span class="pill closed">closed, quality-first</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- INTERVIEW LENS -->
+<section class="wrap reveal">
+  <div class="eyebrow">The interview lens</div>
+  <h2><span class="n">06</span>What they will actually ask</h2>
+  <p class="lede">Same method as your other foundations days: cover the section, then say the answers out loud. Five questions carry most of the ground.</p>
+
+  <div class="qa">
+    <div class="q">
+      <div class="qq">Walk me through a modern text-to-video forward pass.</div>
+      <div class="aa">Encode the prompt with a <b>text encoder</b>. Sample <b>noise</b> in the latent space of a <b>3D VAE</b>. A <b>DiT denoiser</b> removes noise over N steps, conditioned on the text, to reach a clean latent. The <span class="k">VAE decoder</span> expands that latent back to pixels. Name latent space, the denoising loop, and the conditioning, and you have it.</div>
+    </div>
+    <div class="q">
+      <div class="qq">Why latent, and why a 3D VAE specifically?</div>
+      <div class="aa">Raw video is far too many pixels to diffuse directly. A <b>3D causal VAE</b> compresses space and time together (roughly <span class="k">16x</span> spatial, <span class="k">4x</span> temporal), so the model reasons over motion rather than independent frames and the token count stays tractable for attention. Causal means it can encode streaming or variable-length input.</div>
+    </div>
+    <div class="q">
+      <div class="qq">U-Net vs DiT vs MMDiT?</div>
+      <div class="aa">U-Net is convolutional, older, weaker at long-range dependencies and scaling. <b>DiT</b> treats spacetime patches as tokens, so it scales with compute and handles variable duration and resolution. <b>MMDiT</b> puts text and video tokens in one attention stream for tighter prompt alignment. The trajectory was U-Net to DiT to MMDiT.</div>
+    </div>
+    <div class="q">
+      <div class="qq">Full 3D attention vs factorized, and why do clips stay short?</div>
+      <div class="aa"><b>3D full attention</b> lets every spacetime token attend to every other, which gives the best consistency but is <span class="k">quadratic</span> in token count. A short clip is already tens of thousands of tokens, so cost explodes with duration and resolution. Factorized, sparse, or tiled attention trade some consistency for tractability. This quadratic wall is the class-wide limiter.</div>
+    </div>
+    <div class="q">
+      <div class="qq">Bidirectional vs autoregressive, and what breaks in long video?</div>
+      <div class="aa">Bidirectional denoises the whole clip together: best quality, fixed length, expensive. <b>Autoregressive</b> generates the next frame or chunk conditioned on the past: streaming, long, interactive, but it <b>accumulates error</b> and drifts. Long-range temporal coherence is the shared weakness. <span class="k">Diffusion forcing</span> and few-step distillation are the levers that make the causal branch stable and real-time.</div>
+    </div>
+  </div>
+</section>
+
+<footer class="wrap">
+  <p><b>The Video Generation Atlas</b> · a foundations-day study tour, second in a set of three. From temporal-layer U-Nets through DiT, MMDiT, and the streaming, audible, world-model frontier. Landscape current to mid-2026: Sora 2, Veo 3.1, Wan, HunyuanVideo, CogVideoX, LTX, Cosmos. Open models are described by architecture; closed flagships by stated design.</p>
+  <p style="margin-top:8px">Method: read one section, close the page, redraw the denoising loop from memory, then answer the five questions out loud.</p>
+  <div class="sibs">
+    <a href="vlm-architecture-atlas.html">← The VLM Architecture Atlas</a>
+    <a href="world-action-model-atlas.html">The World Action Model Atlas →</a>
+  </div>
+</footer>
+
+<script>
+  // threshold 0: sections are often taller than the viewport, so any
+  // percentage threshold can be unreachable and leave them stuck at opacity 0.
+  const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:0,rootMargin:'0px 0px -8% 0px'});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
