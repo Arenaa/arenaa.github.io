@@ -126,6 +126,12 @@
   .card-title a:hover { color: var(--accent); border-bottom-color: var(--accent); }
   .card-authors { font-family: var(--sans); font-size: 0.78rem; color: var(--ink-muted); margin-bottom: 0.3rem; line-height: 1.5; }
   .card-authors strong { color: var(--ink-soft); font-weight: 600; }
+  .equal-contrib {
+    display: block;
+    font-size: 0.7rem;
+    font-style: italic;
+    color: var(--ink-muted);
+  }
   .card-venue { font-family: var(--sans); font-size: 0.8rem; font-style: italic; color: var(--ink-soft); margin-bottom: 0.75rem; }
   .card-desc { font-size: 0.9rem; color: var(--ink-soft); line-height: 1.75; margin-bottom: 0.75rem; }
   .card-links { display: flex; gap: 1rem; flex-wrap: wrap; }
@@ -346,7 +352,7 @@
       </div>
       </div>
         <div class="card-title"><a href="https://aclanthology.org/2026.semeval-1.342/" target="_blank">GUNLP at SemEval-2026 Task 10: Emotion-Aware Multi-Task Learning for Conspiracy Detection</a></div>
-        <div class="card-authors"><strong>Mahsa Khoshnoodi</strong>, Rojin Ziaei, Nazli Goharian</div>
+        <div class="card-authors"><strong>Mahsa Khoshnoodi</strong>*, Rojin Ziaei*, Nazli Goharian<span class="equal-contrib">* Equal contribution</span></div>
         <div class="card-venue">SemEval 2026</div>
         <div class="card-desc">
           We present a multi-task learning system that jointly models emotion signals and conspiracy detection, motivated by the strong correlation between affective language and conspiratorial framing. The system achieves competitive performance on Task 10 of SemEval-2026.
