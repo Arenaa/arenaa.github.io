@@ -295,6 +295,12 @@ section {
   font-style: italic;
   margin-top: 0.15rem;
 }
+.pub-desc {
+  font-size: 0.88rem;
+  color: var(--ink-soft);
+  line-height: 1.7;
+  margin-top: 0.5rem;
+}
 .pub-links { margin-top: 0.5rem; display: flex; gap: 1rem; }
 .pub-link {
   font-family: var(--mono);
@@ -438,6 +444,20 @@ footer p {
 <section id="publications">
   <div class="section-title">Publications</div>
   <div class="pub-list">
+
+    <div class="pub-item">
+      <div class="pub-header">
+        <span class="venue-tag arxiv">Paper 2026</span>
+      </div>
+      <div class="pub-title"><a href="https://arxiv.org/abs/2608.13671" target="_blank">PROVE: Training-Free Prompt Recovery using Verifiable Evidence</a></div>
+      <div class="pub-authors">Rupayan Mallick, <strong>Mahsa Khoshnoodi</strong>, Sarah Adel Bargal</div>
+      <div class="pub-venue">Preprint, 2026</div>
+      <div class="pub-desc">We introduce PROVE, a training-free, black-box prompt inversion method that recovers prompts by composing scene claims the image can verify, rather than optimizing tokens. Across MS-COCO, Flickr30K, and Lexica, it outperforms optimization, captioning, and RL baselines on image similarity and text-image alignment, without training or generator access.</div>
+      <div class="pub-links">
+        <a href="https://arxiv.org/abs/2608.13671" target="_blank" class="pub-link">Paper</a>
+        <a href="https://arenaa.github.io/prove/" target="_blank" class="pub-link">Webpage</a>
+      </div>
+    </div>
 
     <div class="pub-item">
       <div class="pub-header">
