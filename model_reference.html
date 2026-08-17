@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VLA & WAM Models — Complete Reference</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --white:#ffffff;
+  --ink:#141414;
+  --ink-mid:#4a4a4a;
+  --ink-dim:#888888;
+  --ink-faint:#c8c8c8;
+  --rule:#e8e8e8;
+  --rule-strong:#d0d0d0;
+  --surface:#f9f9f8;
+  --vla-fill:#eef2fa;--vla-ink:#1a3a7c;--vla-border:#b0bfe0;
+  --wam-fill:#edf7f0;--wam-ink:#1a5a30;--wam-border:#90cca0;
+  --jepa-fill:#fff8e8;--jepa-ink:#7a5010;--jepa-border:#c8b050;
+  --serif:'Playfair Display',Georgia,serif;
+  --body:'Source Serif 4',Georgia,serif;
+  --mono:'DM Mono',monospace;
+}
+html{font-size:16px;-webkit-font-smoothing:antialiased}
+body{background:var(--white);color:var(--ink);font-family:var(--body);padding-bottom:80px}
+
+/* ── HEADER ── */
+.page-header{padding:64px 80px 44px;border-bottom:1px solid var(--rule-strong)}
+.kicker{font-family:var(--mono);font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:16px}
+.title{font-family:var(--serif);font-size:2.8rem;font-weight:700;line-height:1.1;letter-spacing:-0.02em;margin-bottom:18px}
+.title em{font-style:italic;font-weight:400}
+.subtitle{font-size:1rem;line-height:1.75;color:var(--ink-mid);max-width:680px;font-weight:300;margin-bottom:28px}
+.meta-row{display:flex;align-items:center;gap:20px;flex-wrap:wrap;padding-top:20px;border-top:1px solid var(--rule)}
+.meta-item{font-family:var(--mono);font-size:0.7rem;color:var(--ink-dim);letter-spacing:0.05em}
+.meta-sep{width:4px;height:4px;border-radius:50%;background:var(--ink-faint)}
+
+/* ── LEGEND ── */
+.legend{display:flex;align-items:center;gap:20px;flex-wrap:wrap;padding:16px 80px;border-bottom:1px solid var(--rule);background:var(--surface);font-size:0.78rem;color:var(--ink-mid)}
+.leg{display:inline-flex;align-items:center;gap:7px}
+.leg-pill{font-family:var(--mono);font-size:0.62rem;padding:2px 8px;border-radius:2px;border:1px solid}
+
+/* ── SECTION ── */
+.section{padding:44px 80px 0}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:24px;padding-bottom:12px;border-bottom:1px solid var(--rule)}
+.sec-title{font-family:var(--serif);font-size:1.4rem;font-weight:500}
+.sec-count{font-family:var(--mono);font-size:0.68rem;color:var(--ink-dim);border:1px solid var(--rule-strong);padding:2px 8px;border-radius:20px}
+.sec-desc{font-size:0.85rem;color:var(--ink-dim);max-width:700px;margin-bottom:24px;font-weight:300;line-height:1.6}
+
+/* ── MODEL GRID ── */
+.model-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule);margin-bottom:52px}
+.model-card{background:var(--white);padding:20px 22px;transition:background .12s}
+.model-card:hover{background:var(--surface)}
+.model-card.vla-card{border-top:3px solid var(--vla-border)}
+.model-card.wam-card{border-top:3px solid var(--wam-border)}
+.model-card.jepa-card{border-top:3px solid var(--jepa-border)}
+.model-card.open{background:#fafffe}
+.model-card.closed{background:#fffafa}
+
+.card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:3px}
+.model-name{font-family:var(--serif);font-size:1.05rem;font-weight:500;color:var(--ink);line-height:1.2}
+.access-pill{font-family:var(--mono);font-size:0.58rem;letter-spacing:0.05em;padding:2px 6px;border-radius:2px;white-space:nowrap;flex-shrink:0}
+.access-open{background:#e8f8ee;color:#1a5a30;border:1px solid #a0d8b0}
+.access-closed{background:#faeaea;color:#7a2020;border:1px solid #e0b0b0}
+.access-partial{background:#fdf7ed;color:#7a5010;border:1px solid #d0b060}
+
+.model-sub{font-size:0.76rem;color:var(--ink-dim);margin-bottom:10px;font-style:italic}
+.model-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:14px}
+.tag{font-family:var(--mono);font-size:0.6rem;padding:2px 7px;border-radius:2px;border:1px solid var(--rule-strong);color:var(--ink-mid)}
+.tag.t-vla{background:var(--vla-fill);border-color:var(--vla-border);color:var(--vla-ink)}
+.tag.t-wam{background:var(--wam-fill);border-color:var(--wam-border);color:var(--wam-ink)}
+.tag.t-jepa{background:var(--jepa-fill);border-color:var(--jepa-border);color:var(--jepa-ink)}
+
+.model-props{border-top:1px solid var(--rule);padding-top:12px;display:grid;gap:5px}
+.prop{display:flex;justify-content:space-between;font-size:0.78rem;gap:8px}
+.pk{color:var(--ink-dim)}
+.pv{color:var(--ink);text-align:right;font-weight:400;max-width:160px}
+.pv.bold{font-weight:500}
+
+.model-note{margin-top:10px;padding:8px 10px;background:var(--surface);border-radius:2px;font-size:0.75rem;line-height:1.55;color:var(--ink-mid)}
+.model-note strong{color:var(--ink);font-weight:500}
+
+/* ── COMPARISON TABLE ── */
+.cmp-wrap{margin:0 80px 52px;overflow-x:auto}
+.cmp-table{width:100%;border-collapse:collapse;font-size:0.8rem;min-width:800px}
+.cmp-table th{padding:9px 12px;background:var(--surface);border:1px solid var(--rule);color:var(--ink-dim);font-weight:500;font-family:var(--mono);font-size:0.68rem;letter-spacing:0.05em;text-align:left;white-space:nowrap}
+.cmp-table th.vla-h{background:var(--vla-fill);color:var(--vla-ink)}
+.cmp-table th.wam-h{background:var(--wam-fill);color:var(--wam-ink)}
+.cmp-table th.jepa-h{background:var(--jepa-fill);color:var(--jepa-ink)}
+.cmp-table td{padding:8px 12px;border:1px solid var(--rule);vertical-align:top;line-height:1.45}
+.cmp-table td:first-child{color:var(--ink-dim);font-size:0.75rem;white-space:nowrap;background:var(--surface)}
+.cmp-table tr:nth-child(even) td{background:#fafaf9}
+.cmp-table tr:nth-child(even) td:first-child{background:#f4f4f2}
+
+footer{padding:32px 80px 0;font-size:0.75rem;color:var(--ink-dim);font-family:var(--mono);letter-spacing:0.04em;line-height:2;border-top:1px solid var(--rule)}
+
+@media(max-width:900px){
+  .page-header,.legend,.section,.cmp-wrap,footer{padding-left:24px;padding-right:24px}
+  .page-header{padding-top:40px}
+  .title{font-size:2rem}
+}
+</style>
+</head>
+<body>
+
+<header class="page-header">
+  <div class="kicker">VLA &amp; WAM Research · May 2026</div>
+  <h1 class="title">VLA &amp; WAM Models<br><em>Complete reference</em></h1>
+  <p class="subtitle">Key VLA (Vision-Language-Action) and WAM (World Action Model) models — architecture, encoder, action head, open-source status, and benchmark performance. Organized by family for clear comparison.</p>
+  <div class="meta-row">
+    <span class="meta-item">8 VLA models</span>
+    <span class="meta-sep"></span>
+    <span class="meta-item">7 WAM models</span>
+    <span class="meta-sep"></span>
+    <span class="meta-item">3 JEPA / latent world models</span>
+    <span class="meta-sep"></span>
+    <span class="meta-item">May 2026</span>
+  </div>
+</header>
+
+<!-- ── LEGEND ── -->
+<div class="legend">
+  <strong style="color:var(--ink)">Family:</strong>
+  <span class="leg"><span class="leg-pill" style="background:var(--vla-fill);border-color:var(--vla-border);color:var(--vla-ink)">VLA</span>direct image→action</span>
+  <span class="leg"><span class="leg-pill" style="background:var(--wam-fill);border-color:var(--wam-border);color:var(--wam-ink)">WAM</span>joint video+action</span>
+  <span class="leg"><span class="leg-pill" style="background:var(--jepa-fill);border-color:var(--jepa-border);color:var(--jepa-ink)">JEPA</span>latent world model</span>
+  <span class="meta-sep"></span>
+  <strong style="color:var(--ink)">Access:</strong>
+  <span class="leg"><span class="access-pill access-open">open</span>fully open weights</span>
+  <span class="leg"><span class="access-pill access-partial">partial</span>limited / API only</span>
+  <span class="leg"><span class="access-pill access-closed">closed</span>proprietary</span>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- VLA MODELS                                 -->
+<!-- ══════════════════════════════════════════ -->
+<div class="section">
+  <div class="sec-head">
+    <h2 class="sec-title">VLA models</h2>
+    <span class="sec-count">8 models</span>
+  </div>
+  <p class="sec-desc">VLAs learn P(action | image, language). One forward pass per action chunk. No future state prediction. The image encoder is always a ViT; the action head varies between tokenization, diffusion, and flow matching.</p>
+</div>
+
+<div class="model-grid" style="margin:0 80px 52px">
+
+  <div class="model-card vla-card open">
+    <div class="card-top"><span class="model-name">OpenVLA</span><span class="access-pill access-open">open</span></div>
+    <div class="model-sub">Kim et al., CoRL 2024 · Stanford / UC Berkeley</div>
+    <div class="model-tags"><span class="tag t-vla">VLA</span><span class="tag">7B params</span><span class="tag">tokenized actions</span></div>
+    <div class="model-props">
+      <div class="prop"><span class="pk">Backbone</span><span class="pv">LLaMA-2 7B</span></div>
+      <div class="prop"><span class="pk">Vision encoder</span><span class="pv">DINOv2 + SigLIP (fused)</span></div>
+      <div class="prop"><span class="pk">Action head</span><span class="pv">Tokenized (256 bins)</span></div>
+      <div class="prop"><span class="pk">Action space</span><span class="pv">7D delta EEF</span></div>
+      <div class="prop"><span class="pk">Training data</span><span class="pv">Open X-Embodiment (970K)</span></div>
+      <div class="prop"><span class="pk">LIBERO avg</span><span class="pv bold">~79.6%</span></div>
+    </div>
+    <div class="model-note">First open-source generalist VLA. Outperforms RT-2-X (55B) by 16.5% with 7× fewer parameters. Fine-tuneable via LoRA on single A100 in 4–8hrs.</div>
+  </div>
+
+  <div class="model-card vla-card open">
+    <div class="card-top"><span class="model-name">OpenVLA-OFT+</span><span class="access-pill access-open">open</span></div>
+    <div class="model-sub">Kim et al., Feb 2025 · Stanford</div>
+    <div class="model-tags"><span class="tag t-vla">VLA</span><span class="tag">7B params</span><span class="tag">continuous actions</span></div>
+    <div class="model-props">
+      <div class="prop"><span class="pk">Backbone</span><span class="pv">LLaMA-2 7B (OFT recipe)</span></div>
+      <div class="prop"><span class="pk">Vision encoder</span><span class="pv">DINOv2 + SigLIP</span></div>
+      <div class="prop"><span class="pk">Action head</span><span class="pv">L1 regression (continuous)</span></div>
+      <div class="prop"><span class="pk">Action space</span><span class="pv">7D delta EEF</span></div>
+      <div class="prop"><span class="pk">Speed</span><span class="pv">25–50× faster inference than base</span></div>
+      <div class="prop"><span class="pk">LIBERO avg</span><span class="pv bold">79.6%</span></div>
+    </div>
+    <div class="model-note">Optimized Fine-Tuning recipe. Switches to continuous actions (no discretization). Supports multi-image input and bimanual control. Used as VLA baseline in LIBERO-plus robustness study.</div>
+  </div>
+
+  <div class="model-card vla-card closed">
+    <div class="card-top"><span class="model-name">π₀ (pi-zero)</span><span class="access-pill access-partial">partial</span></div>
+    <div class="model-sub">Black et al., Oct 2024 · Physical Intelligence</div>
+    <div class="model-tags"><span class="tag t-vla">VLA</span><span class="tag">3B + 300M</span><span class="tag">flow matching</span></div>
+    <div class="model-props">
+      <div class="prop"><span class="pk">Backbone</span><span class="pv">PaLI-Gemma 3B (VLM)</span></div>
+      <div class="prop"><span class="pk">Vision encoder</span><span class="pv">SigLIP ViT-So400M</span></div>
+      <div class="prop"><span class="pk">Action head</span><span class="pv">Flow matching (300M DiT)</span></div>
+      <div class="prop"><span class="pk">Action space</span><span class="pv">7D or 14D (bimanual)</span></div>
+      <div class="prop"><span class="pk">Training data</span><span class="pv">π Cross-Embodiment (proprietary)</span></div>
+      <div class="prop"><span class="pk">LIBERO avg</span><span class="pv bold">~85%</span></div>
+    </div>
+    <div class="model-note">First flow-matching VLA. Excels at dexterous bimanual tasks (laundry folding, table bussing). Weights open on HuggingFace via openpi repo.</div>
+  </div>
+
+  <div class="model-card vla-card closed">
+    <div class="card-top"><span class="model-name">π₀.₅ (pi-zero-5)</span><span class="access-pill access-partial">partial</span></div>
+    <div class="model-sub">Black et al., Apr 2025 · Physical Intelligence</div>
+    <div class="model-tags"><span class="tag t-vla">VLA</span><span class="tag">flow matching</span><span class="tag">scaled</span></div>
+    <div class="model-props">
+      <div class="prop"><span class="pk">Backbone</span><span class="pv">PaLI-Gemma (scaled)</span></div>
+      <div class="prop"><span class="pk">Action head</span><span class="pv">Flow matching</span></div>
+      <div class="prop"><span class="pk">Action space</span><span class="pv">7D / 14D</span></div>
+      <div class="prop"><span class="pk">Training data</span><span class="pv">Scaled cross-embodiment</span></div>
+      <div class="prop"><span class="pk">LIBERO avg</span><span class="pv bold">85.5% (best VLA in robustness study)</span></div>
+    </div>
+    <div class="model-note">Scaling of π₀ with better open-world generalization. Best-performing VLA in the March 2026 WAM robustness study across most perturbation types.</div>
+  </div>
+
+  <div class="model-card vla-card open">
+    <div class="card-top"><span class="model-name">GR00T N1 / N1.5</span><span class="access-pill access-open">open</span></div>
+    <div class="model-sub">NVIDIA, Mar 2025</div>
+    <div class="model-tags"><span class="tag t-vla">VLA</span><span class="tag">humanoid</span><span class="tag">diffusion head</span></div>
+    <div class="model-props">
+      <div class="prop"><span class="pk">Backbone</span><span class="pv">Eagle-2 VLM</span></div>
+      <div class="prop"><span class="pk">Vision encoder</span><span class="pv">ViT (CLIP-based)</span></div>
+      <div class="prop"><span class="pk">Action head</span><span class="pv">Diffusion transformer (DiT)</span></div>
+      <div class="prop"><span class="pk">Action space</span><span class="pv">Full humanoid body</span></div>
+      <div class="prop"><span class="pk">Training data</span><span class="pv">Isaac Lab sim + real robot</span></div>
+      <div class="prop"><span class="pk">Focus</span><span class="pv bold">Humanoid whole-body control</span></div>
+    </div>
+    <div class="model-note">Foundation model for generalist humanoid robots. Combines high-level VLM reasoning with low-level diffusion action expert. Weights on HuggingFace.</div>
+  </div>
+
+  <div class="model-card vla-card open">
+    <div class="card-top"><span class="model-name">CogACT</span><span class="access-pill access-open">open</span></div>
+    <div class="model-sub">Li et al., Nov 2024 · Microsoft Research Asia</div>
+    <div class="model-tags"><span class="tag t-vla">VLA</span><span class="tag">componentized</span><span class="tag">DiT head</span></div>
+    <div class="model-props">
+      <div class="prop"><span class="pk">Backbone</span><span class="pv">LLaMA-2 + VLM encoder</span></div>
+      <div class="prop"><span class="pk">Vision encoder</span><span class="pv">DINOv2 ViT-L + SigLIP</span></div>
+      <div class="prop"><span class="pk">Action head</span><span class="pv">DiT (Small / Large variant)</span></div>
+      <div class="prop"><span class="pk">Action space</span><span class="pv">7D continuous</span></div>
+      <div class="prop"><span class="pk">Training data</span><span class="pv">Open X-Embodiment subset</span></div>
+      <div class="prop"><span class="pk">LIBERO avg</span><span class="pv bold">&gt;OpenVLA by 35%</span></div>
+    </div>
+    <div class="model-note">Separates VLM cognition from action generation. VLM produces semantic tokens; DiT action module generates actions conditioned on those tokens. MIT license.</div>
+  </div>
+
+  <div class="model-card vla-card open">
+    <div class="card-top"><span class="model-name">Octo</span><span class="access-pill access-open">open</span></div>
+    <div class="model-sub">Ghosh et al., RSS 2024 · UC Berkeley</div>
+    <div class="model-tags"><span class="tag t-vla">VLA</span><span class="tag">diffusion head</span><span class="tag">multi-embodiment</span></div>
+    <div class="model-props">
+      <div class="prop"><span class="pk">Backbone</span><span class="pv">Transformer (no LLM backbone)</span></div>
+      <div class="prop"><span class="pk">Vision encoder</span><span class="pv">CNN (lightweight)</span></div>
+      <div class="prop"><span class="pk">Action head</span><span class="pv">Diffusion policy</span></div>
+      <div class="prop"><span class="pk">Action space</span><span class="pv">7D + goal image optional</span></div>
+      <div class="prop"><span class="pk">Training data</span><span class="pv">Open X-Embodiment</span></div>
+      <div class="prop"><span class="pk">Focus</span><span class="pv bold">First open diffusion VLA</span></div>
+    </div>
+    <div class="model-note">First fully open-source VLA using diffusion policy. Supports flexible goal specification (language or goal image). Standard baseline for ManiSkill3 evaluation.</div>
+  </div>
+
+  <div class="model-card vla-card open">
+    <div class="card-top"><span class="model-name">RDT-1B</span><span class="access-pill access-open">open</span></div>
+    <div class="model-sub">Liu et al., Oct 2024</div>
+    <div class="model-tags"><span class="tag t-vla">VLA</span><span class="tag">1B params</span><span class="tag">DiT backbone</span><span class="tag">bimanual</span></div>
+    <div class="model-props">
+      <div class="prop"><span class="pk">Backbone</span><span class="pv">Diffusion Transformer (DiT) 1B</span></div>
+      <div class="prop"><span class="pk">Vision encoder</span><span class="pv">SigLIP ViT</span></div>
+      <div class="prop"><span class="pk">Action head</span><span class="pv">DiT (whole backbone denoises)</span></div>
+      <div class="prop"><span class="pk">Action space</span><span class="pv">14D (bimanual)</span></div>
+      <div class="prop"><span class="pk">Training data</span><span class="pv">Open X + bimanual datasets</span></div>
+      <div class="prop"><span class="pk">Focus</span><span class="pv bold">Bimanual manipulation</span></div>
+    </div>
+    <div class="model-note">Entire backbone is a DiT — diffusion runs through the whole model, not just the action head. Designed specifically for bimanual (14D) tasks. #1 on HuggingFace robotics 2024.</div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- WAM MODELS                                 -->
+<!-- ══════════════════════════════════════════ -->
+<div class="section">
+  <div class="sec-head">
+    <h2 class="sec-title">WAM models</h2>
+    <span class="sec-count">7 models</span>
+  </div>
+  <p class="sec-desc">WAMs learn P(action, future state | image, language). All take language instructions as input — same as VLAs. The difference is the training objective and backbone (video DiT instead of LLM). Output is identical: 7D or 14D action.</p>
+</div>
+
+<div class="model-grid" style="margin:0 80px 52px">
+
+  <div class="model-card wam-card closed">
+    <div class="card-top"><span class="model-name">Cosmos-Policy</span><span class="access-pill access-open">open</span></div>
+    <div class="model-sub">Kim et al., Jan 2026 · NVIDIA</div>
+    <div class="model-tags"><span class="tag t-wam">WAM</span><span class="tag">joint diffusion</span><span class="tag">2B</span></div>
+    <div class="model-props">
+      <div class="prop"><span class="pk">Backbone</span><span class="pv">Cosmos-Predict2 video DiT (2B)</span></div>
+      <div class="prop"><span class="pk">Image encoder</span><span class="pv">VAE (latent grid)</span></div>
+      <div class="prop"><span class="pk">Action head</span><span class="pv">Joint diffusion (25 steps)</span></div>
+      <div class="prop"><span class="pk">Language input</span><span class="pv">Yes — T5 text encoder</span></div>
+      <div class="prop"><span class="pk">Chunk size</span><span class="pv">16 steps</span></div>
+      <div class="prop"><span class="pk">LIBERO avg</span><span class="pv bold">~98.5%</span></div>
+      <div class="prop"><span class="pk">Latency</span><span class="pv">~2000–5000ms</span></div>
+    </div>
+    <div class="model-note">Fine-tunes Cosmos-Predict2 video DiT for robot control. Jointly denoises future video frames + action latents. 25 denoising steps at inference. Weights on HuggingFace.</div>
+  </div>
+
+  <div class="model-card wam-card open">
+    <div class="card-top"><span class="model-name">Fast-WAM</span><span class="access-pill access-open">open</span></div>
+    <div class="model-sub">Yuan et al., Mar 2026</div>
+    <div class="model-tags"><span class="tag t-wam">WAM</span><span class="tag">implicit</span><span class="tag">Wan2.2-5B</span></div>
+    <div class="model-props">
+      <div class="prop"><span class="pk">Backbone</span><span class="pv">Wan2.2-TI2V-5B video DiT</span></div>
+      <div class="prop"><span class="pk">Image encoder</span><span class="pv">VAE (clean latents only)</span></div>
+      <div class="prop"><span class="pk">Action head</span><span class="pv">Action expert DiT (1B) — 1 pass</span></div>
+      <div class="prop"><span class="pk">Language input</span><span class="pv">Yes — T5 precomputed embeds</span></div>
+      <div class="prop"><span class="pk">Chunk size</span><span class="pv">16 steps</span></div>
+      <div class="prop"><span class="pk">LIBERO avg</span><span class="pv bold">97.6%</span></div>
+      <div class="prop"><span class="pk">Latency</span><span class="pv bold">~190ms (real-time)</span></div>
+    </div>
+    <div class="model-note">No video generation at inference — single forward pass through Wan2.2-5B. Proves video co-training matters more than test-time video generation. Fastest WAM.</div>
+  </div>
+
+  <div class="model-card wam-card open">
+    <div class="card-top"><span class="model-name">DreamZero</span><span class="access-pill access-open">open</span></div>
+    <div class="model-sub">Zhu et al., Feb 2026 · coined "WAM"</div>
+    <div class="model-tags"><span class="tag t-wam">WAM</span><span class="tag">zero-shot</span><span class="tag">Wan2.1-14B</span></div>
+    <div class="model-props">
+      <div class="prop"><span class="pk">Backbone</span><span class="pv">Wan2.1-14B video DiT</span></div>
+      <div class="prop"><span class="pk">Image encoder</span><span class="pv">VAE</span></div>
+      <div class="prop"><span class="pk">Action head</span><span class="pv">Autoregressive flow matching</span></div>
+      <div class="prop"><span class="pk">Language input</span><span class="pv">Yes</span></div>
+      <div class="prop"><span class="pk">Key feature</span><span class="pv bold">Zero-shot cross-robot transfer</span></div>
+      <div class="prop"><span class="pk">Speed</span><span class="pv">7Hz real-time (distilled)</span></div>
+    </div>
+    <div class="model-note">First paper to coin the term "WAM". 14B Wan2.1 backbone. Zero-shot policy — no robot-specific fine-tuning needed. Flow distillation enables real-time 7Hz control.</div>
+  </div>
+
+  <div class="model-card wam-card open">
+    <div class="card-top"><span class="model-name">LingBot-VA</span><span class="access-pill access-open">open</span></div>
+    <div class="model-sub">RSS 2026</div>
+    <div class="model-tags"><span class="tag t-wam">WAM</span><span class="tag">autoregressive</span><span class="tag">async</span></div>
+    <div class="model-props">
+      <div class="prop"><span class="pk">Backbone</span><span class="pv">Mixture-of-Transformers (MoT)</span></div>
+      <div class="prop"><span class="pk">Image encoder</span><span class="pv">VAE (discrete tokens)</span></div>
+      <div class="prop"><span class="pk">Action head</span><span class="pv">Interleaved video+action tokens</span></div>
+      <div class="prop"><span class="pk">Language input</span><span class="pv">Yes</span></div>
+      <div class="prop"><span class="pk">LIBERO avg</span><span class="pv bold">98.5%</span></div>
+      <div class="prop"><span class="pk">RoboTwin 2.0</span><span class="pv bold">92%</span></div>
+    </div>
+    <div class="model-note">Async generation — predicts next chunk's video while executing current chunk's actions, hiding latency. Server/client eval architecture for LIBERO and LIBERO-plus.</div>
+  </div>
+
+  <div class="model-card wam-card open">
+    <div class="card-top"><span class="model-name">GE-Act</span><span class="access-pill access-partial">partial</span></div>
+    <div class="model-sub">Liao et al., 2025</div>
+    <div class="model-tags"><span class="tag t-wam">WAM</span><span class="tag">flow matching</span><span class="tag">abs EEF pose</span></div>
+    <div class="model-props">
+      <div class="prop"><span class="pk">Backbone</span><span class="pv">Video DiT</span></div>
+      <div class="prop"><span class="pk">Image encoder</span><span class="pv">VAE</span></div>
+      <div class="prop"><span class="pk">Action head</span><span class="pv">Lightweight flow-matching decoder</span></div>
+      <div class="prop"><span class="pk">Language input</span><span class="pv">Yes</span></div>
+      <div class="prop"><span class="pk">Action space</span><span class="pv">Absolute EEF pose + Euler angles</span></div>
+      <div class="prop"><span class="pk">Chunk size</span><span class="pv">54 steps at 30Hz</span></div>
+    </div>
+    <div class="model-note">Uses absolute end-effector pose (not delta) — unusual for manipulation benchmarks. Strong on LIBERO-plus lighting and noise perturbations in the robustness study.</div>
+  </div>
+
+  <div class="model-card wam-card open">
+    <div class="card-top"><span class="model-name">UWM</span><span class="access-pill access-open">open</span></div>
+    <div class="model-sub">Xiao et al., RSS 2025</div>
+    <div class="model-tags"><span class="tag t-wam">WAM</span><span class="tag">joint diffusion</span><span class="tag">large-scale</span></div>
+    <div class="model-props">
+      <div class="prop"><span class="pk">Full name</span><span class="pv">Unified World Models</span></div>
+      <div class="prop"><span class="pk">Backbone</span><span class="pv">Coupled video + action DiT</span></div>
+      <div class="prop"><span class="pk">Image encoder</span><span class="pv">VAE</span></div>
+      <div class="prop"><span class="pk">Language input</span><span class="pv">Yes</span></div>
+      <div class="prop"><span class="pk">Training data</span><span class="pv">Open X-Embodiment (large-scale)</span></div>
+      <div class="prop"><span class="pk">Focus</span><span class="pv bold">Pretraining on diverse robot data</span></div>
+    </div>
+    <div class="model-note">Couples video diffusion and action diffusion in a unified framework. Designed for large-scale pretraining across diverse robot datasets before task-specific fine-tuning.</div>
+  </div>
+
+  <div class="model-card wam-card open">
+    <div class="card-top"><span class="model-name">VLA-JEPA</span><span class="access-pill access-open">open</span></div>
+    <div class="model-sub">Sun et al., 2026</div>
+    <div class="model-tags"><span class="tag t-wam">WAM</span><span class="tag t-jepa">JEPA pretraining</span><span class="tag">direct policy</span></div>
+    <div class="model-props">
+      <div class="prop"><span class="pk">Backbone</span><span class="pv">Qwen3-VL-2B + V-JEPA 2 encoder</span></div>
+      <div class="prop"><span class="pk">Image encoder</span><span class="pv">ViT (V-JEPA 2 pretrained)</span></div>
+      <div class="prop"><span class="pk">Action head</span><span class="pv">Direct MLP (single forward pass)</span></div>
+      <div class="prop"><span class="pk">Language input</span><span class="pv">Yes</span></div>
+      <div class="prop"><span class="pk">Chunk size</span><span class="pv">8 steps</span></div>
+      <div class="prop"><span class="pk">LIBERO avg</span><span class="pv bold">~89%</span></div>
+      <div class="prop"><span class="pk">Latency</span><span class="pv">~200–400ms</span></div>
+    </div>
+    <div class="model-note">JEPA-style pretraining shapes representations; direct policy at inference (no MPC, no video generation). Best of both: JEPA robustness + VLA speed. Used in LIBERO-plus + SimplerEnv.</div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- JEPA / LATENT WORLD MODELS                 -->
+<!-- ══════════════════════════════════════════ -->
+<div class="section">
+  <div class="sec-head">
+    <h2 class="sec-title">JEPA / latent world models</h2>
+    <span class="sec-count">3 models</span>
+  </div>
+  <p class="sec-desc">Predict future latent representations — not pixels, not video frames. Use ViT (not VAE). No diffusion. Control via MPC at inference (except VLA-JEPA which uses a direct policy). Goal image or reward signal instead of language in V-JEPA 2-AC and LeWorldModel.</p>
+</div>
+
+<div class="model-grid" style="margin:0 80px 52px">
+
+  <div class="model-card jepa-card open">
+    <div class="card-top"><span class="model-name">V-JEPA 2-AC</span><span class="access-pill access-open">open</span></div>
+    <div class="model-sub">Bardes et al., Jun 2025 · Meta AI</div>
+    <div class="model-tags"><span class="tag t-jepa">JEPA</span><span class="tag">MPC</span><span class="tag">1.2B</span><span class="tag">goal-image</span></div>
+    <div class="model-props">
+      <div class="prop"><span class="pk">Backbone</span><span class="pv">ViT-H (1.2B, frozen)</span></div>
+      <div class="prop"><span class="pk">Image encoder</span><span class="pv">ViT (no VAE — latent only)</span></div>
+      <div class="prop"><span class="pk">Control</span><span class="pv">MPC (replan every step)</span></div>
+      <div class="prop"><span class="pk">Language input</span><span class="pv">No — goal image required</span></div>
+      <div class="prop"><span class="pk">Training data</span><span class="pv">1M hrs internet video + 62hrs robot</span></div>
+      <div class="prop"><span class="pk">Real-robot success</span><span class="pv bold">65–80% zero-shot</span></div>
+      <div class="prop"><span class="pk">Latency</span><span class="pv">~16s per action (MPC)</span></div>
+    </div>
+    <div class="model-note">Predicts future latent representations, not pixels. Zero-shot to new labs without retraining. Slow due to MPC replanning — not suitable for fast real-time tasks. Weights on HuggingFace.</div>
+  </div>
+
+  <div class="model-card jepa-card open">
+    <div class="card-top"><span class="model-name">LeWorldModel</span><span class="access-pill access-open">open</span></div>
+    <div class="model-sub">LeCun + Mila, Mar 2026</div>
+    <div class="model-tags"><span class="tag t-jepa">JEPA</span><span class="tag">15M params</span><span class="tag">SIGReg</span><span class="tag">MPC</span></div>
+    <div class="model-props">
+      <div class="prop"><span class="pk">Backbone</span><span class="pv">Lightweight ViT (15M total)</span></div>
+      <div class="prop"><span class="pk">Image encoder</span><span class="pv">ViT (no VAE)</span></div>
+      <div class="prop"><span class="pk">Control</span><span class="pv">MPC</span></div>
+      <div class="prop"><span class="pk">Language input</span><span class="pv">No — reward signal</span></div>
+      <div class="prop"><span class="pk">Key innovation</span><span class="pv bold">SIGReg — prevents collapse</span></div>
+      <div class="prop"><span class="pk">Speed</span><span class="pv bold">48× faster than V-JEPA 2-AC</span></div>
+      <div class="prop"><span class="pk">Hardware</span><span class="pv">Single GPU, hours to train</span></div>
+    </div>
+    <div class="model-note">LeCun's proof-of-concept that world models don't need scale. SIGReg (Sketched Isotropic Gaussian Regularization) solves representation collapse. Early research stage.</div>
+  </div>
+
+  <div class="model-card jepa-card open">
+    <div class="card-top"><span class="model-name">VLA-JEPA</span><span class="access-pill access-open">open</span></div>
+    <div class="model-sub">Sun et al., 2026 (also in WAM section)</div>
+    <div class="model-tags"><span class="tag t-wam">WAM</span><span class="tag t-jepa">JEPA pretraining</span><span class="tag">direct policy</span></div>
+    <div class="model-props">
+      <div class="prop"><span class="pk">Position</span><span class="pv">Bridge between WAM and JEPA</span></div>
+      <div class="prop"><span class="pk">Language input</span><span class="pv bold">Yes — standard VLA interface</span></div>
+      <div class="prop"><span class="pk">Control</span><span class="pv bold">Direct policy (no MPC)</span></div>
+      <div class="prop"><span class="pk">Latency</span><span class="pv bold">~200–400ms (VLA speed)</span></div>
+    </div>
+    <div class="model-note">Unlike V-JEPA 2-AC and LeWorldModel, VLA-JEPA takes language instructions and runs as a direct policy — combining JEPA's robustness priors with VLA's speed and language grounding.</div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- COMPARISON TABLE                           -->
+<!-- ══════════════════════════════════════════ -->
+<div class="section">
+  <div class="sec-head">
+    <h2 class="sec-title">Side-by-side comparison</h2>
+  </div>
+</div>
+<div class="cmp-wrap">
+  <table class="cmp-table">
+    <thead>
+      <tr>
+        <th>Property</th>
+        <th class="vla-h">OpenVLA</th>
+        <th class="vla-h">π₀.₅</th>
+        <th class="vla-h">GR00T N1</th>
+        <th class="vla-h">CogACT</th>
+        <th class="wam-h">Cosmos-Policy</th>
+        <th class="wam-h">Fast-WAM</th>
+        <th class="wam-h">DreamZero</th>
+        <th class="wam-h">VLA-JEPA</th>
+        <th class="jepa-h">V-JEPA 2-AC</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Family</td><td>VLA</td><td>VLA</td><td>VLA</td><td>VLA</td><td>WAM</td><td>WAM</td><td>WAM</td><td>WAM+JEPA</td><td>JEPA</td></tr>
+      <tr><td>Image encoder</td><td>ViT</td><td>ViT</td><td>ViT</td><td>ViT</td><td>VAE</td><td>VAE</td><td>VAE</td><td>ViT (V-JEPA 2)</td><td>ViT</td></tr>
+      <tr><td>Backbone</td><td>LLaMA-2 7B</td><td>PaLI-Gemma</td><td>Eagle-2 VLM</td><td>LLaMA-2</td><td>Cosmos-Predict2 DiT</td><td>Wan2.2-5B DiT</td><td>Wan2.1-14B DiT</td><td>Qwen3-VL-2B</td><td>ViT-H 1.2B</td></tr>
+      <tr><td>Action head</td><td>Tokenized</td><td>Flow matching</td><td>DiT</td><td>DiT</td><td>Joint diffusion</td><td>Action expert DiT</td><td>Flow matching</td><td>MLP</td><td>MPC scoring</td></tr>
+      <tr><td>Language input</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td><td>No (goal image)</td></tr>
+      <tr><td>Predicts future?</td><td>No</td><td>No</td><td>No</td><td>No</td><td>Yes (pixels)</td><td>No (implicit)</td><td>Yes (pixels)</td><td>Yes (latent)</td><td>Yes (latent)</td></tr>
+      <tr><td>Video at inference</td><td>No</td><td>No</td><td>No</td><td>No</td><td>Yes</td><td>No</td><td>Yes</td><td>No</td><td>No</td></tr>
+      <tr><td>Chunk size</td><td>1–8</td><td>8</td><td>16</td><td>8</td><td>16</td><td>16</td><td>—</td><td>8</td><td>—</td></tr>
+      <tr><td>Latency</td><td>~200ms</td><td>~400ms</td><td>~500ms</td><td>~300ms</td><td>~5000ms</td><td>~190ms</td><td>—</td><td>~300ms</td><td>~16s</td></tr>
+      <tr><td>LIBERO avg</td><td>79.6%</td><td>85.5%</td><td>—</td><td>>OpenVLA</td><td>~98.5%</td><td>97.6%</td><td>—</td><td>~89%</td><td>65–80%*</td></tr>
+      <tr><td>Open weights</td><td>Yes</td><td>Partial</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+      <tr><td>LIBERO-plus tested</td><td>Yes</td><td>Yes</td><td>No</td><td>No</td><td>Yes</td><td>Yes</td><td>No</td><td>Yes</td><td>No*</td></tr>
+    </tbody>
+  </table>
+  <div style="font-size:0.75rem;color:var(--ink-dim);margin-top:10px;font-family:var(--mono)">* V-JEPA 2-AC uses goal images not language — LIBERO% is zero-shot real-robot, not LIBERO-plus sim · — = not evaluated on this benchmark in published papers</div>
+</div>
+
+<footer>
+  <div style="display:flex;gap:32px;flex-wrap:wrap">
+    <span>VLA &amp; WAM Research · May 2026</span>
+    <span>18 models catalogued across 3 families</span>
+    <span>All WAMs take language instructions (except V-JEPA 2-AC &amp; LeWorldModel)</span>
+  </div>
+</footer>
+
+</body>
+</html>
