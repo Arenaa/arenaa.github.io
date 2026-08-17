@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" width="1200" height="700" role="img" aria-label="Placeholder for a PROVE figure">
+  <rect width="1200" height="700" fill="#f2f0eb"/>
+  <rect x="16" y="16" width="1168" height="668" fill="none" stroke="#d8d5ce" stroke-width="3" stroke-dasharray="14 12"/>
+  <g fill="none" stroke="#c9c5bd" stroke-width="4">
+    <rect x="230" y="220" width="290" height="230" rx="8"/>
+    <rect x="680" y="220" width="290" height="230" rx="8"/>
+    <path d="M540 335h120" />
+    <path d="M636 315l28 20-28 20" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <g fill="#c9c5bd">
+    <circle cx="300" cy="300" r="26"/>
+    <rect x="270" y="360" width="180" height="14" rx="7"/>
+    <rect x="270" y="392" width="130" height="14" rx="7"/>
+    <rect x="720" y="280" width="210" height="14" rx="7"/>
+    <rect x="720" y="312" width="180" height="14" rx="7"/>
+    <rect x="720" y="344" width="200" height="14" rx="7"/>
+    <rect x="720" y="376" width="140" height="14" rx="7"/>
+  </g>
+  <text x="600" y="560" text-anchor="middle" font-family="Georgia, 'EB Garamond', serif" font-size="34" fill="#8a8780">PROVE figure placeholder</text>
+</svg>
