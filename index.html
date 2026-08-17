@@ -268,6 +268,11 @@ section {
   color: var(--ink);
   line-height: 1.35;
 }
+.pub-title a {
+  color: inherit;
+  border-bottom: 1px solid var(--rule);
+}
+.pub-title a:hover { color: var(--accent); border-bottom-color: var(--accent); }
 .pub-authors {
   font-family: var(--sans);
   font-size: 0.78rem;
@@ -286,15 +291,15 @@ section {
 .pub-links { margin-top: 0.5rem; display: flex; gap: 1rem; }
 .pub-link {
   font-family: var(--mono);
-  font-size: 0.68rem;
+  font-size: 0.8rem;
   letter-spacing: 0.04em;
-  color: var(--accent-mid);
+  color: var(--accent);
   text-transform: uppercase;
-  border-bottom: none !important;
-  transition: color 0.15s;
+  border-bottom: 1px solid var(--accent-mid) !important;
+  transition: color 0.15s, border-color 0.15s;
 }
 .pub-link::before { content: '→ '; }
-.pub-link:hover { color: var(--accent); }
+.pub-link:hover { color: var(--highlight); border-bottom-color: var(--highlight) !important; }
 .pub-img-wrap { margin-top: 0.9rem; }
 .pub-img { width: 100%; max-width: 560px; display: block; border: 1px solid var(--rule); border-radius: 2px; }
 
@@ -431,11 +436,12 @@ footer p {
       <div class="pub-header">
         <span class="venue-tag cvpr">CVPR-VisCon 2026</span>
       </div>
-      <div class="pub-title">Do VLMs Reason About Faces? Probing the Perception-Reasoning Gap in Identity Judgment</div>
+      <div class="pub-title"><a href="https://openreview.net/pdf?id=1MfgN2Yi7m" target="_blank">Do VLMs Reason About Faces? Probing the Perception-Reasoning Gap in Identity Judgment</a></div>
       <div class="pub-authors"><strong>Mahsa Khoshnoodi</strong>, Sarah Adel Bargal</div>
       <div class="pub-venue">Third Workshop on Visual Concepts (VisCon), CVPR 2026</div>
       <div class="pub-links">
         <a href="https://openreview.net/pdf?id=1MfgN2Yi7m" target="_blank" class="pub-link">Paper</a>
+        <a href="https://openreview.net/forum?id=1MfgN2Yi7m" target="_blank" class="pub-link">Webpage</a>
       </div>
     </div>
 
@@ -443,7 +449,7 @@ footer p {
       <div class="pub-header">
         <span class="venue-tag semeval">SemEval 2026</span>
       </div>
-      <div class="pub-title">GUNLP at SemEval-2026 Task 10: Emotion-Aware Multi-Task Learning for Conspiracy Detection</div>
+      <div class="pub-title"><a href="https://aclanthology.org/2026.semeval-1.342/" target="_blank">GUNLP at SemEval-2026 Task 10: Emotion-Aware Multi-Task Learning for Conspiracy Detection</a></div>
       <div class="pub-authors"><strong>Mahsa Khoshnoodi</strong>, Rojin Ziaei, Nazli Goharian</div>
       <div class="pub-venue">SemEval 2026</div>
       <div class="pub-links">

@@ -122,6 +122,8 @@
   }
   .year-tag { font-family: var(--mono); font-size: 0.62rem; color: var(--ink-muted); }
   .card-title { font-family: var(--serif); font-size: 1rem; font-weight: 400; color: var(--ink); line-height: 1.35; margin-bottom: 0.35rem; }
+  .card-title a { color: inherit; border-bottom: 1px solid var(--rule); }
+  .card-title a:hover { color: var(--accent); border-bottom-color: var(--accent); }
   .card-authors { font-family: var(--sans); font-size: 0.78rem; color: var(--ink-muted); margin-bottom: 0.3rem; line-height: 1.5; }
   .card-authors strong { color: var(--ink-soft); font-weight: 600; }
   .card-venue { font-family: var(--sans); font-size: 0.8rem; font-style: italic; color: var(--ink-soft); margin-bottom: 0.75rem; }
@@ -133,14 +135,14 @@
   .card-desc,
   .card-links { grid-column: 2; }
   .card-link {
-    font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.04em;
-    color: var(--accent-mid); text-decoration: none; text-transform: uppercase;
+    font-family: var(--mono); font-size: 0.8rem; letter-spacing: 0.04em;
+    color: var(--accent); text-decoration: none; text-transform: uppercase;
     display: flex; align-items: center; gap: 0.25rem;
-    border-bottom: none !important;
-    transition: color 0.15s;
+    border-bottom: 1px solid var(--accent-mid) !important;
+    transition: color 0.15s, border-color 0.15s;
   }
   .card-link::before { content: '→ '; }
-  .card-link:hover { color: var(--accent); text-decoration: underline; }
+  .card-link:hover { color: var(--highlight); border-bottom-color: var(--highlight) !important; }
   .card-media {
     width: 195px;
     margin: 0.1rem 0 0;
@@ -320,7 +322,7 @@
         <span class="year-tag">2026</span>
       </div>
       </div>
-        <div class="card-title">Do VLMs Reason About Faces? Probing the Perception-Reasoning Gap in Identity Judgment</div>
+        <div class="card-title"><a href="https://openreview.net/pdf?id=1MfgN2Yi7m" target="_blank">Do VLMs Reason About Faces? Probing the Perception-Reasoning Gap in Identity Judgment</a></div>
         <div class="card-authors"><strong>Mahsa Khoshnoodi</strong>, Sarah Adel Bargal</div>
         <div class="card-venue">CVPR 2026, Third Workshop on Visual Concepts (VisCon)</div>
         <div class="card-desc">
@@ -328,6 +330,7 @@
         </div>
         <div class="card-links">
           <a href="https://openreview.net/pdf?id=1MfgN2Yi7m" target="_blank" class="card-link">Paper</a>
+          <a href="https://openreview.net/forum?id=1MfgN2Yi7m" target="_blank" class="card-link">Webpage</a>
         </div>
       </div>
     </div>
@@ -342,7 +345,7 @@
         <span class="year-tag">2026</span>
       </div>
       </div>
-        <div class="card-title">GUNLP at SemEval-2026 Task 10: Emotion-Aware Multi-Task Learning for Conspiracy Detection</div>
+        <div class="card-title"><a href="https://aclanthology.org/2026.semeval-1.342/" target="_blank">GUNLP at SemEval-2026 Task 10: Emotion-Aware Multi-Task Learning for Conspiracy Detection</a></div>
         <div class="card-authors"><strong>Mahsa Khoshnoodi</strong>, Rojin Ziaei, Nazli Goharian</div>
         <div class="card-venue">SemEval 2026</div>
         <div class="card-desc">
