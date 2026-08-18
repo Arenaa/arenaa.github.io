@@ -40,7 +40,9 @@
     line-height:1.6;
     -webkit-font-smoothing:antialiased;
   }
-  .wrap{max-width:1060px;margin:0 auto;padding:0 24px}
+  /* gutters only: setting the padding shorthand here would outrank the
+     element-level rules that own the vertical rhythm (section, header, footer) */
+  .wrap{max-width:1060px;margin:0 auto;padding-left:24px;padding-right:24px}
   .mono{font-family:var(--mono)}
   a{color:inherit}
   :focus-visible{outline:2px solid var(--fuse);outline-offset:3px}
@@ -52,8 +54,6 @@
   .topbar a:hover{color:var(--ink)}
   .topbar .home{color:var(--ink)}
   .topbar .set{display:flex;gap:20px;flex-wrap:wrap}
-  .topbar .set a[aria-current="page"]{color:var(--vision)}
-
   /* ---- eyebrow / section scaffolding ---- */
   .eyebrow{
     font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;
@@ -158,15 +158,6 @@
   .pill.vid{background:var(--lang-soft);color:#0a4f4e}
   .pill.geo{background:#DED9F0;color:#33307a}
 
-  /* ---- interview lens ---- */
-  .qa{margin-top:26px}
-  .q{background:var(--card);border:1px solid var(--card-line);border-radius:10px;padding:18px 20px;margin-bottom:14px;box-shadow:var(--shadow)}
-  .q .qq{font-family:var(--display);font-weight:600;font-size:16.5px;margin-bottom:8px;letter-spacing:-.01em;display:flex;gap:10px}
-  .q .qq::before{content:"Q";font-family:var(--mono);font-size:12px;color:var(--vision);border:1px solid var(--vision);border-radius:4px;padding:1px 6px;height:fit-content;flex:none}
-  .q .aa{font-size:14.5px;color:var(--ink-soft)}
-  .q .aa b{color:var(--ink);font-weight:600}
-  .q .aa .k{font-family:var(--mono);font-size:12.5px;color:var(--fuse);background:#E7E5F4;padding:1px 5px;border-radius:4px}
-
   footer{border-top:1px solid var(--card-line);padding:40px 0 70px;color:var(--muted);font-size:13px;font-family:var(--mono)}
   footer b{color:var(--ink-soft)}
   footer a{color:var(--ink-soft);text-decoration:underline;text-underline-offset:3px}
@@ -205,10 +196,6 @@
     <a href="index.html" class="home">Mahsa Khoshnoodi</a>
     <span class="set">
       <a href="notes.html">All notes</a>
-      <a href="visual-representation-atlas.html" aria-current="page">Visual representation</a>
-      <a href="vlm-architecture-atlas.html">VLM architecture</a>
-      <a href="video-generation-atlas.html">Video generation</a>
-      <a href="world-action-model-atlas.html">World action models</a>
     </span>
   </div>
 </nav>
@@ -713,7 +700,7 @@
     <div class="era"><div class="yr">2022–2023</div><div class="et">Masked and distilled</div><p>Dense features without labels. MAE reconstructs, DINOv2 distills. The frozen backbone era begins.</p></div>
     <div class="era now"><div class="yr">2024–2026</div><div class="et">Predictive and geometric</div><p>Predict latents, not pixels; one backbone for image, video, and 4D. DINOv3, V-JEPA 2, VGGT.</p></div>
   </div>
-  <p class="lede" style="margin-top:22px">The interview compression: the field moved from <b>labeling images</b>, to <b>contrasting them</b>, to <b>reconstructing them</b>, to <b>predicting their representations</b>, and the same arc is now playing out one axis at a time in video and in geometry.</p>
+  <p class="lede" style="margin-top:22px">Compressed to one sentence: the field moved from <b>labeling images</b>, to <b>contrasting them</b>, to <b>reconstructing them</b>, to <b>predicting their representations</b>, and the same arc is now playing out one axis at a time in video and in geometry.</p>
 </section>
 
 <!-- ============ PHILOSOPHIES ============ -->
@@ -779,47 +766,11 @@
   </div>
 </section>
 
-<!-- ============ INTERVIEW LENS ============ -->
-<section class="wrap reveal">
-  <div class="eyebrow">The interview lens</div>
-  <h2><span class="n">08</span>What a representations team will ask</h2>
-  <p class="lede">Same method as your other foundations days: cover the topic, then rehearse out loud. Six questions an interviewer reaches for, with the crisp framing each one wants. The last is the one that turns your diagnosis background into the reason to hire you.</p>
-
-  <div class="qa">
-    <div class="q">
-      <div class="qq">Contrastive, masked, self-distillation: what does each encode?</div>
-      <div class="aa"><b>Contrastive</b> (CLIP, SimCLR) learns global, augmentation-invariant semantics, weak on dense detail. <b>Masked</b> (MAE) learns dense local structure that shines after fine-tuning, weak frozen. <b>Self-distillation</b> (DINOv2/3) gets both at once and works <span class="k">frozen</span>, which is why it is the default backbone. Name the objective, then read off the property.</div>
-    </div>
-    <div class="q">
-      <div class="qq">Why predict latents instead of reconstructing pixels?</div>
-      <div class="aa">Pixels waste capacity modeling unpredictable low-level detail. Predicting the <b>latent feature</b> of a masked region focuses the model on semantics and dynamics and stays robust to nuisance, which is the <span class="k">JEPA</span> argument. The cost is representation collapse, so you need an anti-collapse mechanism, typically an <b>EMA target</b> or a variance regularizer. That trade is the whole debate.</div>
-    </div>
-    <div class="q">
-      <div class="qq">What actually breaks in video representations?</div>
-      <div class="aa"><b>Appearance bias and temporal binding.</b> Many models score well by recognizing objects while ignoring the order events happened in, which is why <span class="k">Something-Something v2</span> matters: it punishes appearance shortcuts. The open failure is that a model can know <b>what</b> without knowing <b>when</b>. Temporal grounding is an unsolved failure mode, not a settled benchmark number.</div>
-    </div>
-    <div class="q">
-      <div class="qq">What does 4D add over 3D, and name one method?</div>
-      <div class="aa">3D is static geometry recovered from views; <b>4D adds time</b>, geometry that moves. Two branches: rendering (<b>3D Gaussian Splatting</b>, extended to 4D-GS) and geometric foundation models (<b>DUSt3R</b>, <b>VGGT</b> for static, <b>MonST3R</b> for dynamic). Naming VGGT and framing it as feed-forward, one-pass geometry is enough to show real literacy.</div>
-    </div>
-    <div class="q">
-      <div class="qq">Why is DINOv2/DINOv3 the default frozen backbone?</div>
-      <div class="aa">Because it produces <b>dense and global semantic features usable without fine-tuning</b>, so a linear or kNN probe already works. DINOv3 added <span class="k">Gram anchoring</span> to stop dense feature maps from degrading over long training at scale, which is what makes its patch features stay clean enough for segmentation, depth, and tracking off a frozen trunk.</div>
-    </div>
-    <div class="q">
-      <div class="qq">How would you diagnose what a representation actually encodes?</div>
-      <div class="aa">The question that fits your background. Start with <b>probing</b> (linear, kNN, dense correspondence) and <b>PCA of patch features</b> to see structure, then push to <span class="k">mechanistic</span> localization: trace which components carry a property and where it fails. Framing a backbone as something to <b>diagnose</b>, not just benchmark, is the angle a representations team rarely gets from a candidate, and it is yours to own.</div>
-    </div>
-  </div>
-</section>
-
 <footer class="wrap">
   <p><b>The Visual Representation Atlas</b> · a foundations-day study tour, from the four image-objective families through video's time axis to the 4D geometry frontier. Landscape current to mid-2026: DINOv3, V-JEPA 2 and 2.1, InternVideo2, VGGT, and the lineages they descend from. The organizing claim: the objective decides the representation, and image, video, and 4D are three regimes running that same choice.</p>
-  <p style="margin-top:8px">Method: cover one section, close the page, redraw the skeleton from memory, then answer the six questions out loud.</p>
+  <p style="margin-top:8px">Method: cover one section, close the page, then redraw the skeleton from memory.</p>
   <div class="sibs">
-    <a href="vlm-architecture-atlas.html">The VLM Architecture Atlas →</a>
-    <a href="video-generation-atlas.html">The Video Generation Atlas →</a>
-    <a href="world-action-model-atlas.html">The World Action Model Atlas →</a>
+    <a href="notes.html">← All notes</a>
   </div>
 </footer>
 
