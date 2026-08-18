@@ -21,7 +21,9 @@
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
   body{background:var(--paper);color:var(--ink);font-family:var(--body);line-height:1.6;-webkit-font-smoothing:antialiased}
-  .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+  /* gutters only: setting the padding shorthand here would outrank the
+     element-level rules that own the vertical rhythm (section, header, footer) */
+  .wrap{max-width:1080px;margin:0 auto;padding-left:24px;padding-right:24px}
   .mono{font-family:var(--mono)}
   a{color:inherit}
   :focus-visible{outline:2px solid var(--couple);outline-offset:3px}
@@ -31,7 +33,6 @@
   .topbar a:hover{color:var(--ink)}
   .topbar .home{color:var(--ink)}
   .topbar .set{display:flex;gap:20px;flex-wrap:wrap}
-  .topbar .set a[aria-current="page"]{color:var(--dream)}
   .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:10px;margin-bottom:14px}
   .eyebrow::before{content:"";width:26px;height:1px;background:var(--ink);opacity:.5}
   section{padding:60px 0;border-top:1px solid var(--card-line)}
@@ -116,12 +117,6 @@
   .c1 .cn{font-family:var(--mono);font-size:10.5px;color:var(--dream);letter-spacing:.08em}
   .c1 h4{font-family:var(--display);font-weight:600;font-size:16px;margin:6px 0 6px;letter-spacing:-.01em}
   .c1 p{font-size:13px;color:var(--ink-soft)}
-  .qa{margin-top:26px}
-  .q{background:var(--card);border:1px solid var(--card-line);border-radius:10px;padding:18px 20px;margin-bottom:14px;box-shadow:var(--shadow)}
-  .q .qq{font-family:var(--display);font-weight:600;font-size:16.5px;margin-bottom:8px;letter-spacing:-.01em;display:flex;gap:10px}
-  .q .qq::before{content:"Q";font-family:var(--mono);font-size:12px;color:var(--dream);border:1px solid var(--dream);border-radius:4px;padding:1px 6px;height:fit-content;flex:none}
-  .q .aa{font-size:14.5px;color:var(--ink-soft)} .q .aa b{color:var(--ink);font-weight:600}
-  .q .aa .k{font-family:var(--mono);font-size:12.5px;color:var(--couple);background:#E7E5F4;padding:1px 5px;border-radius:4px}
   footer{border-top:1px solid var(--card-line);padding:40px 0 70px;color:var(--muted);font-size:13px;font-family:var(--mono)}
   footer b{color:var(--ink-soft)}
   footer a{color:var(--ink-soft);text-decoration:underline;text-underline-offset:3px}
@@ -152,10 +147,6 @@
     <a href="index.html" class="home">Mahsa Khoshnoodi</a>
     <span class="set">
       <a href="notes.html">All notes</a>
-      <a href="visual-representation-atlas.html">Visual representation</a>
-      <a href="vlm-architecture-atlas.html">VLM architecture</a>
-      <a href="video-generation-atlas.html">Video generation</a>
-      <a href="world-action-model-atlas.html" aria-current="page">World action models</a>
     </span>
   </div>
 </nav>
@@ -431,27 +422,11 @@
   <p class="lede" style="margin-top:20px">The interesting question, the survey insists, is never how much a WAM costs on its own. It is how that cost trades against the five properties embodiment imposes. That trade is the whole design space, and it is where your own work gets positioned.</p>
 </section>
 
-<!-- LENS -->
-<section class="wrap reveal">
-  <div class="eyebrow">Section 09 &middot; the positioning lens</div>
-  <h2><span class="n">09</span>Placing a model, and your own work</h2>
-  <p class="lede">Five questions that force the framework into working memory, phrased the way they get asked.</p>
-  <div class="qa">
-    <div class="q"><div class="qq">What makes a WAM, versus a VLA or a world model?</div><div class="aa">A VLA is <span class="k">p(a | o, l)</span>, action from the present, no future. A world model is <span class="k">p(o' | o, a, l)</span>, a future with no committed action. A WAM keeps the predicted future <b>action-facing</b>: it produces, scores, or trains the action. A future generated and discarded before the action does not count, and neither does a sim used only as an RL environment.</div></div>
-    <div class="q"><div class="qq">Give me the three design philosophies in one breath.</div><div class="aa"><b>Render-and-Decode</b> goes to pixels then decodes action. <b>Latent-Only</b> keeps the video prior but stops before pixel decoding, reading action from a latent or feature. <b>Video-Generation-Free</b> drops the video backbone and predicts in VLM, JEPA, or geometric space. A "dream less" spectrum the field is moving down.</div></div>
-    <div class="q"><div class="qq">How would you specify a WAM precisely?</div><div class="aa">As a 4-tuple: <b>substrate</b> (pixel, feature, geometric, affordance), <b>coupling</b> (rollout, joint, post-head, plus chunk size), <b>backbone</b> (denoising, autoregressive, JEPA, hybrid, LLM/VLM), and <b>deployment regime</b> (open-loop, chunked or single-step closed-loop, interactive). Same name, different axis, different behavior.</div></div>
-    <div class="q"><div class="qq">Why "dream less, act more"?</div><div class="aa">Because predictive richness costs compute, memory, latency, and action labels inside the loop, and rendering a full future rarely pays off relative to a compact substrate carrying what the action needs. The strongest recent WAMs generate less future, judged by the five embodiment properties rather than video fidelity.</div></div>
-    <div class="q"><div class="qq">What are the five properties, and why do they bite?</div><div class="aa"><b>Interactability</b> (steer during generation), <b>causality</b> (no future leakage into the current action), <b>persistence</b> (hold long horizons), <b>physical plausibility</b> (realizable, not just photoreal), and <b>generalization</b> (across tasks, cameras, embodiments). They bite because visual-quality metrics do not measure any of them, which is why evaluation is an open problem.</div></div>
-  </div>
-</section>
-
 <footer class="wrap">
-  <p><b>The World Action Model Atlas</b> &middot; a full walkthrough of <a href="https://arxiv.org/abs/2606.20781">World Action Models: A Survey</a> (Shen et al., NUS, arXiv 2606.20781v1). Third in a set with the VLM and video-generation atlases. Boundaries, two viewpoints, anatomy, properties, data, evaluation, and open challenges follow the paper; census-cell assignments are a reading of its prose, and this is one survey's framework rather than a settled consensus.</p>
+  <p><b>The World Action Model Atlas</b> &middot; a full walkthrough of <a href="https://arxiv.org/abs/2606.20781">World Action Models: A Survey</a> (Shen et al., NUS, arXiv 2606.20781v1). Boundaries, two viewpoints, anatomy, properties, data, evaluation, and open challenges follow the paper; census-cell assignments are a reading of its prose, and this is one survey's framework rather than a settled consensus.</p>
   <p style="margin-top:8px">Method: read one section, close the page, redraw the VLA-vs-WAM contract from memory, then place three models as 4-tuples out loud and name which of the five properties each is weakest on.</p>
   <div class="sibs">
-    <a href="visual-representation-atlas.html">← The Visual Representation Atlas</a>
-    <a href="vlm-architecture-atlas.html">← The VLM Architecture Atlas</a>
-    <a href="video-generation-atlas.html">← The Video Generation Atlas</a>
+    <a href="notes.html">← All notes</a>
   </div>
 </footer>
 

@@ -40,7 +40,9 @@
     line-height:1.6;
     -webkit-font-smoothing:antialiased;
   }
-  .wrap{max-width:1060px;margin:0 auto;padding:0 24px}
+  /* gutters only: setting the padding shorthand here would outrank the
+     element-level rules that own the vertical rhythm (section, header, footer) */
+  .wrap{max-width:1060px;margin:0 auto;padding-left:24px;padding-right:24px}
   .mono{font-family:var(--mono)}
   a{color:inherit}
   :focus-visible{outline:2px solid var(--fuse);outline-offset:3px}
@@ -52,8 +54,6 @@
   .topbar a:hover{color:var(--ink)}
   .topbar .home{color:var(--ink)}
   .topbar .set{display:flex;gap:20px;flex-wrap:wrap}
-  .topbar .set a[aria-current="page"]{color:var(--vision)}
-
   /* ---- eyebrow / section scaffolding ---- */
   .eyebrow{
     font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;
@@ -146,15 +146,6 @@
   .pill.ef{background:#DED9F0;color:#33307a}
   .pill.closed{background:#E7EBEF;color:#5B6673}
 
-  /* ---- interview lens ---- */
-  .qa{margin-top:26px}
-  .q{background:var(--card);border:1px solid var(--card-line);border-radius:10px;padding:18px 20px;margin-bottom:14px;box-shadow:var(--shadow)}
-  .q .qq{font-family:var(--display);font-weight:600;font-size:16.5px;margin-bottom:8px;letter-spacing:-.01em;display:flex;gap:10px}
-  .q .qq::before{content:"Q";font-family:var(--mono);font-size:12px;color:var(--vision);border:1px solid var(--vision);border-radius:4px;padding:1px 6px;height:fit-content;flex:none}
-  .q .aa{font-size:14.5px;color:var(--ink-soft)}
-  .q .aa b{color:var(--ink);font-weight:600}
-  .q .aa .k{font-family:var(--mono);font-size:12.5px;color:var(--fuse);background:#E7E5F4;padding:1px 5px;border-radius:4px}
-
   footer{border-top:1px solid var(--card-line);padding:40px 0 70px;color:var(--muted);font-size:13px;font-family:var(--mono)}
   footer b{color:var(--ink-soft)}
   footer a{color:var(--ink-soft);text-decoration:underline;text-underline-offset:3px}
@@ -192,10 +183,6 @@
     <a href="index.html" class="home">Mahsa Khoshnoodi</a>
     <span class="set">
       <a href="notes.html">All notes</a>
-      <a href="visual-representation-atlas.html">Visual representation</a>
-      <a href="vlm-architecture-atlas.html" aria-current="page">VLM architecture</a>
-      <a href="video-generation-atlas.html">Video generation</a>
-      <a href="world-action-model-atlas.html">World action models</a>
     </span>
   </div>
 </nav>
@@ -299,7 +286,7 @@
       <div class="opts"><span class="chip hot">bolt-on align</span><span class="chip hot">native multimodal</span></div>
     </div>
     <div class="axis" style="grid-column:1 / -1">
-      <div class="ax-n">AXIS G · the one interviewers love</div>
+      <div class="ax-n">AXIS G · the deploy-time axis</div>
       <h3>Visual token budget</h3>
       <p>Every image injects hundreds of tokens into the sequence, and every one of them lives in the KV cache. High resolution and tiling multiply this fast, so a big part of VLM design is quietly a token-compression problem: pixel shuffle, resamplers, and cross-attention all exist to keep this number down. Size a VLM like a text model and you hit OOM under load.</p>
       <div class="opts"><span class="chip">~256/image (compressed)</span><span class="chip">~576 (LLaVA)</span><span class="chip">thousands (tiled hi-res)</span><span class="chip hot">variable (native res)</span></div>
@@ -605,11 +592,11 @@
     <div class="axis" style="grid-column:1 / -1">
       <div class="ax-n">THE CLOSED FRONTIER · Gemini · GPT · Claude</div>
       <h3>What you cannot see inside</h3>
-      <p>The most capable general models are proprietary, and their internals are not published. Google and OpenAI describe their flagships as natively multimodal, trained across modalities from the start, and Anthropic's Claude is strong on documents and vision, but none of the three disclose encoder, connector, resolution, or token-budget details. You can place all three in the early-fusion, natively-multimodal era by stated design and behavior, not by architecture. That distinction is itself worth saying in an interview: for closed models you reason from what they do and what the vendor claims, not from a diagram.</p>
+      <p>The most capable general models are proprietary, and their internals are not published. Google and OpenAI describe their flagships as natively multimodal, trained across modalities from the start, and Anthropic's Claude is strong on documents and vision, but none of the three disclose encoder, connector, resolution, or token-budget details. You can place all three in the early-fusion, natively-multimodal era by stated design and behavior, not by architecture. That distinction is worth making explicit: for closed models you reason from what they do and what the vendor claims, not from a diagram.</p>
       <div class="opts"><span class="chip">Gemini · stated native mm</span><span class="chip">GPT omni · stated native mm</span><span class="chip">Claude · vision-capable</span><span class="chip">internals undisclosed</span></div>
     </div>
   </div>
-  <p class="lede" style="margin-top:22px">The interview compression of all this is one sentence: the field moved from <b>aligning vision onto a language model</b> to <b>pretraining one multimodal model that early-fuses everything and increasingly acts</b>. Place a new release on the eras strip, name which shift it embodies, and you are reading it the way the field does.</p>
+  <p class="lede" style="margin-top:22px">Compressed to one sentence: the field moved from <b>aligning vision onto a language model</b> to <b>pretraining one multimodal model that early-fuses everything and increasingly acts</b>. Place a new release on the eras strip, name which shift it embodies, and you are reading it the way the field does.</p>
 </section>
 
 <!-- ============ PHILOSOPHIES ============ -->
@@ -673,43 +660,11 @@
   </div>
 </section>
 
-<!-- ============ INTERVIEW LENS ============ -->
-<section class="wrap reveal">
-  <div class="eyebrow">The interview lens</div>
-  <h2><span class="n">06</span>What they will actually ask</h2>
-  <p class="lede">Same method as your other foundations days: cover the topic, then rehearse the questions out loud. Here are the five an interviewer reaches for, with the crisp framing each one wants.</p>
-
-  <div class="qa">
-    <div class="q">
-      <div class="qq">Walk me through a modern VLM forward pass.</div>
-      <div class="aa">Image goes through the <b>vision encoder</b> to a grid of patch features. The <b>connector</b> projects them into the decoder's embedding space and often reduces their count. Visual tokens are <b>concatenated</b> with text tokens into one sequence, the decoder's <span class="k">self-attention</span> reasons over both, and it decodes autoregressively. Name the three modules, name the fusion step, done.</div>
-    </div>
-    <div class="q">
-      <div class="qq">Why do high-resolution images blow up your KV cache?</div>
-      <div class="aa">Each visual token lives in the sequence, so it lives in the <span class="k">KV cache</span>. More resolution or tiling means more tokens per image, and unlike text the count scales with image count and size, not just prompt length. That is why the mitigations exist: <b>pixel shuffle</b>, <b>resamplers</b>, and <b>cross-attention</b> all keep vision out of, or compressed within, the sequence. This is axis G, and it is the deploy-time gotcha.</div>
-    </div>
-    <div class="q">
-      <div class="qq">Concatenation vs cross-attention: trade-offs?</div>
-      <div class="aa">Concatenation is simple, scales with data, and lets one attention mechanism fuse everything, but every visual token costs sequence length and it can erode text ability. Cross-attention <b>decouples</b> image count from sequence length and protects the base LLM, at the cost of extra parameters and complexity. The field mostly chose concatenation for open models; Llama's vision line is the notable cross-attention holdout.</div>
-    </div>
-    <div class="q">
-      <div class="qq">Why did the field move to native resolution?</div>
-      <div class="aa">Fixed square resizing destroys aspect ratio and shrinks fine detail, which wrecks OCR, dense documents, and small-object grounding. The progression was <b>fixed → AnyRes tiling → native dynamic resolution</b>, with <span class="k">m-RoPE</span> added so the decoder still knows the 2D (and temporal) position of every patch once counts vary.</div>
-    </div>
-    <div class="q">
-      <div class="qq">What breaks specifically in video?</div>
-      <div class="aa">Frame budget and <b>temporal binding</b>. You cannot feed every frame, so sampling loses events, and once frames are tokens the model can <b>misbind</b> what happened when unless position encoding carries a real time axis. Time-aware m-RoPE and frame-token compression are the levers. Good place to note that temporal grounding is an open failure mode, not a solved one.</div>
-    </div>
-  </div>
-</section>
-
 <footer class="wrap">
   <p><b>The VLM Architecture Atlas</b> · a foundations-day study tour, from the LLaVA baseline through the early-fusion, omni, and vision-language-action frontier. Landscape current to mid-2026: Qwen3-VL, InternVL3.5, GLM-4.6V, Qwen3.5-Omni, NVIDIA Nemotron 3 Omni, and the lineages they descend from. Closed flagships (Gemini, GPT, Claude) are placed by stated design, not disclosed architecture.</p>
-  <p style="margin-top:8px">Method: cover one section, close the page, redraw the skeleton from memory, then answer the five questions out loud.</p>
+  <p style="margin-top:8px">Method: cover one section, close the page, then redraw the skeleton from memory.</p>
   <div class="sibs">
-    <a href="visual-representation-atlas.html">← The Visual Representation Atlas</a>
-    <a href="video-generation-atlas.html">The Video Generation Atlas →</a>
-    <a href="world-action-model-atlas.html">The World Action Model Atlas →</a>
+    <a href="notes.html">← All notes</a>
   </div>
 </footer>
 

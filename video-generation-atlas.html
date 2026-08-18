@@ -34,7 +34,9 @@
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
   body{background:var(--paper);color:var(--ink);font-family:var(--body);line-height:1.6;-webkit-font-smoothing:antialiased}
-  .wrap{max-width:1060px;margin:0 auto;padding:0 24px}
+  /* gutters only: setting the padding shorthand here would outrank the
+     element-level rules that own the vertical rhythm (section, header, footer) */
+  .wrap{max-width:1060px;margin:0 auto;padding-left:24px;padding-right:24px}
   .mono{font-family:var(--mono)}
   a{color:inherit}
   :focus-visible{outline:2px solid var(--fuse);outline-offset:3px}
@@ -45,8 +47,6 @@
   .topbar a:hover{color:var(--ink)}
   .topbar .home{color:var(--ink)}
   .topbar .set{display:flex;gap:20px;flex-wrap:wrap}
-  .topbar .set a[aria-current="page"]{color:var(--latent)}
-
   .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:10px;margin-bottom:14px}
   .eyebrow::before{content:"";width:26px;height:1px;background:var(--ink);opacity:.5}
   section{padding:64px 0;border-top:1px solid var(--card-line)}
@@ -131,14 +131,6 @@
   .pill.ar{background:#DED9F0;color:#33307a}
   .pill.closed{background:#E7EBEF;color:#5B6673}
 
-  .qa{margin-top:26px}
-  .q{background:var(--card);border:1px solid var(--card-line);border-radius:10px;padding:18px 20px;margin-bottom:14px;box-shadow:var(--shadow)}
-  .q .qq{font-family:var(--display);font-weight:600;font-size:16.5px;margin-bottom:8px;letter-spacing:-.01em;display:flex;gap:10px}
-  .q .qq::before{content:"Q";font-family:var(--mono);font-size:12px;color:var(--latent);border:1px solid var(--latent);border-radius:4px;padding:1px 6px;height:fit-content;flex:none}
-  .q .aa{font-size:14.5px;color:var(--ink-soft)}
-  .q .aa b{color:var(--ink);font-weight:600}
-  .q .aa .k{font-family:var(--mono);font-size:12.5px;color:var(--fuse);background:#E7E5F4;padding:1px 5px;border-radius:4px}
-
   footer{border-top:1px solid var(--card-line);padding:40px 0 70px;color:var(--muted);font-size:13px;font-family:var(--mono)}
   footer b{color:var(--ink-soft)}
   footer a{color:var(--ink-soft);text-decoration:underline;text-underline-offset:3px}
@@ -176,10 +168,6 @@
     <a href="index.html" class="home">Mahsa Khoshnoodi</a>
     <span class="set">
       <a href="notes.html">All notes</a>
-      <a href="visual-representation-atlas.html">Visual representation</a>
-      <a href="vlm-architecture-atlas.html">VLM architecture</a>
-      <a href="video-generation-atlas.html" aria-current="page">Video generation</a>
-      <a href="world-action-model-atlas.html">World action models</a>
     </span>
   </div>
 </nav>
@@ -590,43 +578,11 @@
   </div>
 </section>
 
-<!-- INTERVIEW LENS -->
-<section class="wrap reveal">
-  <div class="eyebrow">The interview lens</div>
-  <h2><span class="n">06</span>What they will actually ask</h2>
-  <p class="lede">Same method as your other foundations days: cover the section, then say the answers out loud. Five questions carry most of the ground.</p>
-
-  <div class="qa">
-    <div class="q">
-      <div class="qq">Walk me through a modern text-to-video forward pass.</div>
-      <div class="aa">Encode the prompt with a <b>text encoder</b>. Sample <b>noise</b> in the latent space of a <b>3D VAE</b>. A <b>DiT denoiser</b> removes noise over N steps, conditioned on the text, to reach a clean latent. The <span class="k">VAE decoder</span> expands that latent back to pixels. Name latent space, the denoising loop, and the conditioning, and you have it.</div>
-    </div>
-    <div class="q">
-      <div class="qq">Why latent, and why a 3D VAE specifically?</div>
-      <div class="aa">Raw video is far too many pixels to diffuse directly. A <b>3D causal VAE</b> compresses space and time together (roughly <span class="k">16x</span> spatial, <span class="k">4x</span> temporal), so the model reasons over motion rather than independent frames and the token count stays tractable for attention. Causal means it can encode streaming or variable-length input.</div>
-    </div>
-    <div class="q">
-      <div class="qq">U-Net vs DiT vs MMDiT?</div>
-      <div class="aa">U-Net is convolutional, older, weaker at long-range dependencies and scaling. <b>DiT</b> treats spacetime patches as tokens, so it scales with compute and handles variable duration and resolution. <b>MMDiT</b> puts text and video tokens in one attention stream for tighter prompt alignment. The trajectory was U-Net to DiT to MMDiT.</div>
-    </div>
-    <div class="q">
-      <div class="qq">Full 3D attention vs factorized, and why do clips stay short?</div>
-      <div class="aa"><b>3D full attention</b> lets every spacetime token attend to every other, which gives the best consistency but is <span class="k">quadratic</span> in token count. A short clip is already tens of thousands of tokens, so cost explodes with duration and resolution. Factorized, sparse, or tiled attention trade some consistency for tractability. This quadratic wall is the class-wide limiter.</div>
-    </div>
-    <div class="q">
-      <div class="qq">Bidirectional vs autoregressive, and what breaks in long video?</div>
-      <div class="aa">Bidirectional denoises the whole clip together: best quality, fixed length, expensive. <b>Autoregressive</b> generates the next frame or chunk conditioned on the past: streaming, long, interactive, but it <b>accumulates error</b> and drifts. Long-range temporal coherence is the shared weakness. <span class="k">Diffusion forcing</span> and few-step distillation are the levers that make the causal branch stable and real-time.</div>
-    </div>
-  </div>
-</section>
-
 <footer class="wrap">
-  <p><b>The Video Generation Atlas</b> · a foundations-day study tour, second in a set of three. From temporal-layer U-Nets through DiT, MMDiT, and the streaming, audible, world-model frontier. Landscape current to mid-2026: Sora 2, Veo 3.1, Wan, HunyuanVideo, CogVideoX, LTX, Cosmos. Open models are described by architecture; closed flagships by stated design.</p>
-  <p style="margin-top:8px">Method: read one section, close the page, redraw the denoising loop from memory, then answer the five questions out loud.</p>
+  <p><b>The Video Generation Atlas</b> · a foundations-day study tour. From temporal-layer U-Nets through DiT, MMDiT, and the streaming, audible, world-model frontier. Landscape current to mid-2026: Sora 2, Veo 3.1, Wan, HunyuanVideo, CogVideoX, LTX, Cosmos. Open models are described by architecture; closed flagships by stated design.</p>
+  <p style="margin-top:8px">Method: read one section, close the page, then redraw the denoising loop from memory.</p>
   <div class="sibs">
-    <a href="visual-representation-atlas.html">← The Visual Representation Atlas</a>
-    <a href="vlm-architecture-atlas.html">← The VLM Architecture Atlas</a>
-    <a href="world-action-model-atlas.html">The World Action Model Atlas →</a>
+    <a href="notes.html">← All notes</a>
   </div>
 </footer>
 
