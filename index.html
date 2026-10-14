@@ -41,8 +41,8 @@
   ]
 }
 </script>
-<link rel="icon" href="/assets/img/mark.png" type="image/png" sizes="192x192">
-<link rel="apple-touch-icon" href="/assets/img/mark.png">
+<link rel="icon" href="assets/img/mark.png" type="image/png" sizes="192x192">
+<link rel="apple-touch-icon" href="assets/img/mark.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -227,14 +227,13 @@ a:hover { border-bottom-color: var(--navy-mid); }
 }
 .hero-thesis {
   font-family: var(--serif);
-  font-style: italic;
-  font-size: 1.32rem;
-  line-height: 1.35;
-  color: var(--ink);
+  font-style: normal;
+  font-size: 1rem;
+  line-height: 1.8;
+  color: var(--ink-soft);
   margin-bottom: 1.3rem;
-  max-width: 34ch;
 }
-.hero-thesis b { font-style: normal; font-weight: 600; color: var(--navy); }
+.hero-thesis b { font-weight: 600; color: var(--ink); }
 
 .hero-affil {
   font-family: var(--sans);
@@ -252,26 +251,6 @@ a:hover { border-bottom-color: var(--navy-mid); }
   margin-bottom: 1.6rem;
 }
 .hero-bio strong { color: var(--ink); font-weight: 600; }
-
-/* CTA row */
-.cta-row { display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center; margin-bottom: 1.4rem; }
-.btn {
-  font-family: var(--sans);
-  font-size: 0.82rem;
-  font-weight: 600;
-  letter-spacing: 0.01em;
-  padding: 0.5rem 0.95rem;
-  border-radius: 7px;
-  display: inline-flex; align-items: center; gap: 0.45rem;
-  transition: all 0.15s;
-  border: 1px solid transparent;
-}
-.btn svg { width: 0.95rem; height: 0.95rem; fill: currentColor; }
-.btn-primary { background: var(--navy); color: var(--paper); }
-html[data-theme="dark"] .btn-primary { color: #0F141A; }
-.btn-primary:hover { transform: translateY(-1px); box-shadow: var(--shadow); border-color: transparent; }
-.btn-ghost { background: var(--surface); color: var(--ink); border-color: var(--line); }
-.btn-ghost:hover { border-color: var(--navy-mid); color: var(--navy); transform: translateY(-1px); }
 
 .hero-contact { display: flex; flex-wrap: wrap; gap: 0.6rem; }
 .hero-contact a {
@@ -296,7 +275,7 @@ html[data-theme="dark"] .btn-primary { color: #0F141A; }
 .hero-aside { display: flex; flex-direction: column; gap: 1rem; }
 .hero-photo {
   width: 240px; height: 285px;
-  object-fit: cover; object-position: center top;
+  object-fit: cover; object-position: center 35%;
   display: block;
   border: 1px solid var(--line);
   border-radius: 6px;
@@ -570,7 +549,6 @@ footer p {
   .hero { grid-template-columns: 1fr; gap: 2rem; }
   .hero-aside { flex-direction: row; align-items: flex-start; }
   .hero-photo { width: 130px; height: 155px; }
-  .hero-thesis { font-size: 1.2rem; max-width: none; }
   .ladder { grid-template-columns: 1fr; }
   .stage { border-right: none; border-bottom: 1px solid var(--line); }
   .stage:last-child { border-bottom: none; }
@@ -615,7 +593,7 @@ footer p {
 <!-- HERO -->
 <div class="hero">
   <div class="hero-text">
-    <span class="availability"><span class="dot"></span> Seeking research internships, 2027</span>
+    <span class="availability"><span class="dot"></span> Seeking Summer 2027 research internships</span>
     <h1>Mahsa Khoshnoodi</h1>
     <div class="hero-role">PhD Student, Computer Science · Georgetown University</div>
     <p class="hero-thesis">
@@ -625,7 +603,7 @@ footer p {
       GUCV Lab · Advised by <a href="https://gufaculty360.georgetown.edu/s/contact/0031Q00002cJxDQQA0/sarah-bargal" target="_blank" rel="noopener">Prof. Sarah Adel Bargal</a>, mentored by <a href="https://michaelsaxon.github.io/" target="_blank" rel="noopener">Dr. Michael Saxon</a>.
     </div>
     <p class="hero-bio">
-      I study <strong>where and why vision-language models fail</strong> on fine-grained visual understanding. Rather than treating hallucination as an output artifact, I build <strong>diagnostic frameworks</strong> that trace it back to the exact point in a model's reasoning where perception breaks down. My longer view: capable multimodal systems will need a <strong>structured world model</strong> that connects seeing, understanding, and acting.
+      I study <strong>where and why vision-language and video models fail</strong>. I build <strong>diagnostic benchmarks and interpretability probes</strong> that locate each failure at one of three levels: <strong>perception</strong> (did the model see it?), <strong>grounding</strong> (did it link what it saw to the question?), or <strong>reasoning</strong> (did it combine the evidence correctly?). For example, video LLMs internally encode repetition counts they then fail to report. Before my PhD, I spent six years building production ML systems for banking and finance.
     </p>
 
     <div class="hero-contact">
@@ -648,7 +626,7 @@ footer p {
   </div>
 
   <aside class="hero-aside">
-    <img src="/assets/img/profile_pic.jpg" alt="Mahsa Khoshnoodi" class="hero-photo">
+    <img src="assets/img/profile_pic.jpg" alt="Mahsa Khoshnoodi" class="hero-photo">
   </aside>
 </div>
 
@@ -657,16 +635,16 @@ footer p {
   <div class="section-title">Research directions</div>
   <div class="research-list">
     <div class="research-item">
-      <h3>Perception to reasoning</h3>
-      <p>I investigate how VLMs integrate visual and linguistic information to reach decisions. Even when models land on correct conclusions, their internal reasoning paths are often flawed or biased. I build interpretability tools that act as a microscope for AI, tracing information flow and exposing where perception fails to become genuine reasoning.</p>
+      <h3>Diagnosing VLM failures</h3>
+      <p>I decompose visual questions into probes that test perception, grounding, and reasoning separately, with exact ground truth. In <a href="https://arenaa.github.io/ChartProbe-webpage/" target="_blank" rel="noopener">ChartProbe</a>, training on perception probes alone transferred to held-out reasoning, raising accuracy in an unseen domain from 13.6 to 80.1.</p>
     </div>
     <div class="research-item">
-      <h3>Diagnostic frameworks for VLMs</h3>
-      <p>I develop evaluation frameworks that assess not just whether a model is correct, but whether its reasoning process is valid. Hallucination and bias appear heterogeneously across layers and architectures, so effective diagnosis means reading internal dynamics, not just observing outputs.</p>
+      <h3>Video understanding</h3>
+      <p>I study temporal reasoning in video LLMs through repetition counting. In <a href="https://arenaa.github.io/RepProbe-webpage/" target="_blank" rel="noopener">RepProbe</a>, a linear probe on a model's final layer recovers the count better than the model's own answer, locating the failure at readout rather than perception.</p>
     </div>
     <div class="research-item">
-      <h3>From seeing to acting</h3>
-      <p>My long-term work targets systems that perceive, reason, and act reliably in the world. Drawing on structured world modeling and vision-language-action architectures, I aim to build multimodal systems that stay aligned with human values across the full loop from visual input to real-world decision.</p>
+      <h3>Video generation and action</h3>
+      <p>I am extending the same diagnostic lens to models that generate and act: steering video diffusion models to produce a requested number of repetitions, and benchmarking vision-language-action policies against world action models on long-horizon manipulation.</p>
     </div>
   </div>
 </section>
@@ -679,7 +657,19 @@ footer p {
 
     <div class="pub-item">
       <div class="pub-header">
-        <span class="venue-tag paper">Paper 2026</span>
+        <span class="venue-tag arxiv">Preprint 2026</span>
+      </div>
+      <div class="pub-title"><a href="https://arxiv.org/abs/2610.18844" target="_blank" rel="noopener">RepProbe: Repetition Counts Are Linearly Decodable from Video LLMs but Not Reported</a></div>
+      <div class="pub-authors"><strong>Mahsa Khoshnoodi</strong>, Sarah Adel Bargal</div>
+      <div class="pub-links">
+        <a href="https://arxiv.org/abs/2610.18844" target="_blank" rel="noopener" class="pub-link">Paper</a>
+        <a href="https://arenaa.github.io/RepProbe-webpage/" target="_blank" rel="noopener" class="pub-link">Project Page</a>
+      </div>
+    </div>
+
+    <div class="pub-item">
+      <div class="pub-header">
+        <span class="venue-tag arxiv">Preprint 2026</span>
       </div>
       <div class="pub-title"><a href="https://arxiv.org/abs/2608.13766" target="_blank" rel="noopener">ChartProbe: A Diagnostic Study on Visual Reasoning through Perception, Grounding, and Simple Reasoning</a></div>
       <div class="pub-authors"><strong>Mahsa Khoshnoodi</strong>, Sarah Adel Bargal</div>
@@ -691,7 +681,7 @@ footer p {
 
     <div class="pub-item">
       <div class="pub-header">
-        <span class="venue-tag paper">Paper 2026</span>
+        <span class="venue-tag arxiv">Preprint 2026</span>
       </div>
       <div class="pub-title"><a href="https://arxiv.org/abs/2608.13671" target="_blank" rel="noopener">PROVE: Training-Free Prompt Recovery using Verifiable Evidence</a></div>
       <div class="pub-authors">Rupayan Mallick, <strong>Mahsa Khoshnoodi</strong>, Sarah Adel Bargal</div>
@@ -729,7 +719,7 @@ footer p {
       <div class="pub-header">
         <span class="venue-tag kdd">KDD 2025</span>
       </div>
-      <div class="pub-title">Hierarchical Prompting Taxonomy: A Universal Evaluation Framework for Large Language Models</div>
+      <div class="pub-title"><a href="https://arxiv.org/abs/2406.12644" target="_blank" rel="noopener">Hierarchical Prompting Taxonomy: A Universal Evaluation Framework for Large Language Models</a></div>
       <div class="pub-authors">Devichand Budagam, Sankalp KJ, <strong>Mahsa Khoshnoodi</strong>, Ashutosh Kumar, Vinija Jain, Aman Chadha</div>
       <div class="pub-venue">KDD 2025</div>
       <div class="pub-links">
@@ -742,8 +732,8 @@ footer p {
         <span class="venue-tag neurips">NeurIPS 2024</span>
         <span class="spotlight-tag">Spotlight, top 5%</span>
       </div>
-      <div class="pub-title">Who Evaluates the Evaluations? Objectively Scoring Text-to-Image Prompt Coherence Metrics with T2IScoreScore (TS2)</div>
-      <div class="pub-authors"><strong>Mahsa Khoshnoodi</strong>*, Fatima Jahara*, Michael Saxon*, Yujie Lu, Aditya Sharma, William Yang Wang<span class="equal-contrib">* Equal contribution</span></div>
+      <div class="pub-title"><a href="https://arxiv.org/abs/2404.04251" target="_blank" rel="noopener">Who Evaluates the Evaluations? Objectively Scoring Text-to-Image Prompt Coherence Metrics with T2IScoreScore (TS2)</a></div>
+      <div class="pub-authors">Michael Saxon*, Fatima Jahara*, <strong>Mahsa Khoshnoodi</strong>*, Yujie Lu, Aditya Sharma, William Yang Wang<span class="equal-contrib">* Equal contribution (co-first authors)</span></div>
       <div class="pub-venue">NeurIPS 2024</div>
       <div class="pub-links">
         <a href="https://arxiv.org/abs/2404.04251" target="_blank" rel="noopener" class="pub-link">Paper</a>
@@ -753,9 +743,9 @@ footer p {
 
     <div class="pub-item">
       <div class="pub-header">
-        <span class="venue-tag paper">Paper 2024</span>
+        <span class="venue-tag arxiv">Preprint 2024</span>
       </div>
-      <div class="pub-title">A Comprehensive Survey of Accelerated Generation Techniques in Large Language Models</div>
+      <div class="pub-title"><a href="https://arxiv.org/abs/2405.13019" target="_blank" rel="noopener">A Comprehensive Survey of Accelerated Generation Techniques in Large Language Models</a></div>
       <div class="pub-authors"><strong>Mahsa Khoshnoodi</strong>, Vinija Jain, Mingye Gao, Malavika Srikanth, Aman Chadha</div>
       <div class="pub-venue">Preprint, 2024</div>
       <div class="pub-links">
@@ -770,6 +760,14 @@ footer p {
 <section id="news" class="reveal">
   <div class="section-title">News</div>
   <div class="news-list">
+    <div class="news-item">
+      <div class="news-date">Oct 2026</div>
+      <div class="news-text"><strong>New preprint</strong>: <a href="https://arenaa.github.io/RepProbe-webpage/" target="_blank" rel="noopener">RepProbe</a>, showing video LLMs encode repetition counts they fail to report.</div>
+    </div>
+    <div class="news-item">
+      <div class="news-date">Aug 2026</div>
+      <div class="news-text"><strong>Two preprints</strong>: <a href="https://arenaa.github.io/ChartProbe-webpage/" target="_blank" rel="noopener">ChartProbe</a> and <a href="https://arenaa.github.io/prove/" target="_blank" rel="noopener">PROVE</a>.</div>
+    </div>
     <div class="news-item">
       <div class="news-date">May 2026</div>
       <div class="news-text"><strong>Paper accepted</strong> at CVPR 2026 VisCon Workshop: "Do VLMs Reason About Faces?"</div>

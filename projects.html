@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Projects, Mahsa Khoshnoodi</title>
-<link rel="icon" href="/assets/img/favicon.png" type="image/png">
-<link rel="shortcut icon" href="/assets/img/favicon.png" type="image/png">
+<link rel="icon" href="assets/img/favicon.png" type="image/png">
+<link rel="shortcut icon" href="assets/img/favicon.png" type="image/png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -160,16 +160,14 @@
     margin: 0.1rem 0 0;
     border: 1px solid var(--rule);
     border-radius: 2px;
-    overflow: hidden;
     background: #fff;
   }
   .card-image {
     display: block;
-    margin: 0 auto;
-    width: auto;
+    width: 100%;
     height: auto;
-    max-width: 100%;
     max-height: 155px;
+    object-fit: contain;
   }
 
   /* ── PAST PROJECTS ── */
@@ -240,13 +238,13 @@
     margin: 0;
     border: 1px solid var(--rule);
     border-radius: 2px;
-    overflow: hidden;
     background: #fff;
   }
   .past-image {
     width: 100%;
     height: auto;
     display: block;
+    object-fit: contain;
   }
 
   a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; transition: border-color 0.15s; }
@@ -321,7 +319,7 @@
   <div class="page-header">
     <h1>Projects</h1>
     <p>Research publications, applied ML systems, and earlier work spanning multimodal AI, NLP, anomaly detection, and computational neuroscience.</p>
-    <img src="/assets/img/cover.png" alt="Abstract network visualization representing connected research themes" width="1600" height="763" class="page-cover" decoding="async" fetchpriority="high">
+    <img src="assets/img/cover.png" alt="Abstract network visualization representing connected research themes" width="1600" height="763" class="page-cover" decoding="async" fetchpriority="high">
   </div>
 
   <!-- ══ PUBLISHED RESEARCH ══ -->
@@ -330,7 +328,29 @@
       <div class="card-content">
       <div class="card-aside">
       <div class="card-media">
-        <img src="/assets/img/chart.png?v=2" alt="ChartProbe diagnostic framework across perception, grounding, and reasoning levels" width="6354" height="4692" class="card-image" loading="lazy" decoding="async">
+        <img src="assets/img/RepProbe.jpg" alt="RepProbe comparison of a video LLM's reported count against a linear probe on its final layer" width="1133" height="578" class="card-image" decoding="async">
+      </div>
+      <div class="card-badge">
+        <span class="venue-tag paper">Paper</span>
+        <span class="year-tag">2026</span>
+      </div>
+      </div>
+        <div class="card-title"><a href="https://arxiv.org/abs/2610.18844" target="_blank">RepProbe: Repetition Counts Are Linearly Decodable from Video LLMs but Not Reported</a></div>
+        <div class="card-authors"><strong>Mahsa Khoshnoodi</strong>, Sarah Adel Bargal</div>
+        <div class="card-desc">
+          When a video LLM miscounts repeated actions, did it fail to see them or fail to say the number? RepProbe is a 42K-clip benchmark of real and synthetic periodic videos with cycle-accurate counts. A linear probe on the model's final layer recovers the count better than the model's own answer, and the gap survives duration controls, showing the failure lies in the readout, not in perception.
+        </div>
+        <div class="card-links">
+          <a href="https://arxiv.org/abs/2610.18844" target="_blank" class="card-link">Paper</a>
+          <a href="https://arenaa.github.io/RepProbe-webpage/" target="_blank" class="card-link">Project Page</a>
+        </div>
+      </div>
+    </div>
+    <div class="research-card">
+      <div class="card-content">
+      <div class="card-aside">
+      <div class="card-media">
+        <img src="assets/img/chart.png?v=3" alt="ChartProbe diagnostic framework across perception, grounding, and reasoning levels" width="1600" height="1181" class="card-image" decoding="async">
       </div>
       <div class="card-badge">
         <span class="venue-tag paper">Paper</span>
@@ -352,7 +372,7 @@
       <div class="card-content">
       <div class="card-aside">
       <div class="card-media">
-        <img src="/assets/img/prove.png?v=2" alt="Original images beside PROVE regenerations from recovered prompts" width="724" height="842" class="card-image" loading="lazy" decoding="async">
+        <img src="assets/img/prove.png?v=2" alt="Original images beside PROVE regenerations from recovered prompts" width="724" height="842" class="card-image" decoding="async">
       </div>
       <div class="card-badge">
         <span class="venue-tag paper">Paper</span>
@@ -374,7 +394,7 @@
       <div class="card-content">
       <div class="card-aside">
       <div class="card-media">
-        <img src="/assets/img/Face.png" alt="FaceBench diagnostic examples for identity judgment and attribute agreement" width="1638" height="754" class="card-image" loading="lazy" decoding="async">
+        <img src="assets/img/Face.png" alt="FaceBench diagnostic examples for identity judgment and attribute agreement" width="1638" height="754" class="card-image" decoding="async">
       </div>
       <div class="card-badge">
         <span class="venue-tag cvpr">CVPR-VisCon</span>
@@ -396,7 +416,7 @@
       <div class="card-content">
       <div class="card-aside">
       <div class="card-media">
-        <img src="/assets/img/semeval_diagram.png" alt="Emotion-aware multi-task model diagram for SemEval conspiracy detection" width="1360" height="840" class="card-image" loading="lazy" decoding="async">
+        <img src="assets/img/semeval_diagram.png" alt="Emotion-aware multi-task model diagram for SemEval conspiracy detection" width="1360" height="840" class="card-image" decoding="async">
       </div>
       <div class="card-badge">
         <span class="venue-tag semeval">SemEval</span>
@@ -418,7 +438,7 @@
       <div class="card-content">
       <div class="card-aside">
       <div class="card-media">
-        <img src="/assets/img/project1.png" alt="Hierarchical prompting taxonomy diagram showing prompt complexity levels" width="853" height="599" class="card-image" loading="lazy" decoding="async">
+        <img src="assets/img/project1.png" alt="Hierarchical prompting taxonomy diagram showing prompt complexity levels" width="853" height="599" class="card-image" decoding="async">
       </div>
       <div class="card-badge">
         <span class="venue-tag kdd">KDD</span>
@@ -440,7 +460,7 @@
       <div class="card-content">
       <div class="card-aside">
       <div class="card-media">
-        <img src="/assets/img/project9.png" alt="Example synthetic image used to illustrate text-to-image coherence evaluation" width="512" height="512" class="card-image" loading="lazy" decoding="async">
+        <img src="assets/img/project9.png" alt="Example synthetic image used to illustrate text-to-image coherence evaluation" width="512" height="512" class="card-image" decoding="async">
       </div>
       <div class="card-badge">
         <span class="venue-tag neurips">NeurIPS</span>
@@ -464,7 +484,7 @@
       <div class="card-content">
       <div class="card-aside">
       <div class="card-media">
-        <img src="/assets/img/project10.png" alt="Diagram illustrating predict-verify style accelerated language generation" width="925" height="460" class="card-image" loading="lazy" decoding="async">
+        <img src="assets/img/project10.png" alt="Diagram illustrating predict-verify style accelerated language generation" width="925" height="460" class="card-image" decoding="async">
       </div>
       <div class="card-badge">
         <span class="venue-tag paper">Paper</span>
@@ -492,7 +512,7 @@
     <div class="past-card">
       <div class="past-aside">
         <div class="past-media">
-          <img src="/assets/img/project4.png" alt="Basal ganglia pathway diagram showing cortex, striatum, thalamus, and pallidum" width="1149" height="1109" class="past-image" loading="lazy" decoding="async">
+          <img src="assets/img/project4.png" alt="Basal ganglia pathway diagram showing cortex, striatum, thalamus, and pallidum" width="1149" height="1109" class="past-image" decoding="async">
         </div>
         <span class="past-tag thesis">M.Sc. Thesis</span>
       </div>
