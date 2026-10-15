@@ -302,11 +302,12 @@ section { margin-top: 4.5rem; }
 
 /* SIGNATURE: diagnostic ladder */
 .ladder-intro {
-  font-size: 1.05rem;
+  font-size: clamp(0.78rem, 1.35vw, 0.98rem);
   color: var(--ink-soft);
-  line-height: 1.75;
-  max-width: 62ch;
-  margin-bottom: 2rem;
+  line-height: 1.45;
+  max-width: none;
+  margin-bottom: 1.75rem;
+  white-space: nowrap;
 }
 .ladder-intro b { color: var(--ink); font-weight: 600; }
 .ladder {
@@ -603,6 +604,7 @@ footer p {
   .hero { grid-template-columns: 1fr; gap: 2rem; }
   .hero-aside { flex-direction: row; align-items: flex-start; }
   .hero-photo { width: 130px; height: 155px; }
+  .ladder-intro { white-space: normal; font-size: 1rem; }
   .ladder { grid-template-columns: 1fr; }
   .stage { border-right: none; border-bottom: 1px solid var(--line); }
   .stage:last-child { border-bottom: none; }
@@ -687,19 +689,26 @@ footer p {
 
 <!-- RESEARCH -->
 <section id="research" class="reveal">
-  <div class="section-title">Research directions</div>
-  <div class="research-list">
-    <div class="research-item">
-      <h3>Diagnosing VLM failures</h3>
-      <p>I decompose visual questions into probes that test perception, grounding, and reasoning separately, each with exact ground truth, so a wrong answer can be traced to the skill that failed. I apply this to fine-grained domains such as charts and faces, where models often answer correctly for the wrong reasons.</p>
+  <div class="section-title">Research</div>
+  <p class="ladder-intro">I study where multimodal models fail and why, across models that <b>see</b>, models that <b>watch</b>, and models that <b>generate and act</b>.</p>
+  <div class="ladder">
+    <div class="stage">
+      <div class="stage-num"><span class="stage-bar"></span>IMAGES</div>
+      <h3>Diagnosing Vision-Language Models</h3>
+      <p class="q"><a href="https://arenaa.github.io/ChartProbe-webpage/" target="_blank" rel="noopener">ChartProbe</a></p>
+      <p>I split each chart question into probes for perception, grounding, and reasoning, each with exact ground truth. Training on perception alone raised reasoning accuracy in an unseen domain from 13.6 to 80.1.</p>
     </div>
-    <div class="research-item">
-      <h3>Video understanding</h3>
-      <p>I study temporal reasoning in video LLMs through repetition counting. In <a href="https://arenaa.github.io/RepProbe-webpage/" target="_blank" rel="noopener">RepProbe</a>, a linear probe on a model's final layer recovers the count better than the model's own answer, locating the failure at readout rather than perception.</p>
+    <div class="stage">
+      <div class="stage-num"><span class="stage-bar"></span>VIDEO</div>
+      <h3>Temporal Reasoning in Video</h3>
+      <p class="q"><a href="https://arenaa.github.io/RepProbe-webpage/" target="_blank" rel="noopener">RepProbe</a></p>
+      <p>Video LLMs encode how many times an action repeats but fail to report it. Across 42K clips, a linear probe on the final layer counts better than the model's own answer.</p>
     </div>
-    <div class="research-item">
-      <h3>Video generation and action</h3>
-      <p>I am extending the same diagnostic lens to models that generate and act: steering video diffusion models to produce a requested number of repetitions, and benchmarking vision-language-action policies against world action models on long-horizon manipulation.</p>
+    <div class="stage">
+      <div class="stage-num"><span class="stage-bar"></span>GENERATION &amp; ACTION</div>
+      <h3>Video Generation and Embodied Agents</h3>
+      <p class="q">Ongoing</p>
+      <p>Steering video generation models to produce a requested number of repetitions, and comparing vision-language-action policies with world action models on long-horizon manipulation.</p>
     </div>
   </div>
 </section>
