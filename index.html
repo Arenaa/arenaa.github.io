@@ -50,9 +50,9 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --paper: #FBFAF7;
-  --surface: #F2EFE9;
-  --surface-2: #EAE6DD;
+  --paper: #FFFEFC;
+  --surface: #F7F5F1;
+  --surface-2: #F1EEE8;
   --ink: #16202B;
   --ink-soft: #45505B;
   --ink-muted: #8A8880;
@@ -490,19 +490,73 @@ section { margin-top: 4.5rem; }
   line-height: 1.65;
   margin-top: 0.6rem;
 }
-.pub-links { margin-top: 0.7rem; display: flex; gap: 0.9rem; flex-wrap: wrap; }
+.pub-links { margin-top: 0.85rem; display: flex; gap: 0.5rem; flex-wrap: wrap; }
 .pub-link {
-  font-family: var(--mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.03em;
-  color: var(--navy-mid);
-  text-transform: uppercase;
-  border-bottom: none;
-  display: inline-flex; align-items: center; gap: 0.3rem;
-  transition: color 0.15s;
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  text-transform: none;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  padding: 0.32rem 0.7rem;
+  display: inline-flex;
+  align-items: center;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
 }
-.pub-link::before { content: "→"; }
-.pub-link:hover { color: var(--navy); border-bottom: none; }
+.pub-link::before { content: none; }
+.pub-link:hover {
+  color: var(--navy);
+  background: var(--surface);
+  border-color: var(--line);
+  border-bottom-color: var(--line);
+}
+
+.pub-item.has-thumb {
+  display: grid;
+  grid-template-columns: 210px 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+.pub-item.has-thumb:hover { padding-left: 0; }
+.pub-thumb {
+  display: block;
+  padding: 6px;
+  border: 1px solid color-mix(in srgb, #fff 70%, var(--line));
+  border-radius: 12px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--paper) 62%, transparent);
+  backdrop-filter: blur(12px) saturate(150%);
+  -webkit-backdrop-filter: blur(12px) saturate(150%);
+  aspect-ratio: 16 / 10;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.75),
+    0 10px 28px rgba(22, 32, 43, 0.12);
+}
+html[data-theme="dark"] .pub-thumb {
+  background: color-mix(in srgb, var(--surface) 70%, transparent);
+  border-color: color-mix(in srgb, #fff 18%, var(--line));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 12px 32px rgba(0, 0, 0, 0.35);
+}
+.pub-thumb:hover { border-bottom-color: color-mix(in srgb, #fff 70%, var(--line)); }
+.pub-thumb img {
+  width: 100%; height: 100%;
+  object-fit: contain;
+  display: block;
+  border-radius: 8px;
+  background: #fff;
+}
+.pub-body { min-width: 0; }
+.pub-desc {
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+  line-height: 1.65;
+  margin-top: 0.6rem;
+}
 
 /* NEWS */
 .news-list { display: flex; flex-direction: column; }
@@ -553,6 +607,8 @@ footer p {
   .stage { border-right: none; border-bottom: 1px solid var(--line); }
   .stage:last-child { border-bottom: none; }
   .research-item { grid-template-columns: 1fr; gap: 0.5rem; }
+  .pub-item.has-thumb { grid-template-columns: 1fr; gap: 0.9rem; }
+  .pub-thumb { max-width: 360px; }
   .news-item { grid-template-columns: 76px 1fr; gap: 1rem; }
   nav { padding: 0 1rem; }
   nav ul { gap: 1rem; flex-wrap: wrap; }
@@ -577,7 +633,6 @@ footer p {
     <li><a href="#research">Research</a></li>
     <li><a href="#publications">Publications</a></li>
     <li><a href="#news">News</a></li>
-    <li><a href="projects.html">Projects</a></li>
     <li><a href="notes.html">Notes</a></li>
     <li>
       <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" title="Toggle theme">
@@ -636,7 +691,7 @@ footer p {
   <div class="research-list">
     <div class="research-item">
       <h3>Diagnosing VLM failures</h3>
-      <p>I decompose visual questions into probes that test perception, grounding, and reasoning separately, with exact ground truth. In <a href="https://arenaa.github.io/ChartProbe-webpage/" target="_blank" rel="noopener">ChartProbe</a>, training on perception probes alone transferred to held-out reasoning, raising accuracy in an unseen domain from 13.6 to 80.1.</p>
+      <p>I decompose visual questions into probes that test perception, grounding, and reasoning separately, each with exact ground truth, so a wrong answer can be traced to the skill that failed. I apply this to fine-grained domains such as charts and faces, where models often answer correctly for the wrong reasons.</p>
     </div>
     <div class="research-item">
       <h3>Video understanding</h3>
@@ -655,101 +710,152 @@ footer p {
 
   <div class="pub-list">
 
-    <div class="pub-item">
-      <div class="pub-header">
-        <span class="venue-tag arxiv">Preprint 2026</span>
-      </div>
-      <div class="pub-title"><a href="https://arxiv.org/abs/2610.18844" target="_blank" rel="noopener">RepProbe: Repetition Counts Are Linearly Decodable from Video LLMs but Not Reported</a></div>
-      <div class="pub-authors"><strong>Mahsa Khoshnoodi</strong>, Sarah Adel Bargal</div>
-      <div class="pub-links">
-        <a href="https://arxiv.org/abs/2610.18844" target="_blank" rel="noopener" class="pub-link">Paper</a>
-        <a href="https://arenaa.github.io/RepProbe-webpage/" target="_blank" rel="noopener" class="pub-link">Project Page</a>
-      </div>
-    </div>
-
-    <div class="pub-item">
-      <div class="pub-header">
-        <span class="venue-tag arxiv">Preprint 2026</span>
-      </div>
-      <div class="pub-title"><a href="https://arxiv.org/abs/2608.13766" target="_blank" rel="noopener">ChartProbe: A Diagnostic Study on Visual Reasoning through Perception, Grounding, and Simple Reasoning</a></div>
-      <div class="pub-authors"><strong>Mahsa Khoshnoodi</strong>, Sarah Adel Bargal</div>
-      <div class="pub-links">
-        <a href="https://arxiv.org/abs/2608.13766" target="_blank" rel="noopener" class="pub-link">Paper</a>
-        <a href="https://arenaa.github.io/ChartProbe-webpage/" target="_blank" rel="noopener" class="pub-link">Project Page</a>
+    <div class="pub-item has-thumb">
+      <a class="pub-thumb" href="https://arenaa.github.io/RepProbe-webpage/" target="_blank" rel="noopener" aria-hidden="true" tabindex="-1">
+        <img src="assets/img/RepProbe.jpg" alt="RepProbe teaser" decoding="async">
+      </a>
+      <div class="pub-body">
+        <div class="pub-header">
+          <span class="venue-tag arxiv">Preprint 2026</span>
+        </div>
+        <div class="pub-title"><a href="https://arxiv.org/abs/2610.18844" target="_blank" rel="noopener">RepProbe: Repetition Counts Are Linearly Decodable from Video LLMs but Not Reported</a></div>
+        <div class="pub-authors"><strong>Mahsa Khoshnoodi</strong>, Sarah Adel Bargal</div>
+        <div class="pub-venue">Preprint, 2026</div>
+        <div class="pub-desc">A 42K-clip benchmark for repetition counting in video LLMs. A linear probe on the final layer recovers the count better than the model's own answer, and the gap survives duration controls, locating the failure at the autoregressive readout rather than perception.</div>
+        <div class="pub-links">
+          <a href="https://arxiv.org/abs/2610.18844" target="_blank" rel="noopener" class="pub-link">Paper</a>
+          <a href="https://arenaa.github.io/RepProbe-webpage/" target="_blank" rel="noopener" class="pub-link">Project Page</a>
+        </div>
       </div>
     </div>
 
-    <div class="pub-item">
-      <div class="pub-header">
-        <span class="venue-tag arxiv">Preprint 2026</span>
-      </div>
-      <div class="pub-title"><a href="https://arxiv.org/abs/2608.13671" target="_blank" rel="noopener">PROVE: Training-Free Prompt Recovery using Verifiable Evidence</a></div>
-      <div class="pub-authors">Rupayan Mallick, <strong>Mahsa Khoshnoodi</strong>, Sarah Adel Bargal</div>
-      <div class="pub-links">
-        <a href="https://arxiv.org/abs/2608.13671" target="_blank" rel="noopener" class="pub-link">Paper</a>
-        <a href="https://arenaa.github.io/prove/" target="_blank" rel="noopener" class="pub-link">Project Page</a>
-      </div>
-    </div>
-
-    <div class="pub-item">
-      <div class="pub-header">
-        <span class="venue-tag cvpr">CVPR-VisCon 2026</span>
-      </div>
-      <div class="pub-title"><a href="https://openreview.net/pdf?id=1MfgN2Yi7m" target="_blank" rel="noopener">Do VLMs Reason About Faces? Probing the Perception-Reasoning Gap in Identity Judgment</a></div>
-      <div class="pub-authors"><strong>Mahsa Khoshnoodi</strong>, Sarah Adel Bargal</div>
-      <div class="pub-venue">Third Workshop on Visual Concepts (VisCon), CVPR 2026</div>
-      <div class="pub-links">
-        <a href="https://openreview.net/pdf?id=1MfgN2Yi7m" target="_blank" rel="noopener" class="pub-link">Paper</a>
+    <div class="pub-item has-thumb">
+      <a class="pub-thumb" href="https://arenaa.github.io/ChartProbe-webpage/" target="_blank" rel="noopener" aria-hidden="true" tabindex="-1">
+        <img src="assets/img/chart.png" alt="ChartProbe diagnostic framework" decoding="async">
+      </a>
+      <div class="pub-body">
+        <div class="pub-header">
+          <span class="venue-tag arxiv">Preprint 2026</span>
+        </div>
+        <div class="pub-title"><a href="https://arxiv.org/abs/2608.13766" target="_blank" rel="noopener">ChartProbe: A Diagnostic Study on Visual Reasoning through Perception, Grounding, and Simple Reasoning</a></div>
+        <div class="pub-authors"><strong>Mahsa Khoshnoodi</strong>, Sarah Adel Bargal</div>
+        <div class="pub-venue">Preprint, 2026</div>
+        <div class="pub-desc">Chart questions are split into perception, grounding, and reasoning probes with exact ground truth, so a wrong answer can be traced to the skill that failed.</div>
+        <div class="pub-links">
+          <a href="https://arxiv.org/abs/2608.13766" target="_blank" rel="noopener" class="pub-link">Paper</a>
+          <a href="https://arenaa.github.io/ChartProbe-webpage/" target="_blank" rel="noopener" class="pub-link">Project Page</a>
+        </div>
       </div>
     </div>
 
-    <div class="pub-item">
-      <div class="pub-header">
-        <span class="venue-tag semeval">SemEval 2026</span>
-      </div>
-      <div class="pub-title"><a href="https://aclanthology.org/2026.semeval-1.342/" target="_blank" rel="noopener">GUNLP at SemEval-2026 Task 10: Emotion-Aware Multi-Task Learning for Conspiracy Detection</a></div>
-      <div class="pub-authors"><strong>Mahsa Khoshnoodi</strong>*, Rojin Ziaei*, Nazli Goharian<span class="equal-contrib">* Equal contribution</span></div>
-      <div class="pub-venue">SemEval 2026</div>
-      <div class="pub-links">
-        <a href="https://aclanthology.org/2026.semeval-1.342.pdf" target="_blank" rel="noopener" class="pub-link">Paper</a>
-      </div>
-    </div>
-
-    <div class="pub-item">
-      <div class="pub-header">
-        <span class="venue-tag kdd">KDD 2025</span>
-      </div>
-      <div class="pub-title"><a href="https://arxiv.org/abs/2406.12644" target="_blank" rel="noopener">Hierarchical Prompting Taxonomy: A Universal Evaluation Framework for Large Language Models</a></div>
-      <div class="pub-authors">Devichand Budagam, Sankalp KJ, <strong>Mahsa Khoshnoodi</strong>, Ashutosh Kumar, Vinija Jain, Aman Chadha</div>
-      <div class="pub-venue">KDD 2025</div>
-      <div class="pub-links">
-        <a href="https://arxiv.org/abs/2406.12644" target="_blank" rel="noopener" class="pub-link">Paper</a>
+    <div class="pub-item has-thumb">
+      <a class="pub-thumb" href="https://arenaa.github.io/prove/" target="_blank" rel="noopener" aria-hidden="true" tabindex="-1">
+        <img src="assets/img/prove.png" alt="Original images beside PROVE regenerations from recovered prompts" decoding="async">
+      </a>
+      <div class="pub-body">
+        <div class="pub-header">
+          <span class="venue-tag arxiv">Preprint 2026</span>
+        </div>
+        <div class="pub-title"><a href="https://arxiv.org/abs/2608.13671" target="_blank" rel="noopener">PROVE: Training-Free Prompt Recovery using Verifiable Evidence</a></div>
+        <div class="pub-authors">Rupayan Mallick, <strong>Mahsa Khoshnoodi</strong>, Sarah Adel Bargal</div>
+        <div class="pub-venue">Preprint, 2026</div>
+        <div class="pub-desc">A training-free, black-box prompt inversion method that recovers prompts by composing scene claims the image can verify, rather than optimizing tokens.</div>
+        <div class="pub-links">
+          <a href="https://arxiv.org/abs/2608.13671" target="_blank" rel="noopener" class="pub-link">Paper</a>
+          <a href="https://arenaa.github.io/prove/" target="_blank" rel="noopener" class="pub-link">Project Page</a>
+        </div>
       </div>
     </div>
 
-    <div class="pub-item">
-      <div class="pub-header">
-        <span class="venue-tag neurips">NeurIPS 2024</span>
-        <span class="spotlight-tag">Spotlight, top 5%</span>
-      </div>
-      <div class="pub-title"><a href="https://arxiv.org/abs/2404.04251" target="_blank" rel="noopener">Who Evaluates the Evaluations? Objectively Scoring Text-to-Image Prompt Coherence Metrics with T2IScoreScore (TS2)</a></div>
-      <div class="pub-authors">Michael Saxon*, Fatima Jahara*, <strong>Mahsa Khoshnoodi</strong>*, Yujie Lu, Aditya Sharma, William Yang Wang<span class="equal-contrib">* Equal contribution (co-first authors)</span></div>
-      <div class="pub-venue">NeurIPS 2024</div>
-      <div class="pub-links">
-        <a href="https://arxiv.org/abs/2404.04251" target="_blank" rel="noopener" class="pub-link">Paper</a>
-        <a href="https://t2iscorescore.github.io/" target="_blank" rel="noopener" class="pub-link">Project Page</a>
+    <div class="pub-item has-thumb">
+      <a class="pub-thumb" href="https://openreview.net/pdf?id=1MfgN2Yi7m" target="_blank" rel="noopener" aria-hidden="true" tabindex="-1">
+        <img src="assets/img/Face.png" alt="FaceBench diagnostic examples for identity judgment" decoding="async">
+      </a>
+      <div class="pub-body">
+        <div class="pub-header">
+          <span class="venue-tag cvpr">CVPR-VisCon 2026</span>
+        </div>
+        <div class="pub-title"><a href="https://openreview.net/pdf?id=1MfgN2Yi7m" target="_blank" rel="noopener">Do VLMs Reason About Faces? Probing the Perception-Reasoning Gap in Identity Judgment</a></div>
+        <div class="pub-authors"><strong>Mahsa Khoshnoodi</strong>, Sarah Adel Bargal</div>
+        <div class="pub-venue">Third Workshop on Visual Concepts (VisCon), CVPR 2026</div>
+        <div class="pub-desc">A diagnostic benchmark that separates failures of facial perception from failures of reasoning over perceived attributes in identity judgment.</div>
+        <div class="pub-links">
+          <a href="https://openreview.net/pdf?id=1MfgN2Yi7m" target="_blank" rel="noopener" class="pub-link">Paper</a>
+        </div>
       </div>
     </div>
 
-    <div class="pub-item">
-      <div class="pub-header">
-        <span class="venue-tag arxiv">Preprint 2024</span>
+    <div class="pub-item has-thumb">
+      <a class="pub-thumb" href="https://aclanthology.org/2026.semeval-1.342/" target="_blank" rel="noopener" aria-hidden="true" tabindex="-1">
+        <img src="assets/img/semeval_diagram.png" alt="Emotion-aware multi-task model diagram" decoding="async">
+      </a>
+      <div class="pub-body">
+        <div class="pub-header">
+          <span class="venue-tag semeval">SemEval 2026</span>
+        </div>
+        <div class="pub-title"><a href="https://aclanthology.org/2026.semeval-1.342/" target="_blank" rel="noopener">GUNLP at SemEval-2026 Task 10: Emotion-Aware Multi-Task Learning for Conspiracy Detection</a></div>
+        <div class="pub-authors"><strong>Mahsa Khoshnoodi</strong>*, Rojin Ziaei*, Nazli Goharian<span class="equal-contrib">* Equal contribution</span></div>
+        <div class="pub-venue">SemEval 2026</div>
+        <div class="pub-desc">A multi-task system that jointly models emotion and conspiracy detection, motivated by the link between affective language and conspiratorial framing.</div>
+        <div class="pub-links">
+          <a href="https://aclanthology.org/2026.semeval-1.342.pdf" target="_blank" rel="noopener" class="pub-link">Paper</a>
+        </div>
       </div>
-      <div class="pub-title"><a href="https://arxiv.org/abs/2405.13019" target="_blank" rel="noopener">A Comprehensive Survey of Accelerated Generation Techniques in Large Language Models</a></div>
-      <div class="pub-authors"><strong>Mahsa Khoshnoodi</strong>, Vinija Jain, Mingye Gao, Malavika Srikanth, Aman Chadha</div>
-      <div class="pub-venue">Preprint, 2024</div>
-      <div class="pub-links">
-        <a href="https://arxiv.org/abs/2405.13019" target="_blank" rel="noopener" class="pub-link">Paper</a>
+    </div>
+
+    <div class="pub-item has-thumb">
+      <a class="pub-thumb" href="https://arxiv.org/abs/2406.12644" target="_blank" rel="noopener" aria-hidden="true" tabindex="-1">
+        <img src="assets/img/project1.png" alt="Hierarchical prompting taxonomy diagram" decoding="async">
+      </a>
+      <div class="pub-body">
+        <div class="pub-header">
+          <span class="venue-tag kdd">KDD 2025</span>
+        </div>
+        <div class="pub-title"><a href="https://arxiv.org/abs/2406.12644" target="_blank" rel="noopener">Hierarchical Prompting Taxonomy: A Universal Evaluation Framework for Large Language Models</a></div>
+        <div class="pub-authors">Devichand Budagam, Sankalp KJ, <strong>Mahsa Khoshnoodi</strong>, Ashutosh Kumar, Vinija Jain, Aman Chadha</div>
+        <div class="pub-venue">KDD 2025</div>
+        <div class="pub-desc">A cognitively motivated framework that ranks prompting strategies by cognitive demand and quantifies task complexity across LLMs.</div>
+        <div class="pub-links">
+          <a href="https://arxiv.org/abs/2406.12644" target="_blank" rel="noopener" class="pub-link">Paper</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="pub-item has-thumb">
+      <a class="pub-thumb" href="https://t2iscorescore.github.io/" target="_blank" rel="noopener" aria-hidden="true" tabindex="-1">
+        <img src="assets/img/project9.png" alt="T2IScoreScore example images ordered by faithfulness" decoding="async">
+      </a>
+      <div class="pub-body">
+        <div class="pub-header">
+          <span class="venue-tag neurips">NeurIPS 2024</span>
+          <span class="spotlight-tag">Spotlight, top 5%</span>
+        </div>
+        <div class="pub-title"><a href="https://arxiv.org/abs/2404.04251" target="_blank" rel="noopener">Who Evaluates the Evaluations? Objectively Scoring Text-to-Image Prompt Coherence Metrics with T2IScoreScore (TS2)</a></div>
+        <div class="pub-authors">Michael Saxon*, Fatima Jahara*, <strong>Mahsa Khoshnoodi</strong>*, Yujie Lu, Aditya Sharma, William Yang Wang<span class="equal-contrib">* Equal contribution (co-first authors)</span></div>
+        <div class="pub-venue">NeurIPS 2024</div>
+        <div class="pub-desc">A meta-evaluation benchmark that scores text-to-image faithfulness metrics by how well they rank progressively corrupted image sets.</div>
+        <div class="pub-links">
+          <a href="https://arxiv.org/abs/2404.04251" target="_blank" rel="noopener" class="pub-link">Paper</a>
+          <a href="https://t2iscorescore.github.io/" target="_blank" rel="noopener" class="pub-link">Project Page</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="pub-item has-thumb">
+      <a class="pub-thumb" href="https://arxiv.org/abs/2405.13019" target="_blank" rel="noopener" aria-hidden="true" tabindex="-1">
+        <img src="assets/img/project10.png" alt="Diagram of accelerated language generation" decoding="async">
+      </a>
+      <div class="pub-body">
+        <div class="pub-header">
+          <span class="venue-tag arxiv">Preprint 2024</span>
+        </div>
+        <div class="pub-title"><a href="https://arxiv.org/abs/2405.13019" target="_blank" rel="noopener">A Comprehensive Survey of Accelerated Generation Techniques in Large Language Models</a></div>
+        <div class="pub-authors"><strong>Mahsa Khoshnoodi</strong>, Vinija Jain, Mingye Gao, Malavika Srikanth, Aman Chadha</div>
+        <div class="pub-venue">Preprint, 2024</div>
+        <div class="pub-desc">A survey of speculative decoding, early exiting, and non-autoregressive methods for faster LLM inference.</div>
+        <div class="pub-links">
+          <a href="https://arxiv.org/abs/2405.13019" target="_blank" rel="noopener" class="pub-link">Paper</a>
+        </div>
       </div>
     </div>
 
@@ -766,7 +872,7 @@ footer p {
     </div>
     <div class="news-item">
       <div class="news-date">Aug 2026</div>
-      <div class="news-text"><strong>Two preprints</strong>: <a href="https://arenaa.github.io/ChartProbe-webpage/" target="_blank" rel="noopener">ChartProbe</a> and <a href="https://arenaa.github.io/prove/" target="_blank" rel="noopener">PROVE</a>.</div>
+      <div class="news-text"><strong>New preprints</strong>: <a href="https://arenaa.github.io/ChartProbe-webpage/" target="_blank" rel="noopener">ChartProbe</a> and <a href="https://arenaa.github.io/prove/" target="_blank" rel="noopener">PROVE</a>, training-free prompt recovery using verifiable visual evidence.</div>
     </div>
     <div class="news-item">
       <div class="news-date">May 2026</div>
